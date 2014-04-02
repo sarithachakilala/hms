@@ -1,0 +1,110 @@
+
+<script type="text/javascript"> 
+	var query1=""
+	var selectid;
+	function Select_Ward(id)
+	{
+		var selObj = document.getElementById(id);
+		query1= selObj.options[selObj.selectedIndex].value
+		selectid=id
+		Ajax_Code()
+		
+	}
+	
+	//Ajax Code
+	function Ajax_Code()
+	{
+		var org_code=document.getElementById('org_code').value
+		req = new Ajax.Request('/bed_managements/ajax_function/1', {
+			method: 'get',
+			parameters: { name: query1 , org_code:org_code,type : selectid },
+			onComplete: function(transport) {
+			processReqChange(transport);
+			}
+
+		}); 
+		function processReqChange(req) 
+		{
+			// request is complete
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				var temp=new Array()
+				temp=results.split("<division>")
+				document.getElementById('room').length=0
+				var opt = document.createElement("option");
+				document.getElementById("room").options.add(opt);
+				opt.text = "Please select"
+				opt.value = ""
+				for(i=0;i<temp.length-1;i++)
+				{
+					var opt = document.createElement("option");
+					document.getElementById("room").options.add(opt);
+					opt.text = temp[i]
+					opt.value = temp[i]
+				}
+			}
+		}		
+	}
+	
+	function clear_function()
+	{
+	
+		
+		document.getElementById('ward').value=""
+		document.getElementById('room').value=""
+		document.getElementById('status').value=""
+		
+
+	}
+	var man =new Array('ward','room','status')
+	function check()
+	{
+		var org_code=document.getElementById('org_code').value
+		var ward=document.getElementById('ward').value
+		var room=document.getElementById('room').value
+		document.getElementById("frame").src="/bed_managements/bed_select/1?ward="+ward+"&org_code="+org_code+"&room="+room
+		
+	
+	}
+	
+	
+</script> 
+<body onload="check();">
+
+ 
+<% form_for(@bed_management) do |f| %>
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">&nbsp;&nbsp;&nbsp;<a HREF='/bed_managements/new' class="nav" style="text-decoration:none;">Bed Management</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<br/>
+<fieldset>
+<legend><div class="font"><b>Search</b></div></legend>
+<%= f.hidden_field :user_id, :value => @person.id %>
+  <table align="center"> 
+    <% ward_master=WardMaster.first %>
+	<tr><td><%= f.label :ward %></td>
+    <td><%= f.select :ward, WardMaster.find(:all, :conditions =>"org_code = '#{@org_code}'").collect{|p| [p.name]},{:prompt => false}, {:id => "ward", :onChange => "Select_Ward(id)" }  %></td>
+    <td><%= f.label :room %></td>
+    <td><%= f.select :room, RoomMaster.find(:all, :conditions =>"org_code = '#{@org_code}' and ward_master_id='#{ward_master.id}'").collect{|p| [p.name]},{:prompt => true} ,{:id => "room"  } %></td>
+	<td>Org.Code</td>
+	<td><%= text_field_tag ('org_code','',:value => @org_code, :size => 20, :readonly =>true) %></td>
+	<td><a href="javascript:void(0);" class="new1" onClick ="check()">Search</a></td>
+	<td><a href="javascript:void(0);" class="new1" onClick ="clear_function()">Clear</a></td>
+	
+</tr>    
+  
+
+<% end %>
+</table>
+</fieldset>
+</div>
+<br/>
+ <center>
+   <iframe src="" id="frame" width="100%" height="440px" align="center" style="border:none"/>
+</center>

@@ -1,0 +1,37 @@
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+<tr>
+    <th>S.No</th>
+    <th>Admn.No</th>
+    <th>MR No</th>
+    <th>Final bill amount</th>
+    <th>Final bill cancel amount</th>
+	<th colspan="2">Permissions</th>
+</tr>
+ </thead>
+<tbody>
+<% @i=0 %>
+<% @final_bill_cancel.each do |final_bill_cancel| %>
+  <% if((@i%2)==0) 
+		id="datacelltwo"
+	else
+		id="datacellone"
+  end %>
+  <tr class='<%= id %>'>
+    <td><%= @i=@i+1 %></td>
+    <td><%=h final_bill_cancel.admn_no %></td>
+    <td><%=h final_bill_cancel.mr_no %></td>
+    <td><%=h final_bill_cancel.final_bill_amount %></td>
+    <td><%=h final_bill_cancel.final_bill_cancel_amount %></td>
+     <td  align="center">
+<a href="final_bill_cancels/<%= final_bill_cancel.id %>?user_id=<%= @user_id %>"><image src="images/buttons/display1.png" size = "54x21" border ="0" /></a>
+</td>
+<td  align="center">
+<a href="final_bill_cancels/<%= final_bill_cancel.id %>/edit?user_id=<%= @user_id %>"><image src="images/buttons/modify.png" size = "54x21" border ="0" /></a>
+</td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+<br />
+</div>

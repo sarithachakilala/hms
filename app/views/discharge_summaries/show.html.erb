@@ -1,0 +1,45 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">IP Patients >>&nbsp;&nbsp;&nbsp;<a HREF='/discharge_summaries?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Discharge Summaries</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<% if @discharge_summary %>
+<div align="cenetr">
+<% form_for(@discharge_summary) do |f| %>
+  <%= f.error_messages %>
+<table width="100%" bgcolor="#87CEEB">
+  <tr><td colspan="8">
+<fieldset>
+ <legend><div class="font"><b>Discharge Intimation Details</b></div></legend>
+<%= f.hidden_field :id, :id => "record_id" %>
+<table width="100%">
+  <tr>
+   <td>Org.Code</td>
+	<td><%= f.text_field :org_code, :value => @org_code, :size => 20, :id => "org_code", :readonly => true %></td>
+    <td>Org.Location</td>
+    <td><%= f.text_field :org_location, :value => @org_location, :size => 20, :id => "org_location", :readonly => true %></td>
+	<td>Admn No </td>
+	<td><%= f.text_field :admn_no, :size => "20", :id =>"admn_no", :readonly => true %>
+    <td>MR No</td>
+    <td><%= f.text_field :mr_no, :readonly =>true , :size => "20" %>  </td>
+	</tr>
+    <tr> 
+    <td>Discharge Date</td>
+	<td><%= f.text_field :discharge_date, :readonly =>true , :size => "20" %> 
+	<td> <%= f.label :time %></td>
+	<td><%= f.text_field :time , :readonly =>true , :size => "20" %></td>
+	<td>Discharge Consultant </td>
+	<td><%= f.text_field :discharge_consultant, :readonly =>true , :size => "20" %></td>
+	<td> <%= f.label :status %></td>
+	<td><%= f. text_field  :status, :readonly =>true , :size => "20" %></td>
+</tr>
+
+<% end %>
+</table>
+</fieldset>	
+</tr><TR></TR><TR></TR></table>
+<% end %>
+<BR/><center><td valign="middle"><%= link_to "Back",  discharge_summaries_path, :class=>"new1" %></td></center>

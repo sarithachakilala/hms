@@ -1,0 +1,93 @@
+<script language="javascript" type="text/javascript">
+	function stopRKey(evt) {
+		var evt  = (evt) ? evt : ((event) ? event : null);
+		var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+		if ((evt.keyCode == 13) && (node.type=="text")) { return false; }
+	}
+	document.onkeypress = stopRKey;
+</script>
+<script type="application/javascript">
+		function Search_medicine(id,event)
+		{
+		
+			var medicine_name=document.getElementById(id).value
+			if(medicine_name)
+			{
+			req = new Ajax.Request('/goodsrecieptnotemasters/search_function/1', {
+					method: 'get',
+					parameters: {medicine_name: medicine_name },
+					onComplete: function(transport) {
+					processReqChange(transport);
+					}
+				});
+				function processReqChange(req) 
+				{
+					document.getElementById("table_data").innerHTML=req.responseText
+				}
+			}
+		}
+		function show_results()
+	{
+	
+		window.open('/pharmacy_ranges','open_window','menubar=0, toolbar=0, scrollbars=1location, width=640, height=480, left=0, top=0')
+	
+	}
+		
+</script>
+<br/>
+<a href='javascript:void(0)' onclick="show_results()" ><%= image_tag("/images/range.png", :height=> "35",:width=>"105", :border =>"0", :align=>"right")  %>
+
+    <table border=1 cellpadding="0" width="70%" align="center" cellspacing="0" id="table_data">
+		<caption style="background: url(/images/vertical1_04.jpg) repeat-x top left;text-align:center;" >
+		<font color="#F0FFFF" face="Cambria" size="4px"><b>Less Medicine List</b></font></caption>
+		<thead width="100%">
+		<tr>
+
+			<TH width="25%" style="color:black;" >S No</TH>
+			<TH  width="50%" style="color:black;">Product Name</TH>
+			<TH  width="25%" style="color:black;" >Quantity</TH>
+		</tr>
+		</thead> 
+		 <tbody >
+			<% j=1 %>
+			<% val=0 %>
+			<% for itemmaster in @itemmaster  %>
+				<tr>
+					<td colspan="3" align="center" bgcolor="#06b1f1" style="color:white;"><b><%= itemmaster.drug_type %></b></td>
+				</tr>
+				<% @itemmaster_names=Itemmaster.all(:select =>"DISTINCT product_name", :conditions => "drug_type='#{itemmaster.drug_type}'") %>
+				<% @range=PharmacyRange.find_by_item_type(itemmaster.drug_type)%>
+					
+				<% if(@range)%>
+				
+					<% val=(@range.range).to_i%>	
+					<% for itemmaster_names in @itemmaster_names  %>
+						<% store_child=StoreChild.sum(:quantity,:conditions =>"item_name='#{itemmaster_names.product_name}'").to_i %>
+						<% if(itemmaster.drug_type=="TABS" && (store_child).to_i < val) %>
+							<tr class="dk">
+								<td><%= j  %></td>
+								<td><%=h itemmaster_names.product_name %></td>
+								<td><%=h store_child  %></td>
+							</tr>
+						<% elsif(itemmaster.drug_type=="SYP" && store_child.to_i < val) %>
+							<tr class="dk">
+								<td><%= j  %></td>
+								<td><%=h itemmaster_names.product_name %></td>
+								<td><%=h store_child  %></td>
+							</tr>
+						<% elsif(itemmaster.drug_type=="INJECTION" && store_child.to_i < val) %>
+							<tr class="dk">
+								<td><%= j  %></td>
+								<td><%=h itemmaster_names.product_name %></td>
+								<td><%=h store_child  %></td>
+							</tr>
+						<% end %>
+					<% j+=1 %>
+					<% end %>
+					
+				<% else %>	
+				
+				<% end %>	
+			<% end %>	
+  </tbody>
+</table>

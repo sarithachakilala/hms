@@ -1,0 +1,318 @@
+<script type="text/javascript">
+	function select_company_name(selected_value)
+	{
+		jQuery.ajax({
+          	url: "/purchase_invoices/select_company_name/1?company_name="+selected_value,
+		     	type: "POST",
+           	success: function(result){  
+						var results=result.split("<division>");
+						var field_id=new Array('purchase_cst','purchase_vat','purchase_other_tax','sale_cst','sale_vat','sale_other_tax');
+						for(i=0;i<results.length;i++)
+						{
+							document.getElementById(field_id[i]).value=results[i];
+						}
+            },
+            error: function(){
+                  alert('Error occured');
+            }
+      });
+	}
+
+	
+	function get_supplier_info(supplier_code)
+	{
+	
+		jQuery.ajax({
+          	url: "/pharmacy_payments/get_supplier_address/1?customer_code="+supplier_code,
+		     	type: "POST",
+
+           	success: function(result){  
+
+							if(result.split("<division>")[3]=="")
+							{
+								alert("Bills are cleared");
+								return;
+							}
+							document.getElementById("address").value=result.split("<division>")[0];
+							document.getElementById("city").value=result.split("<division>")[1];
+							document.getElementById("total_due_amount").value=result.split("<division>")[2];
+							var bills_list=result.split("<division>")[3].split("<division_sub>");
+
+							var table = document.getElementById("scroll_table"); 
+		var row_id="r"
+		for(i=0;i<table.rows.length;i++)
+		{
+			if(document.getElementById(row_id+i+"c1").value!="")
+			{
+				document.getElementById(row_id+i+"c1").value="";
+				document.getElementById(row_id+i+"c2").value="";
+				document.getElementById(row_id+i+"c3").value="";
+				document.getElementById(row_id+i+"c4").value="";
+				document.getElementById(row_id+i+"c5").value="";
+				document.getElementById(row_id+i+"c6").value="";
+				document.getElementById(row_id+i+"c7").value="";
+				table.rows[i].cells[7].innerHTML =""
+				
+			}
+		}		
+
+
+
+							for(bill=0;bill<bills_list.length-1;bill++)
+							{
+								var sub_bill_list=bills_list[bill].split("<sub_division>");
+								add_indi_row(sub_bill_list[0],sub_bill_list[1],sub_bill_list[2],sub_bill_list[3]);
+							}
+            },
+            error: function(){
+                  alert('Error occured');
+            }
+      });
+	}
+
+	function add_indi_row(bill_no,bill_date,discount_amount,amount)
+	{ 
+		
+		var table = document.getElementById("scroll_table"); 
+		var row_id="r"
+		for(i=0;i<table.rows.length;i++)
+		{
+			if(document.getElementById(row_id+i+"c1").value=="")
+			{
+				document.getElementById(row_id+i+"c1").value=i+1
+				document.getElementById(row_id+i+"c2").value=bill_no;
+				document.getElementById(row_id+i+"c3").value=bill_date;
+				document.getElementById(row_id+i+"c4").value=discount_amount;
+				document.getElementById(row_id+i+"c5").value=parseFloat(amount).toFixed(2);
+				document.getElementById(row_id+i+"c6").value=parseFloat(amount).toFixed(2);
+				document.getElementById(row_id+i+"c7").value=0;
+				var chkbox = document.createElement('input');
+				chkbox.type = "checkbox";
+				chkbox.id = row_id+i ;
+				chkbox.checked=true;
+				chkbox.name="pharmacy_payment[pharmacy_payment_children_attributes]["+i+"][status]"
+				chkbox.setAttribute('onChange','amount_calculation();');
+				table.rows[i].cells[7].appendChild(chkbox);	
+				amount_calculation();
+				break;
+			}
+		}		
+	}
+
+	function amount_calculation()
+	{
+		var table = document.getElementById("scroll_table"); 
+		var row_id="r"
+		document.getElementById("amount").value=0;
+		for(i=0;i<table.rows.length;i++)
+		{
+			if(document.getElementById(row_id+i+"c6").value!="" && document.getElementById(row_id+i).checked)
+			{
+				if(document.getElementById(row_id+i+"c6").value=="0")
+					document.getElementById(row_id+i+"c6").value=(parseFloat(document.getElementById(row_id+i+"c5").value)).toFixed(2);
+				document.getElementById("amount").value=(parseFloat(document.getElementById("amount").value)+parseFloat(document.getElementById(row_id+i+"c6").value)).toFixed(2);
+				document.getElementById(row_id+i+"c7").value=(parseFloat(document.getElementById(row_id+i+"c5").value)-parseFloat(document.getElementById(row_id+i+"c6").value)).toFixed(2);
+			}
+			else if(document.getElementById(row_id+i+"c6").value!="" && !document.getElementById(row_id+i).checked)
+			{
+				document.getElementById(row_id+i+"c7").value=parseFloat(document.getElementById(row_id+i+"c5").value).toFixed(2);
+				document.getElementById(row_id+i+"c6").value=0;
+			}
+			else
+				break;
+		}
+		total_amount_calculation()
+	}
+	function total_amount_calculation()
+	{ 
+		var amount=0,discount_amount=0,adjust=0;
+		if(document.getElementById('amount').value=="0")
+		{
+			document.getElementById('discount_amount').value=0;
+			document.getElementById('adjust').value=0;
+			document.getElementById('net_amount').value=0;
+			document.getElementById('gross').value=0;
+			return;
+		}
+		if(document.getElementById('amount').value!="")
+			amount=parseFloat(document.getElementById('amount').value).toFixed(2);
+		if(document.getElementById('discount_amount').value!="")
+			discount_amount=parseFloat(document.getElementById('discount_amount').value).toFixed(2);
+		if(document.getElementById('adjust').value!="")
+			adjust=document.getElementById('adjust').value;
+		document.getElementById('gross').value=(amount-discount_amount).toFixed(2);
+		document.getElementById('net_amount').value=((parseFloat(amount)+parseFloat(adjust))-parseFloat(discount_amount)).toFixed(2);
+	}
+
+	function discount_calculation()
+	{
+		var discount=0;
+		var sub_total=parseFloat(document.getElementById('amount').value).toFixed(2);
+		if(document.getElementById('discount').value!="")
+		{
+			discount=parseFloat(document.getElementById('discount').value);
+			document.getElementById('discount_amount').value=((sub_total*discount)/100).toFixed(2);
+		}
+		else
+			document.getElementById('discount_amount').value=0;
+		total_amount_calculation();
+	}
+
+	function sub_total_calculation()
+	{
+		var table = document.getElementById("scroll_table");
+		document.getElementById("sub_total").value=0;
+		for(i=0;i<table.rows.length;i++)
+		{
+			if(document.getElementById("r"+i+"c12").value!="" && document.getElementById("r"+i+"c1").value!="")
+				document.getElementById("sub_total").value=(parseFloat(document.getElementById("r"+i+"c12").value)+parseFloat(document.getElementById("sub_total").value)).toFixed(2);
+			else
+				break;
+		}
+		total_amount_calculation();
+	}
+
+	function qty_amount_calculation(row_no)
+	{
+		if(document.getElementById("r"+row_no+"c4").value!="" && document.getElementById("r"+row_no+"c10").value!="")
+			document.getElementById("r"+row_no+"c12").value=(parseFloat(document.getElementById("r"+row_no+"c4").value)*parseFloat(document.getElementById("r"+row_no+"c10").value)).toFixed(2);
+		else
+			document.getElementById("r"+row_no+"c12").value=0;
+		sub_total_calculation();
+	}
+
+
+	function calculate_paid_amount(row_no)
+	{
+
+		if(document.getElementById("r"+row_no+"c6").value!="" && document.getElementById("r"+row_no+"c6").value!="" && document.getElementById("r"+row_no).checked)
+			document.getElementById("r"+row_no+"c7").value=(parseFloat(document.getElementById("r"+row_no+"c5").value)-parseFloat(document.getElementById("r"+row_no+"c6").value)).toFixed(2);
+		else if(document.getElementById("r"+row_no+"c6").value!="0" && !document.getElementById("r"+(row_no)).checked)
+		{
+			alert("Please select the check box");
+			document.getElementById("r"+row_no+"c6").value=0;
+		}else
+		{
+			document.getElementById("r"+row_no+"c6").value=0;
+			document.getElementById("r"+row_no+"c7").value=(parseFloat(document.getElementById("r"+row_no+"c5").value)).toFixed(2);
+		}
+		amount_calculation();
+	}
+</script>
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Pharmacy >>&nbsp;&nbsp;&nbsp;<a HREF='/pharmacy_payments' class="nav" style="text-decoration:none;">Payments</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+
+<% form_for(@pharmacy_payment) do |f| %>
+<%= hidden_field :user_id, :value => @person.id %>
+<% @date=format_date(:sort, Date.today ) %>
+	<div align="center">
+	<fieldset>
+	<legend><div class="font"><b>Payments Details</b></div></legend>
+<%= f.hidden_field :org_code, :value => @org_code, :size => 20, :id => "org_code", :required => true, :readonly => true %>
+<%= f.hidden_field :org_location, :value => @org_location, :size => 20, :id => "org_location", :required => true, :readonly => true %>
+<table width="100%" >
+					<tr>
+						<td>Supplier Name</td>
+						<td><%= f.select :agency_name, @vendor_names, {:prompt => true},{:id => "agency_name", :required => true, :onchange => "get_supplier_info(this.value)"} %></td>
+						<td>Address<sup>*<sup></td>
+				 		<td><%= text_field_tag ('address','',:id=>"address", :readOnly => true) %></div></td>
+						<td>City<sup>*<sup></td>
+				 		<td><%= text_field_tag ('city','',:id=>"city", :readOnly => true) %></div></td>
+			  		</tr>
+			  		<tr>
+						<td>Payment No<sup>*<sup></td>
+				 		<td><%= f.text_field :payment_no, :readOnly => true %></div></td>
+				 	 	<td>Date<sup>*<sup></td>
+				 		<td><%= f.text_field :payment_date, :id => "invoice_date", :value => Date.today %></div></td>
+			  		 	<td>Total Amount<sup>*<sup></td>
+				 		<td><%= f.text_field :invoice_total, :id => "total_due_amount", :readOnly => true %></div></td>
+				 	</tr>
+				</table>
+
+<table align="center" width="100%">
+  <tr>
+<td colspan="10">
+	<div id="info" width="100%">
+    <table class="tableone" width="100%">
+  <caption style="background: url(/images/vertical1_04.jpg) repeat-x top left;text-align:center;" ><font color="#F0FFFF" face="Cambria" ><b>Payment Details</b></font></caption>
+      <thead>
+        <tr>
+			<th width="150px"  style="color:black;">S.No</th> 
+			<th width="200px"  style="color:black;">Invoice No</th> 
+			<th width="200px"  style="color:black;">Invoice Date</th> 
+			<th width="200px"  style="color:black;">Dis</th>
+			<th width="200px"  style="color:black;">Amount</th>
+			<th width="200px"  style="color:black;">Paid Amount</th>
+			<th width="200px"  style="color:black;">Due</th>
+			<th width="150px"  style="color:black;">Pay</th>
+        </tr>
+      </thead>
+     <tbody>
+		<tr><td colspan="10">
+			<div class="innerb">
+			<table class="tabletwo" id="scroll_table">
+			<% i=0 %>
+			<% f.fields_for :pharmacy_payment_children do |r| %>
+				<% if (i%2==0) %>
+					<tr>
+				<% else%>
+					<tr class="dk">
+				<% end %>
+
+				<td ><%= text_field_tag('s_no','',:id => "r#{i}c1", :style=>"width:100%", :class => "nbb", :readOnly =>true) %></td>
+				<td ><%= r.text_field :invoice_no,:id =>"r#{i}c2", :style=>"width:100%", :class => "nbb", :readOnly =>true %></td>
+				<td ><%= r.text_field :invoice_date,:id =>"r#{i}c3", :style=>"width:100%", :class => "nbb", :readOnly =>true %></td>
+				<td ><%= r.text_field :discount,:id =>"r#{i}c4",:style=>"width:100%", :class => "nbb", :onKeyup =>"qty_amount_calculation('#{i}')" %></td>
+				<td ><%= r.text_field :amount,:id =>"r#{i}c5", :style=>"width:100%", :class => "nbb", :readOnly =>true %></td>
+				<td ><%= r.text_field :received,:id =>"r#{i}c6", :style=>"width:100%", :class => "nbb",:onKeyUp => "calculate_paid_amount('#{i}')" %></td>
+				<td ><%= r.text_field :balance,:id =>"r#{i}c7", :style=>"width:100%", :class => "nbb",:readOnly => true %></td>
+				<td >&nbsp;</td>
+			</tr>
+				<% i+=1 %>
+			<% end %>
+			</table>
+			</div><
+		</td>
+		</tr>
+	</tbody>
+     </table>
+   </div>
+	</td>
+  </tr>
+ </table>
+
+		<table width="100%">
+					<tr>
+						 	 	<td>Amount<sup>*<sup></td>
+						 		<td><%= f.text_field :amount, :id=>"amount", :readOnly => true %></div></td>
+						 	 	<td>Dis(%)</td>
+						 		<td><%= f.text_field :discount, :id => "discount", :onKeyup => "discount_calculation()" %></div></td>
+						 	 	<td>Dis.Amount</td>
+						 		<td><%= text_field_tag('discount_amount','', :id =>"discount_amount", :readOnly => true) %></div></td>
+					  		</tr>
+					  		<tr>
+						 	 	<td>Gross<sup>*<sup></td>
+						 		<td><%= f.text_field :gross, :id => "gross", :readOnly => true %></div></td>
+						 		<td>Adjust</td>
+						 		<td><%= f.text_field :adjust,:id => "adjust", :onKeyup => "amount_calculation()"%></div></td>
+								<td>Net Amount</td>
+						 		<td><%= f.text_field :net_amount, :id => "net_amount", :readOnly => true %></div></td>
+					  		</tr>
+						</table>
+					</div>
+				</div>
+				
+			<table align="center">
+<tr>
+	<td><%= submit_tag "", :value => " Save&Print ", :class => "submit_button", :onClick => "this.disabled=true;this.value='Process..';this.form.submit();" %></td>
+	<td><%= submit_tag "", :value => " Reset ", :type => "reset",  :class => "submit_button" %></td>
+	<td valign="middle"><%= link_to "Back",  pharmacy_payments_path, :class=>"new1" %></td>
+</tr>
+</table>
+<% end %>

@@ -1,0 +1,170 @@
+<%= javascript_include_tag 'dashboards/jquery-1.4.2.min' %>
+<%= javascript_include_tag 'dashboards/jquery.min' %>
+<%= javascript_include_tag 'dashboards/jquery-1.5.2.min' %>
+<%= javascript_include_tag 'dashboards/exporting.src' %>
+<%= javascript_include_tag 'dashboards/highcharts.src' %>
+<%= javascript_include_tag 'dashboards/dark-green' %> 
+<%= javascript_include_tag 'dashboards/exporting' %>
+<% if(@type=="Yearly") %>  
+<script type="text/javascript" charset="utf-8">
+
+var chart;
+$(document).ready(function() {
+
+	chart = new Highcharts.Chart({
+		chart: {
+			renderTo: 'container',
+			type: 'spline'
+		},
+		title: {
+			text: 'Year Wise Finance'
+		},
+		xAxis: {
+			categories: [
+					<% for j in @from_year.to_i..@to_year.to_i %>
+					 	<%= j %>,
+					<% end %>
+				     ]
+		},
+		yAxis: {
+			title: {
+				text: 'Amount'
+			},
+			labels: {
+				formatter: function() {
+					return this.value 
+				}
+			}
+		},
+		tooltip: {
+			crosshairs: true,
+			shared: true
+		},
+		plotOptions: {
+			spline: {
+				marker: {
+					radius: 4,
+					lineColor: '#666666',
+					lineWidth: 1
+				}
+			}
+		},
+		series: [<% for j in 0...@label.length %>
+		{
+			name: '<%= @label[j] %>',
+			data: [ <% for i in 0..(@to_year.to_i-@from_year.to_i) %>
+					<%= @consultant_visit[((@to_year.to_i-@from_year.to_i)+1)*j+i] %>,<% end %>]
+		},
+		<% end %>]
+	});
+});
+
+</script>
+<% elsif(@type=="Weekly") %>
+
+<script type="text/javascript" charset="utf-8">
+var chart;
+$(document).ready(function() {
+	chart = new Highcharts.Chart({
+		chart: {
+			renderTo: 'container',
+			type: 'spline'
+		},
+		title: {
+			text: 'Day Wise Finance'
+		},
+		xAxis: {
+			categories: [<% for j in 0...@dates.length %>
+					 	<%= @dates[j] %>,
+					<% end %>]
+		},
+		yAxis: {
+			title: {
+				text: 'Amount'
+			},
+			labels: {
+				formatter: function() {
+					return this.value 
+				}
+			}
+		},
+		tooltip: {
+			crosshairs: true,
+			shared: true
+		},
+		plotOptions: {
+			spline: {
+				marker: {
+					radius: 4,
+					lineColor: '#666666',
+					lineWidth: 1
+				}
+			}
+		},
+		series: [<% for j in 0...@label.length %>
+		{
+			name: '<%= @label[j] %>',
+			data: [ <% for i in 0..(@to_date.to_date-@from_date.to_date).to_i %>
+					<%= @consultant_visit[((@to_date.to_date-@from_date.to_date).to_i+1)*j+i] %>,<% end %>]
+		},
+		<% end %>]
+	});
+});
+
+ </script>  
+		
+<% else %>
+
+<script type="text/javascript" charset="utf-8">
+var chart;
+$(document).ready(function() {
+	chart = new Highcharts.Chart({
+		chart: {
+			renderTo: 'container',
+			type: 'spline'
+		},
+		title: {
+			text: 'Monthly Wise Finance'
+		},
+		xAxis: {
+			categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+				'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+		},
+		yAxis: {
+			title: {
+				text: 'Amount'
+			},
+			labels: {
+				formatter: function() {
+					return this.value 
+				}
+			}
+		},
+		tooltip: {
+			crosshairs: true,
+			shared: true
+		},
+		plotOptions: {
+			spline: {
+				marker: {
+					radius: 4,
+					lineColor: '#666666',
+					lineWidth: 1
+				}
+			}
+		},
+		series: [<% for j in 0...@label.length %>
+		{
+			name: '<%= @label[j] %>',
+			data: [<%= @consultant_visit[(12*j)] %>,<%= @consultant_visit[12*j+1] %>,<%= @consultant_visit[12*j+2] %>,<%= @consultant_visit[12*j+3] %>,<%= @consultant_visit[12*j+4] %>,<%= @consultant_visit[(12*j)+5] %>,<%= @consultant_visit[12*j+6] %>,<%= @consultant_visit[12*j+7] %>,<%= @consultant_visit[12*j+8] %>,<%= @consultant_visit[12*j+9] %>,<%= @consultant_visit[12*j+10] %>,<%= @consultant_visit[12*j+11] %> ]
+		},
+		<% end %>]
+	});
+});
+
+ </script>  
+<% end %>
+	
+<body>
+    <div id="container" style="width: 800px; height: 400px; margin: 0 auto"></div>
+ </body>  

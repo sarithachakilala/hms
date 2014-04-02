@@ -1,0 +1,277 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Pharmacy >>&nbsp;&nbsp;&nbsp;<a HREF='/pharmacy_payments' class="nav" style="text-decoration:none;">Payments</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<div id="form_data">
+<script type="application/javascript">
+
+		var selectedid
+		var query
+		var org_code
+		var array_fill=new Array("agency_code","invoice_total")
+		var month;
+		var year;
+		function search_function(id)
+		{
+			query=document.getElementById('agency_name').value
+			if(query)
+			{
+				year=document.getElementById('pharmacy_payment_invoice_date_1i').value
+				month=document.getElementById('pharmacy_payment_invoice_date_2i').value
+				if(query!="")
+					{
+					req = new Ajax.Request('/goodsrecieptnotemasters/ajax_select/1', 
+						{
+							method: 'get',
+							parameters: { agency: query },
+							onComplete: function(transport){
+								processReqChange(transport);
+							}
+					}); // end ajax req
+					
+				}				
+				ajax()	
+			}
+			
+			
+		}
+		function ajax()
+		{			
+			org_code=document.getElementById('org_code').value
+			req = new Ajax.Request('/pharmacy_payments/ajax_search/1', {
+				method: 'get',
+				parameters: {query: query, month:month, year:year },
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			});
+			function processReqChange(req) 
+			{
+				var results = req.responseText;
+				var temp=new Array()
+				temp=results.split("<goods>")
+
+				if(results=="error")
+				{
+					alert("Your Already Clear The Bill")
+					for(i=0;i<array_fill.length;i++)
+					{
+						document.getElementById(array_fill[i]).value=""
+						document.getElementById(array_fill[i]).style.background="white"
+						document.getElementById(array_fill[i]).readOnly=false
+					}
+					
+				}
+				else
+				{
+					for(i=0;i<array_fill.length;i++)
+					{
+						document.getElementById(array_fill[i]).value=temp[i+1]
+						document.getElementById(array_fill[i]).style.background="#FEF5CA"
+						document.getElementById(array_fill[i]).readOnly=true
+					}
+					document.getElementById("paid_amount").value=parseFloat(temp[i]).toFixed(2);
+					document.getElementById("invoice_total").value=parseFloat(temp[i]).toFixed(2);
+					document.getElementById("netamt").value=parseFloat(temp[i]).toFixed(2);
+					var data=new Array();
+					var data=temp[0].split("<division>");
+					for(j1=0;j1<data.length-1;j1++)
+					{
+						var row_data=data[j1].split("<sub_division>");
+						var store=new Array();
+						store[0]=""
+						store[1]=row_data[0];
+						store[2]=row_data[1];
+						store[3]=row_data[2];
+						
+						add_saperate_row('r',4,'displayTable',store)
+					}
+				}
+			}
+		}
+		
+		function cal_amount(id)
+		{
+			document.getElementById("due_amount").value=0
+			document.getElementById("paid_amount").value=0
+document.getElementById("netamt").value=0
+			var table = document.getElementById("displayTable");
+			for(i=0;i<table.rows.length;i++)
+			{
+				if(document.getElementById("r"+i+"c1").value!="" && document.getElementById("r"+i+"c1").value)
+				{
+					if(document.getElementById("r"+i).checked)
+					{
+						document.getElementById("r"+i+"c6").value=1;
+						document.getElementById("paid_amount").value=(parseFloat(document.getElementById("paid_amount").value)+parseFloat(document.getElementById("r"+i+"c5").value)).toFixed(2);
+						document.getElementById("netamt").value=(parseFloat(document.getElementById("netamt").value)+parseFloat(document.getElementById("r"+i+"c5").value)).toFixed(2);
+					}
+					else
+					{
+						document.getElementById("r"+i+"c6").value=0;
+						document.getElementById("due_amount").value=(parseFloat(document.getElementById("due_amount").value)+parseFloat(document.getElementById("r"+i+"c5").value)).toFixed(2);
+					}	
+				}
+				else
+				{
+					break;
+				}
+			}
+		
+		}
+		function bill_info()
+		{
+			var vendor_code=document.getElementById('agency_name').value
+			req = new Ajax.Request('/pharmacy_payments/bill_info/1', {
+				method: 'get',
+				parameters: {month: month, vendor_code:vendor_code, year:year },
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			});
+			function processReqChange(req) 
+			{
+				document.getElementById('info').innerHTML = req.responseText;
+			}
+		}
+		function select_paid_amount(id)
+		{
+			var net_amount=parseFloat(document.getElementById('invoice_total').value)
+			if(document.getElementById(id).value!="" && document.getElementById(id).value)
+			{
+				var now_paid_amount=parseFloat(document.getElementById(id).value)
+				document.getElementById('due_amount').value=(net_amount-now_paid_amount)
+			}
+			else
+				document.getElementById('due_amount').value=net_amount
+		}
+
+function select_adjust(id)
+{
+var adj=0, amount=0;
+
+if(document.getElementById(id).value != "")
+		adj=document.getElementById(id).value
+if(document.getElementById('paid_amount').value != "")
+		amount=document.getElementById('paid_amount').value
+
+document.getElementById('netamt').value=(parseFloat(adj)+parseFloat(amount)).toFixed(2);
+		
+
+
+}
+</script>		
+<% form_for(@pharmacy_payment) do |f| %>
+<%= hidden_field :user_id, :value => @person.id %>
+<% @date=format_date(:sort, Date.today ) %>
+	<div align="center">
+	<fieldset>
+	<legend><div class="font"><b>Payments Details</b></div></legend>
+<%= f.hidden_field :org_code, :value => @org_code, :size => 20, :id => "org_code", :required => true, :readonly => true %>
+<%= f.hidden_field :org_location, :value => @org_location, :size => 20, :id => "org_location", :required => true, :readonly => true %>
+<table width="100%" >
+<tr>
+		<td>Supplier Name</td>
+		<td><%= f.select :agency_name, @vendor_names, {:prompt => true},{:id => "agency_name", :required => true, :onchange => "search_function(id)"} %></td>
+		<td> Address</td>
+		<td><%= text_field_tag('agency_dl_no','', :class=>"text_field", :id => "address") %> </td>
+		<td> City</td>
+		<td><%= text_field_tag('city','', :style=>"text_field", :id => "city") %> </td>
+		<td>Phone</td>
+		<td><%= text_field_tag('phone','', :style=>"text_field", :id => "phone_no") %> </td>
+		
+</tr>
+<tr> 
+		<td>Payment No</td>
+		<td><%= f.text_field :payment_no,:readOnly=>true, :size=>"20" %></td>
+		<td><label for="item_name">Date</label></td>
+		<td><%= f.date_select :invoice_date, {:prompt => false, :start_year => 2010, :order => [:month,:year]} %>	
+		<%= f.hidden_field :agency_code, :id=>"agency_code", :size=>"20" %>
+		
+		<td>Total Due Amt</td>
+		<td><%= f.text_field :invoice_total, :id=>"invoice_total", :size=>"20" %></td>
+		<td>Amount</td>
+		<td><%= f.text_field :paid_amount, :id=>"paid_amount", :size=>"20", :onkeyup=>"select_paid_amount(id)" %></td>
+	
+</tr>
+</table>
+
+<table align="center" width="100%">
+  <tr>
+<td colspan="10">
+	<div id="info" width="100%">
+    <table class="tableone" width="100%">
+  <caption style="background: url(/images/vertical1_04.jpg) repeat-x top left;text-align:center;" ><font color="#F0FFFF" face="Cambria" ><b>Payment Details</b></font></caption>
+      <thead>
+        <tr>
+			<th width="150px"  style="color:black;">S.No</th> 
+			<th width="200px"  style="color:black;">Invoice No</th> 
+			<th width="200px"  style="color:black;">Invoice Date</th> 
+			<th width="200px"  style="color:black;">Amount</th>
+			<th width="150px"  style="color:black;">Check</th>
+        </tr>
+      </thead>
+     <tbody>
+		<tr><td colspan="10">
+			<div class="innerb">
+			<table class="tabletwo" id="displayTable">
+			<% i=0 %>
+			<% f.fields_for :pharmacy_payment_children do |a| %>
+				<% if (i%2==0) %>
+					<tr>
+				<% else%>
+					<tr class="dk">
+				<% end %>
+					<td width="150px"><%= text_field_tag('s_no','', :style=>"width:100%", :id => "r#{i}c1", :class => "nbb", :readOnly =>true) %></td> 
+					<%= a.hidden_field :po_no, :style=>"width:100%", :id => "r#{i}c2", :class => "nbb", :readOnly =>true %>
+					<td width="200px"><%= a.text_field :invoice_no, :style=>"width:100%", :id => "r#{i}c3", :class => "nbb", :readOnly =>true %></td> 
+					<td width="200px"><%= a.text_field :invoice_date, :style=>"width:100%", :id => "r#{i}c4", :class => "nbb", :readOnly =>true %></td> 
+					<td width="200px"><%= a.text_field :amount, :style=>"width:100%", :id => "r#{i}c5", :class => "nbb", :readOnly =>true %></td> 
+					<%= a.hidden_field :check_option, :style=>"width:100%", :id => "r#{i}c6", :class => "nbb", :value => 0 %>
+					<td width="150px">&nbsp;</td> 
+				</tr>
+				<% i+=1 %>
+			<% end %>
+			</table>
+			</div>
+		</td>
+		</tr>
+	</tbody>
+     </table>
+   </div>
+	</td>
+  </tr>
+ </table>
+<table>
+<tr>
+	
+		<%= f.hidden_field :balance_amount,:size=>20,:id=>"due_amount", :readOnly=>true, :value => 0 %>
+		<td>Adjust</td>
+		<td><%= f.text_field :adjust,:size=>20,:id=>"adjust", :value => 0, :onkeyup=>"select_adjust(id)"%></td>
+		<td>Net Amount</td>
+		<td><%= f.text_field :adjust,:size=>20,:id=>"netamt", :value => 0 %></td>
+		
+		<td>status</td>
+		<td><%= f.select :status, [['Closed'],['Open'],['Balance Pending']], {:prompt=>false} , :style=>"width:158px;" %></td>
+</tr> <tr> 
+		  <td>Notes</td>
+			<td colspan="4"><%= f.text_area :notes, :rows => 3, :columns => 15 %> </td>
+</tr>
+ </table>
+<table align="center">
+<tr>
+	<td><%= submit_tag "", :value => " Save&Process ", :class => "submit_button", :onClick => "this.disabled=true;this.value='Process..';this.form.submit();" %></td>
+	<td><%= submit_tag "", :value => " Reset ", :type => "reset",  :class => "submit_button" %></td>
+	<td valign="middle"><%= link_to "Back",  pharmacy_payments_path, :class=>"new1" %></td>
+</tr>
+</table>
+ 
+</fieldset>
+<% end %>
+</div>
+<div id="info">
+</div>

@@ -1,0 +1,56 @@
+<script type="text/javascript">
+	function open_new_window(department,test_name,lab_id,org_code,org_location)
+	{
+		window.open('/test_cancels/new?department='+department+'&test_name='+test_name+'&lab_id='+lab_id+'&org_code='+org_code+'&org_location='+org_location,'open_window','dependent, width=900, height=480, left=0, top=0');
+	}
+</script>
+<table border="1" cellspacing="0" align="center" width="100%">
+	<tr bgcolor ="#378bf8">
+		<th>Lab No</td>
+		<th>Date</th>
+		<th>MR No</th>
+		<th>First Name</th>
+		<th>Department</th>
+		<th>Test Name</th>
+		<th>Results</th>
+	</tr>
+	<% if(@form_name=="radiology") %>
+		<% for test_booking in @test_bookings %>
+			<% for test_booking_children in test_booking.test_booking_child %>
+				<% if(test_booking_children.department=="XRAY") %>
+					<% encounter = Encounter.find_by_lab_no_and_encounter_type_id_and_org_code(test_booking.lab_no,test_booking_children.test_name,test_booking.org_code) %>
+					<% if(!encounter) %>
+						<tr>
+							<td><%= test_booking.lab_no %></td>
+							<td><%= test_booking.receipt_date %></td>
+							<td><%= test_booking.mr_no %></td>
+							<td><%= test_booking.first_name %></td>
+							<td><%= test_booking_children.department %></td>
+							<td><%= test_booking_children.test_name %></td>
+							<td align="center"><a href="javascript:void(0)" onclick="open_new_window('<%= test_booking_children.department %>','<%= test_booking_children.test_name %>','<%= test_booking.lab_no %>','<%= test_booking.org_code %>','<%= test_booking.org_location %>')">Cancel</a></td>
+						</tr>
+					<% end %>
+				<% end %>
+			<% end %>
+		<% end %>
+	<% else %>
+		<% for test_booking in @test_bookings %>
+			<% for test_booking_children in test_booking.test_booking_child %>
+				<% if(test_booking_children.department!="XRAY") %>
+					<% store_test_result = StoreTestResult.find_by_lab_no_and_service_name_and_org_code(test_booking.lab_no,test_booking_children.test_name,test_booking.org_code) %>
+					<% if(!store_test_result) %>
+						<tr>
+							<td><%= test_booking.lab_no %></td>
+							<td><%= test_booking.receipt_date %></td>
+							<td><%= test_booking.mr_no %></td>
+							<td><%= test_booking.first_name %></td>
+							<td><%= test_booking_children.department %></td>
+							<td><%= test_booking_children.test_name %></td>
+							<td align="center"><a href="javascript:void(0)" onclick="open_new_window('<%= test_booking_children.department %>','<%= test_booking_children.test_name %>','<%= test_booking.lab_no %>','<%= test_booking.org_code %>','<%= test_booking.org_location %>')">Cancel</a></td>
+						</tr>
+					<% end %>
+				<% end %>
+			<% end %>
+		<% end %>
+	<% end %>
+</table>

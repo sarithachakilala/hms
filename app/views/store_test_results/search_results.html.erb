@@ -1,0 +1,90 @@
+<script type="text/javascript">
+	function open_new_window(test_name,lab_id,org_code)
+	{
+		req = new Ajax.Request('/store_test_results/ajax_function/1', {
+			method: 'get',
+			parameters: { lab_id:lab_id, org_code:org_code, test_name:test_name},
+			onComplete: function(transport) {
+			processReqChange(transport);
+			}
+
+		}); // end ajax req
+							
+		function processReqChange(req) 
+		{   
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				if(results=="error")
+				{
+					alert("Please clear the OP-Bill");
+					return false;
+				}
+				else if(results=="test_error")
+					alert("Please enter test");
+				else 
+				{
+					window.open('/store_test_results/new?test_name='+test_name+'&lab_id='+lab_id+'&org_code='+org_code,'open_window','dependent, width=900, height=480, left=0, top=0');	
+				}
+			}
+		}
+	}
+</script>
+<table border="1" cellspacing="0" align="center" width="90%">
+	<tr bgcolor ="#378bf8">
+		<th>S.No</th>
+		<th>Lab No</td>
+		<th>Date</th>
+		<th>MR No</th>
+		<th>First Name</th>
+		<th>Department</th>
+		<th>Test Name</th>
+		<th colspan="3">Results</th>
+	</tr>
+	<% i=0 %>
+	<% for test_booking in @test_bookings %>
+		<% if(@department_name!="") %>
+			<% @test_booking_children=TestBookingChild.find(:all, :conditions => "test_booking_id = #{test_booking.id} AND department = '#{@department_name}'") %>
+		<% else %>
+			<% @test_booking_children=TestBookingChild.find(:all, :conditions => "test_booking_id = #{test_booking.id} AND (department != 'X-Ray' AND department != 'C.T Scan')") %>
+		<% end %>
+		
+		<% @test_booking_children=TestBookingChild.find(:all, :conditions => "test_booking_id = #{test_booking.id}") %>
+				<% store_test_result1 = StoreTestResult.find_by_lab_no(@lab_id) %>
+				<% if(@lab_id!="" && store_test_result1) %>
+					<tr>
+						<td><%= i+=1 %></td>
+						<td><%= @lab_id %></td>
+						<td><%= test_booking.receipt_date %></td>
+						<td><%= test_booking.mr_no %></td>
+						<td><%= test_booking.first_name %></td>
+						<td>&nbsp;</td>
+						
+						<td><%= @test_booking_children.length %></td>
+						<td align="center" colspan="3"><a href="javascript:void(0)" onclick="window.open('/store_test_result_children/print_selection/1?lab_no=<%= @lab_id %>','open_window','dependent, width=900, height=480, left=0, top=0');">Print By Selection</a></td>
+					</tr>
+				<% end %>
+		
+		<% for test_booking_children in @test_booking_children %>
+			<% if(test_booking_children.department!="XRAY") %>
+				<tr>
+					<td><%= i+=1 %></td>
+					<td><%= test_booking.lab_no %></td>
+					<td><%= test_booking.receipt_date %></td>
+					<td><%= test_booking.mr_no %></td>
+					<td><%= test_booking.first_name %></td>
+					<td><%= test_booking_children.department %></td>
+					<td><%= test_booking_children.test_name %></td>
+					<% store_test_result = StoreTestResult.find_by_lab_no_and_service_name_and_org_code(test_booking.lab_no,test_booking_children.test_name,test_booking.org_code) %>
+					<% if(store_test_result) %>
+						<td align="center"><a href="javascript:void(0)" onclick="window.open('/store_test_result_children/show/<%= store_test_result.id %>?test_name=<%= test_booking_children.test_name %>','open_window','dependent, width=900, height=480, left=0, top=0');"><%= image_tag("buttons/show.png",:size=>"54x21",:border =>0) %></a></td>
+						<td align="center"><a href="javascript:void(0)" onclick="window.open('/store_test_result_children/report/<%= store_test_result.id %>?test_name=<%= test_booking_children.test_name %>&format=pdf','open_window','dependent, width=900, height=480, left=0, top=0');"><%= image_tag("buttons/print.png",:size=>"54x21",:border =>0) %></a></td>
+						<td align="center"><a href="javascript:void(0)" onclick="window.open('/store_test_results/<%= store_test_result.id %>/edit','open_window','dependent, width=900, height=480, left=0, top=0');"><%= image_tag("buttons/modify.png",:size=>"54x21",:border =>0) %></a></td>
+					<% else %>
+						<td align="center" colspan="3"><a href="javascript:void(0)" onclick="open_new_window('<%= test_booking_children.test_name %>','<%= test_booking.lab_no %>','<%= test_booking.org_code %>')"><%= image_tag("buttons/new.png",:size=>"54x21",:border =>0) %></a></td>
+					<% end %>	
+				</tr>
+			<% end %>
+		<% end %>
+	<% end %>
+</table>

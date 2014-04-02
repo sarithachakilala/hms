@@ -1,0 +1,32 @@
+<div id="name" align="center" width="100%">
+<table id="tablesorter-demo"  class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+   <tr>
+    <th>S.No</th>    
+    <th>Payment No</th>
+	<th>Agency Name</th>
+	<th>Net Amount</th>
+    <th align="center">Permissions</th>
+  </tr>
+ </thead>
+<tbody>
+<% @i=0 %>
+<% @pharmacy_payment.each do |pharmacy_payment| %>
+<% if((@i % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+		 end %>
+  <tr class='<%= id %>' style="height:30px">
+	<td><%= @i+=1 %></td>
+    <td><%=h pharmacy_payment.payment_no %></td>
+    <td><%=h pharmacy_payment.agency_name %></td>
+    <td><%=h pharmacy_payment.net_amount %></td>
+
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Edit&nbsp;&nbsp;&nbsp;', edit_pharmacy_payment_path(pharmacy_payment), :class=>"submit_button" %></td>   
+	
+   
+  </tr>
+<% end %>
+</tbody>
+</table>

@@ -1,0 +1,25 @@
+<body onLoad="window.close()">
+<p>
+  <b>Notice date:</b>
+  <%=h @notice_board.notice_date %>
+</p>
+
+<p>
+  <b>Notice time:</b>
+  <%=h @notice_board.notice_time %>
+</p>
+
+<p>
+  <b>Department:</b>
+  <%=h @notice_board.department %>
+</p>
+
+<p>
+  <b>Notice:</b>
+  <%=h @notice_board.notice %>
+</p>
+
+
+<%= link_to 'Edit', edit_notice_board_path(@notice_board) %> |
+<%= link_to 'Back', notice_boards_path %>
+</body>

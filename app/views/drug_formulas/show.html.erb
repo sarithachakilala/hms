@@ -1,0 +1,47 @@
+
+<script type="text/javascript">
+	function close_form()
+	{
+	
+		var opt = opener.window.document.createElement('option');
+		opener.window.document.getElementById('drug_formula_temp').options.add(opt);
+		opt.text ='<%=@drug_formula.content%>'
+		opt.value='<%=@drug_formula.content%>'
+		window.close()
+	}
+</script>
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Pharmacy Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/drug_formulas' class="nav" style="text-decoration:none;">Drug Formulas Master</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</TD></TR>
+	</table>
+</div><br/>
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div align="center">
+<table width="30%">
+<body onLoad="close_form();">
+<TR>
+  <TD><b>Code:</b></TD><TD>
+  <%=h @drug_formula.code %>
+</TD></TR>
+
+<TR>
+  <TD><b>Content:</b></TD><TD>
+  <%=h @drug_formula.content %>
+</TD></TR>
+
+<TR>
+  <TD><b>Details:</b></TD><TD>
+  <%=h @drug_formula.details %>
+</TD></TR>
+
+</table>
+<table align="center">
+        <tr>
+		
+			<td valign="middle"><%= link_to "Back", drug_formulas_path, :class=>"new1" %></td> 
+		</tr>
+</table>

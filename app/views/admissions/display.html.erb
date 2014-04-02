@@ -1,0 +1,70 @@
+<h3><font color="#015a84"><center><%=h @registration.patient_name %> Record</center></font></h3>
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div  width="100%">
+<table align="center" width="100%" border="0" cellspacing="2" cellpadding="4">
+<tr >
+	<td class='<%= id %>'>MR No</td>
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @admission.mr_no %></td>
+	<td class='<%= id %>'>Admn.No</td>
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @admission.admn_no %></td>
+	<td class='<%= id %>'>Admn.Date</td>
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @admission.admn_date %></td>
+</tr>
+<tr>
+	  <td class='<%= id %>'>Admn.Type</td>
+	  <td class='<%= id %>'>:</td>
+	  <td class='<%= id1 %>'><%=h @admission.admn_type %></td>
+	  <td class='<%= id %>'>Accident Type</td>
+	  <td class='<%= id %>'>:</td>
+      <td class='<%= id1 %>'> <%=h @admission.case_type %></td>
+	  <td class='<%= id %>'>Police Station</td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @admission.authorized_police_station %></td>
+</tr>
+<tr>
+	<td class='<%= id %>'>Patient Name</td>
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @registration.patient_name %></td>
+	<td class='<%= id %>'>Reg.No</td>
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @registration.reg_no %></td>
+	<td class='<%= id %>'>Father Name</td>
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'> <%=h @registration.father_name %></td>
+</tr>
+<tr>
+	<td class='<%= id %>'>Department</td>
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @admission.department %></td>
+	<td class='<%= id %>'>Floor</td>
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @admission.floor %></td>
+	<td class='<%= id %>'>Ward</td>
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'> <%=h @admission.ward %></td>
+</tr>
+<tr>
+	<td class='<%= id %>'>Room</td>
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @admission.room %></td>
+	<td class='<%= id %>'>Bed</td>
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @admission.bed %></td>
+	<td class='<%= id %>'>Attendant Name</td>
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @admission.attendant_name %></td>
+</tr>
+<tr> 
+  <td class='<%= id %>'>Ph.No</td>
+	<td class='<%= id %>'>:</td>
+  <td class='<%= id1 %>'> <%=h @admission.attendant_ph_no %></td>
+  <td class='<%= id %>'>Address</td>
+	<td class='<%= id %>'>:</td>
+  <td class='<%= id1 %>'><%=h @registration.address %></td>
+</tr>
+</table>
+</div>

@@ -1,0 +1,60 @@
+<h1>Editing opreturn_child</h1>
+
+<% form_for(@opreturn_child) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :op_patient_return_id %><br />
+    <%= f.text_field :op_patient_return_id %>
+  </p>
+  <p>
+    <%= f.label :item_code %><br />
+    <%= f.text_field :item_code %>
+  </p>
+  <p>
+    <%= f.label :item_name %><br />
+    <%= f.text_field :item_name %>
+  </p>
+  <p>
+    <%= f.label :batch_no %><br />
+    <%= f.text_field :batch_no %>
+  </p>
+  <p>
+    <%= f.label :expiry_date %><br />
+    <%= f.date_select :expiry_date %>
+  </p>
+  <p>
+    <%= f.label :issue_qty %><br />
+    <%= f.text_field :issue_qty %>
+  </p>
+  <p>
+    <%= f.label :sale_rate %><br />
+    <%= f.text_field :sale_rate %>
+  </p>
+  <p>
+    <%= f.label :discount %><br />
+    <%= f.text_field :discount %>
+  </p>
+  <p>
+    <%= f.label :sale_amount %><br />
+    <%= f.text_field :sale_amount %>
+  </p>
+  <p>
+    <%= f.label :return_qty %><br />
+    <%= f.text_field :return_qty %>
+  </p>
+  <p>
+    <%= f.label :return_rate %><br />
+    <%= f.text_field :return_rate %>
+  </p>
+  <p>
+    <%= f.label :return_amt %><br />
+    <%= f.text_field :return_amt %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @opreturn_child %> |
+<%= link_to 'Back', opreturn_children_path %>

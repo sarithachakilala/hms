@@ -1,0 +1,52 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">IP Patients >>&nbsp;&nbsp;&nbsp;<a HREF='/consultant_visits?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Consultant Visits</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<br/>
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div  width="100%">
+<h4 align=center>Consultant Visits Details</h4><br/>
+<table align="center" width="70%" border="0" cellspacing="2" cellpadding="4">
+<tr>
+  <td class='<%= id %>'><b>Org Code</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @consultant_visit.org_code %>
+  <td class='<%= id %>'><b>Org Location</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @consultant_visit.org_location %>
+</tr>
+
+<tr>
+  <td class='<%= id %>'><b>Admn No</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @consultant_visit.admn_no %>
+  <td class='<%= id %>'><b>Department</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @consultant_visit.department %>
+</tr>
+<tr>
+  <td class='<%= id %>'><b>Consultant</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @consultant_visit.consultant %>
+  <td class='<%= id %>'><b>Dtae of Visit</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @consultant_visit.date_of_visit %>
+</tr>
+<tr>
+  <td class='<%= id %>'><b>Time Of Visit</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @consultant_visit.time_of_visit %>
+  <td class='<%= id %>'><b>Charge</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @consultant_visit.charge %>
+</tr>
+</table>
+</div>
+<br/>
+<center><%= link_to "Back",  consultant_visits_path, :class=>"new1" %></center>
+

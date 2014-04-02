@@ -1,0 +1,108 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">IP Patients >>&nbsp;&nbsp;&nbsp;<a HREF='/bed_transfers?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Bed Transfers</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div  width="100%">
+<h3 align=center>Bed Transfer Details</h3><br/>
+<table align="center" width="70%" border="0" cellspacing="2" cellpadding="4">
+
+<tr>
+	<td class='<%= id %>'><b>Org code</b></td>
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id1 %>'><%=h @bed_transfer.org_code %>
+	<td class='<%= id %>'><b>Org location:</b></td>
+	<td class='<%= id %>'>:</td>  
+	<td class='<%= id %>'> <%=h @bed_transfer.org_location %></td>
+    <td class='<%= id %>'><b>Admn no</b></td>
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id1 %>'><%=h @bed_transfer.admn_no %>
+</tr>
+
+<tr>
+	<td class='<%= id %>'><b>Admn date</b></td>
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id1 %>'><%=h @bed_transfer.admn_date %>
+	<td class='<%= id %>'><b>Mr no</b></td>
+	<td class='<%= id %>'>:</td>  
+	<td class='<%= id %>'><%=h @bed_transfer.mr_no %>
+    <td class='<%= id %>'><b>Transfer date</b></td>
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id1 %>'><%=h @bed_transfer.transfer_date %>
+</tr>
+<tr>
+<td class='<%= id %>'><b>Transfer Type</b></td>
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id1 %>'><%=h @bed_transfer.transfer_type %>
+	<td class='<%= id %>'><b>Patient name</b></td>
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id1 %>'><%=h @bed_transfer.patient_name %>
+	<td class='<%= id %>'><b>Consultant</b></td>
+	<td class='<%= id %>'>:</td>  
+	<td class='<%= id %>'><%=h @bed_transfer.consultant %>
+    
+</tr>
+<tr>
+<td class='<%= id %>'><b>From ward</b></td>
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id1 %>'><%=h @bed_transfer.from_ward %>
+	<td class='<%= id %>'><b>From room</b></td>
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id1 %>'><%=h @bed_transfer.from_room %>
+	<td class='<%= id %>'><b>From bed</b></td>
+	<td class='<%= id %>'>:</td>  
+	<td class='<%= id %>'><%=h @bed_transfer.from_bed %>
+   
+</tr>
+<tr>
+ <td class='<%= id %>'><b>From floor</b></td>
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id1 %>'><%=h @bed_transfer.from_floor %>
+	<td class='<%= id %>'><b>No of days</b></td>
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id1 %>'><%=h @bed_transfer.no_of_days %>
+	<td class='<%= id %>'><b>Amount</b></td>
+	<td class='<%= id %>'>:</td>  
+	<td class='<%= id %>'><%=h @bed_transfer.amount %>
+    
+</tr>
+<tr>
+	<td class='<%= id %>'><b>To ward</b></td>
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id1 %>'><%=h @bed_transfer.to_ward %>
+    <td class='<%= id %>'><b>To ward</b></td>
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id1 %>'><%=h @bed_transfer.to_ward %>
+	<td class='<%= id %>'><b>To room</b></td>
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id1 %>'><%=h @bed_transfer.to_room %>
+	
+</tr>
+<tr>
+	<td class='<%= id %>'><b>To bed</b></td>
+	<td class='<%= id %>'>:</td>  
+	<td class='<%= id %>'><%=h @bed_transfer.to_bed %>
+    <td class='<%= id %>'><b>To floor</b></td>
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id1 %>'><%=h @bed_transfer.to_floor %>
+	<td class='<%= id %>'><b>Charge per day</b></td>
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id1 %>'><%=h @bed_transfer.charge_per_day %>
+</tr>
+<tr>
+	<td class='<%= id %>'><b>Remarks</b></td>
+	<td class='<%= id %>'>:</td>  
+	<td class='<%= id %>'><%=h @bed_transfer.remarks %>
+    
+</tr>
+
+</table>
+</div>
+<br/>
+<center>
+<td valign="middle"><%= link_to "Back",  bed_transfers_path, :class=>"new1" %></td>

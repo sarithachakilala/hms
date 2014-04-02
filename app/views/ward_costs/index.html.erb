@@ -1,0 +1,28 @@
+<h1>Listing ward_costs</h1>
+
+<table>
+  <tr>
+    <th>Consultant master</th>
+    <th>Ward</th>
+    <th>Gcost</th>
+    <th>Night duty cost</th>
+    <th>Emergency cost</th>
+  </tr>
+
+<% @ward_costs.each do |ward_cost| %>
+  <tr>
+    <td><%=h ward_cost.consultant_master_id %></td>
+    <td><%=h ward_cost.ward %></td>
+    <td><%=h ward_cost.gcost %></td>
+    <td><%=h ward_cost.night_duty_cost %></td>
+    <td><%=h ward_cost.emergency_cost %></td>
+    <td><%= link_to 'Show', ward_cost %></td>
+    <td><%= link_to 'Edit', edit_ward_cost_path(ward_cost) %></td>
+    <td><%= link_to 'Destroy', ward_cost, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New ward_cost', new_ward_cost_path %>

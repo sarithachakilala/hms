@@ -1,0 +1,620 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Payments>>&nbsp;&nbsp;&nbsp;<a HREF='/final_bills' class="nav" style="text-decoration:none;">Final Bill</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<div id="form_data">
+	<%= stylesheet_link_tag 'look_up_search/jquery-ui' %>
+		<%= javascript_include_tag 'jquery.min.js' %>
+		<%= javascript_include_tag 'jquery-ui.min.js' %>
+		
+		<script>
+			$(document).ready(function() {
+				$("input#other").autocomplete({
+					source: [<% for charge in @charge %>
+								'<%= charge.service_name %>',
+							<% end %>
+					]
+				});
+			});
+		</script>
+		<script language="javascript" type="text/javascript">
+			function stopRKey(evt) {
+				
+				var evt  = (evt) ? evt : ((event) ? event : null);
+				var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+				if ((evt.keyCode == 13) && (node.type=="text")) { return false; }
+			}
+			document.onkeypress = stopRKey;
+		</script>
+<script type="text/javascript">
+		var admn_no
+		var org_code
+		var concession
+		var global
+		var type
+		var category="General";
+		var field_names=new Array('admn_no','mr_no','receipt_no','first_name','floor','ward','room','bed','gross_amount','advance','due','ot_amount','bed_amount','doctor_amount','lab_amount','nurse_amount','pharmacy_amount');
+		var package_amount=0;
+	function check_admn_no(id)
+	{
+		org_code=document.getElementById('org_code').value
+		admn_no=id; // Call the function.this is available in commonFunctionality.js file
+		ajax()
+	}
+	
+	function ajax()
+	{
+		var bill_time=document.getElementById('final_bill_final_bill_time_4i').value+":"+document.getElementById('final_bill_final_bill_time_5i').value
+		org_code=document.getElementById('org_code').value
+		req = new Ajax.Request('/final_bills/ajax_function/1', 
+			{
+				method: 'get',
+				parameters: { type:type, admn_no:admn_no, org_code:org_code, concession:concession, bill_time:bill_time, category:category },
+				onComplete: function(transport){
+					processReqChange(transport);
+					}
+			}); // end ajax req
+		function processReqChange(req) 
+		{
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+
+				if(type=="concession_authority")
+				{
+					global=results
+					document.getElementById('hidden_global').value=global
+					document.getElementById('conauth').innerHTML="(Cons.limit :" +global+"%)"
+				}
+				else
+				{
+					if(results=="error")
+					{
+						
+						alert("Invalid Admn.No")
+						for(var i=0;i<field_names.length;i++)
+						{
+							document.getElementById(field_names[i]).value=""
+							document.getElementById(field_names[i]).style.background="white"
+							document.getElementById(field_names[i]).readOnly=false
+						}
+					}
+					else
+					{
+						var temp=new Array
+						temp=results.split("<division>")
+						
+						if(category=="Package")
+						{
+							var field_names_pack=new Array('admn_no','mr_no','receipt_no','first_name','floor','ward','room','bed','gross_amount','advance','due','ot_amount','bed_amount','doctor_amount','extra_charge','extra_days','nurse_amount','operation_amount','assistant_amount','anaesthesia_amount','lab_amount','other');
+							for(var i=0;i<field_names_pack.length;i++)
+							{
+								document.getElementById(field_names_pack[i]).value=temp[i]
+								document.getElementById(field_names_pack[i]).style.background="#FEF5CA"
+								document.getElementById(field_names_pack[i]).readOnly=true
+								
+							}
+							document.getElementById('remaining_amount').value=temp[11]
+							package_amount=document.getElementById('gross_amount').value
+						}
+						else
+						{
+							for(var i=0;i<field_names.length;i++)
+							{
+								document.getElementById(field_names[i]).value=temp[i]
+								if(i<field_names.length-5)
+								{
+									document.getElementById(field_names[i]).style.background="#FEF5CA"
+									document.getElementById(field_names[i]).readOnly=true
+								}
+							}
+							document.getElementById('remaining_amount').value=temp[11]
+						}
+					}
+				}
+			}
+		}	
+	}
+	
+	
+	
+	function select_org_code(id)
+				{
+					var org_code=document.getElementById(id).value
+					if(org_code)
+					{
+						req = new Ajax.Request('/registrations/select_org_code/1', {
+							method: 'get',
+							parameters: { org_code: org_code },
+							onComplete: function(transport) {
+							processReqChange(transport);
+							}
+						}); // end ajax req
+					}
+					else
+					{
+						alert("Please Select org_code")
+					}
+		}
+	function ajaxSearch(id) 
+	{
+		var selObj = document.getElementById(id);
+		var query = selObj.options[selObj.selectedIndex].value
+              var selectedid=id
+		
+		org_code=document.getElementById('org_code').value
+		req = new Ajax.Request('/op_billings/ajax_buildings/1', 
+			{
+				method: 'get',
+				parameters: { q: query, type: selectedid, org_code:org_code },
+				onComplete: function(transport){
+					processReqChange(transport);
+					}
+			})
+		function processReqChange(req) 
+		{
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				
+				var temp=new Array
+				var val=parseInt(document.getElementById('remaining_amount').value)
+				global1=(val*(results/100));
+				document.getElementById('due_authority').value=global1
+				document.getElementById('dueauth').innerHTML="(Due limit :" +(results)+"%=" +global1+")"
+			}
+		}
+	}
+
+		
+	function calculate(id)
+	{
+		if(document.getElementById("concession_authority").value!="" || document.getElementById("concession_authority").value)
+		{
+			var fee=document.getElementById("due").value
+			var cons=document.getElementById(id).value
+			document.getElementById("paid_amount").value=0
+			if(document.getElementById(id).value!="" && document.getElementById(id).value)
+				document.getElementById("paid_amount").value=parseInt(fee)-(parseInt(fee)*cons/100)
+			else
+				document.getElementById("paid_amount").value=parseInt(fee)
+			document.getElementById("remaining_amount").value=document.getElementById("paid_amount").value
+		}
+		else
+		{
+			document.getElementById(id).value=0;
+			alert("Please enter Concession Authority Name");
+		}
+	}
+	
+	function calculate_due(id)
+	{
+		if(document.getElementById("due1").value!="" || document.getElementById("due1").value)
+		{
+			var fee=document.getElementById("paid_amount").value
+			var due=document.getElementById(id).value
+			if(document.getElementById(id).value!="" && document.getElementById(id).value)
+				document.getElementById("remaining_amount").value=parseInt(fee)-parseInt(due)
+			else
+				document.getElementById("remaining_amount").value=parseInt(fee)
+		}
+		else
+		{
+			document.getElementById(id).value=0;
+			alert("Please enter Due Authority Name");
+
+		}
+	}
+	function other_charge(id,event)
+	{
+		if(event.keyCode!=13)
+			return false;
+		if(document.getElementById(id).value=="")
+			return false;
+		var final_charge=0;
+		var charge_type=document.getElementById(id).value
+		
+		req = new Ajax.Request('/final_bills/final_charges/1', 
+			{
+				method: 'get',
+				parameters: { charge_type: charge_type },
+				onComplete: function(transport){
+					processReqChange(transport);
+					}
+			})
+		function processReqChange(req) 
+		{
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				if(results=="error")
+				{
+					alert("Invalid charge");
+					document.getElementById(id).value=""
+					return false;
+				}
+				else
+				{
+					final_charge=parseFloat(results).toFixed(2);
+					var table = document.getElementById("charges");
+					var rowCount = table.rows.length;
+					var row = table.insertRow(rowCount);
+					if(rowCount==0)
+					{
+						var cel1 = row.insertCell(0);
+						cel1.innerHTML = "Charge Type";
+						cel1.align="center"
+						
+						var cel2 = row.insertCell(1);
+						cel2.innerHTML = "From";
+						cel2.align="center"
+						
+						var cel3 = row.insertCell(2);
+						cel3.innerHTML = "To";
+						cel3.align="center"
+						
+						var cel4 = row.insertCell(3);
+						cel4.innerHTML = "Days";
+						cel4.align="center"
+						
+						var cel5 = row.insertCell(4);
+						cel5.innerHTML = "Amount";
+						cel5.align="center"		
+						
+						var cel6 = row.insertCell(5);
+						cel6.innerHTML = "Total Amount";
+						cel6.align="center"	
+						
+						row.style.backgroundColor ="#0e92b8";
+						row.style.color="white";
+						var table = document.getElementById("charges");
+						var rowCount = table.rows.length;
+						var row = table.insertRow(rowCount);
+						
+					}
+					var cell1 = row.insertCell(0);
+					var element1 = document.createElement("input");
+					element1.type="text";
+					element1.name="final_bill[final_charges_attributes]["+rowCount+"][charge_type]"
+					element1.value=document.getElementById(id).value
+					element1.style.border=0
+					element1.style.backgroundColor ="#ecf3f7";
+					element1.readOnly=true;
+					element1.style.width="95%";
+					cell1.appendChild(element1);
+
+					document.getElementById(id).value=""
+
+					var cell2 = row.insertCell(1);
+					var element2 = document.createElement("input");
+					element2.type="text";
+					element2.value=""
+					element2.id="r"+rowCount+"c1"
+					element2.style.width="95%";
+					element2.setAttribute('onClick','setYears(1900, 2050);showCalender(this,id);');
+					element2.name="final_bill[final_charges_attributes]["+rowCount+"][from]"
+					cell2.appendChild(element2);
+					
+					var cell3 = row.insertCell(2);
+					var element3 = document.createElement("input");
+					element3.type="text";
+					element3.value=""
+					element3.id="r"+rowCount+"c2"
+					element3.style.width="95%";
+					element3.setAttribute('onClick','setYears(1900, 2050);showCalender(this,id);');
+					element3.name="final_bill[final_charges_attributes]["+rowCount+"][to]"
+					cell3.appendChild(element3);
+					
+					var cell4 = row.insertCell(3);
+					var element4 = document.createElement("input");
+					element4.type="text";
+					element4.value=1
+					element4.id="r"+rowCount+"c3"
+					element4.style.width="95%";
+					element4.setAttribute('onkeyup', 'calculate_amount_by_day(id,'+rowCount+')');
+					element4.name="final_bill[final_charges_attributes]["+rowCount+"][days]"
+					cell4.appendChild(element4);
+										
+					var cell5 = row.insertCell(4);
+					var element5 = document.createElement("input");
+					element5.type="text";
+					element5.value=final_charge
+					element5.id="r"+rowCount+"c4"
+					element5.style.width="95%";
+					element5.setAttribute('onkeyup', 'calculate_amount_by_amount_field(id,'+rowCount+')');
+					cell5.appendChild(element5);
+										
+					var cell6 = row.insertCell(5);
+					var element6 = document.createElement("input");
+					element6.type="text";
+					element6.value=final_charge
+					element6.id="r"+rowCount+"c5"
+					element6.style.width="95%";
+					element6.setAttribute('onkeyup', 'cal_charges(id)');
+					element6.name="final_bill[final_charges_attributes]["+rowCount+"][charge]"
+					cell6.appendChild(element6);
+					
+					cal_charges(id);
+				}
+				
+			}
+		}		
+	}
+	
+	function calculate_amount_by_amount_field(id,row_no)
+	{
+		var amount=parseInt(document.getElementById("r"+row_no+"c3").value);
+		if(document.getElementById(id).value!="")
+			document.getElementById("r"+row_no+"c5").value=parseInt(document.getElementById(id).value)*amount
+		else
+			document.getElementById("r"+row_no+"c5").value=0
+		cal_charges(id);
+
+	}
+
+	function calculate_amount_by_day(id,row_no)
+	{
+		var amount=parseInt(document.getElementById("r"+row_no+"c4").value);
+		
+		if(document.getElementById(id).value!="")
+			document.getElementById("r"+row_no+"c5").value=parseInt(document.getElementById(id).value)*amount
+		else
+			document.getElementById("r"+row_no+"c5").value=0
+		cal_charges(id);
+	}
+	function cal_charges(id)
+	{
+		var charge_names=new Array('ot_amount','bed_amount','doctor_amount','nurse_amount','operation_amount','assistant_amount','anaesthesia_amount','miscellaneous_amount','lab_amount','pharmacy_amount');
+		var table = document.getElementById("charges");
+		var rowCount = table.rows.length;
+		var amount=0;
+		document.getElementById("gross_amount").value=0
+		var charge_main=0;
+		if(category=="Package")
+		{
+			
+			var total_amt=package_amount
+			document.getElementById("gross_amount").value=(parseFloat(total_amt)+parseFloat(document.getElementById(id).value)).toFixed(2)
+			document.getElementById("due").value=(parseFloat(document.getElementById("gross_amount").value)-parseInt(document.getElementById("advance").value)).toFixed(2)
+			document.getElementById("remaining_amount").value=(parseFloat(document.getElementById("gross_amount").value)-parseInt(document.getElementById("advance").value)).toFixed(2)
+			document.getElementById("paid_amount").value=(parseFloat(document.getElementById("gross_amount").value)-parseInt(document.getElementById("advance").value)).toFixed(2)
+		}
+		else
+		{
+			for(i=1;i<rowCount;i++)
+			{
+				if(document.getElementById("r"+i+"c5").value!="" && document.getElementById("r"+i+"c5").value)
+					amount=amount+parseInt(document.getElementById("r"+i+"c5").value)
+			}
+			for(i=0;i<charge_names.length;i++)
+			{
+				if(document.getElementById(charge_names[i]).value!="" && document.getElementById(charge_names[i]).value)
+					charge_main=charge_main+parseInt(document.getElementById(charge_names[i]).value)
+			}
+			document.getElementById("gross_amount").value=amount+charge_main
+			document.getElementById("due").value=(amount+charge_main)-parseInt(document.getElementById("advance").value)
+			document.getElementById("remaining_amount").value=(amount+charge_main)-parseInt(document.getElementById("advance").value)
+			document.getElementById("paid_amount").value=(amount+charge_main)-parseInt(document.getElementById("advance").value)
+		}
+	}
+	
+	
+	function select_admn_category(id)
+	{
+		var admn_category=document.getElementById(id).value
+		
+		if(admn_category=="Package")
+		{
+			category="Package"
+			document.getElementById('with_package').style.display='block'
+			document.getElementById('with_out_package').style.display='none'
+			document.getElementById('package_fields').style.display='block'
+		}
+		else
+		{
+			category="General"
+			document.getElementById('with_package').style.display='none'
+			document.getElementById('with_out_package').style.display='block'
+			document.getElementById('package_fields').style.display='none'
+
+			
+		}
+		for(var i=0;i<field_names.length;i++)
+		{
+			document.getElementById(field_names[i]).value=""
+			document.getElementById(field_names[i]).style.background="white"
+			document.getElementById(field_names[i]).readOnly=false
+		}
+		
+	}
+	
+	
+	
+</script>
+
+<% form_for(@final_bill) do |f| %>
+
+<body onload="document.getElementById('admn_no').focus();">
+<% @date=format_date(:sort, Date.today ) %>
+
+  <table width="100%">
+ 
+  <tr><td colspan="8"><fieldset><legend><div class="font"><b>Final Payments</b></div></legend>
+	<table width="100%">
+	 <tr align="center">
+	<td colspan="6">Admn.Category
+       <%= f.radio_button :admn_category, "General", :checked => true, :id => "button11" , :onchange => "select_admn_category(id)" %>General
+		<%= f.radio_button :admn_category, "Package", :id => "button12" ,:onchange => "select_admn_category(id)" %>Package
+		
+	</td>
+  </tr>	
+	<%= f.hidden_field :org_code, :value => @org_code, :class=>"text_field", :id => "org_code", :readonly => true %>
+	<%= f.hidden_field :org_location, :value => @org_location, :class=>"text_field", :id => "org_location", :readonly => true %>
+	<%= f.hidden_field :user_id, :value => @person.id, :class=>"text_field", :id => "org_location" %>
+  <tr> 
+	<td>Admn.No<sup>*</sup></td>
+    <td><%= f.text_field :admn_no,:id => "admn_no",:class=>"text_field", :placeholder => "Select right panel", :onKeyPress => "alert('Please select right panel');return false;" %></td>
+	<td>MR No</td>
+    <td><%= f.text_field :mr_no,:class=>"text_field", :id=>"mr_no" %></td>
+	<td>Bill No</td>
+    <td><%= f.text_field :receipt_no,:class=>"text_field",:id=>"receipt_no" %></td>
+ </tr>
+  <tr>
+	 <td>Date</td>
+    <td><%= f.text_field :final_bill_date,:class=>"text_field", :readonly =>true, :value => "#{@date}"  %></td>
+    <td>Time</td>
+    <td><%= f.time_select :final_bill_time,:class=>"text_field", :readonly =>true, :default => Time.new  %></td>
+    <td>Patient Name</td>
+	<td><%= text_field_tag ('first_name','',:class=>"text_field", :value => @first_name) %></td>
+   </tr>
+  <tr>	
+	<td>Ward</td>
+	<td><%= text_field_tag ('ward','',:class=>"text_field", :value => @ward) %></td>
+	<td>Room</td>
+	<td><%= text_field_tag ('room','',:class=>"text_field", :value => @room) %></td>	
+   	<td>Bed</td>
+	<td><%= text_field_tag ('bed','',:class=>"text_field", :value => @bed) %></td>
+  </tr>
+  <tr>
+	<td>Floor</td>
+	<td><%= text_field_tag ('floor','',:class=>"text_field", :value => @floor) %></td>
+	<td colspan="6"><div id="package_fields" style="display:none">
+	<table width="100%"><tr><td>Extra Days</td><td width="7%"></td><td><%= f.text_field :extra_days ,:class=>"text_field",:id=>"extra_days"%></td>
+	<td>Extra Charge</td><td width="11%"></td><td><%= f.text_field :extra_charge ,:class=>"text_field",:id=>"extra_charge"%></td>   
+		</tr></table>
+	</td>
+  </tr>
+  <tr>
+	<td>Room Charge</td>
+	<td><%= f.text_field :ward_fee,:class=>"text_field",:id=>"bed_amount", :onKeyUp => "cal_charges(id)" %></td>
+	<td>Nursing Charge</td>
+	<td><%= f.text_field :nurse_fee,:class=>"text_field",:id=>"nurse_amount", :onKeyUp => "cal_charges(id)" %></td>
+	<td>Cons.Visits</td>
+	<td><%= f.text_field :doctor_fee,:class=>"text_field",:id=>"doctor_amount", :onKeyUp => "cal_charges(id)"%></td>
+</tr
+<tr>
+	<td>Operating Charge</td>
+	<td><%= f.text_field :operation_amount,:class=>"text_field",:id=>"operation_amount", :onKeyUp => "cal_charges(id)" %></td>
+	<td>Assistant's Charge</td>
+	<td><%= f.text_field :assistant_amount,:class=>"text_field",:id=>"assistant_amount", :onKeyUp => "cal_charges(id)" %></td>
+	<td>OT Charge</td>
+	<td><%= f.text_field :ot_fee,:class=>"text_field",:id=>"ot_amount", :onKeyUp => "cal_charges(id)" %></td>
+  </tr>
+  <tr>
+	<td>Anaesthesia Charge</td>
+	<td><%= f.text_field :anaesthesia_amount,:class=>"text_field",:id=>"anaesthesia_amount", :onKeyUp => "cal_charges(id)" %></td>
+	<td>Lab Amount</td>
+	<td><%= f.text_field :lab_amount,:class=>"text_field",:id=>"lab_amount", :onKeyUp => "cal_charges(id)" %></td>
+	<td>Pharmacy Amount</td>
+	<td><%= f.text_field :pharmacy_amount,:class=>"text_field",:id=>"pharmacy_amount", :onKeyUp => "cal_charges(id)" %></td>
+	
+  </tr>
+  <tr>  
+  	<td>Miscellaneous Amount</td>
+	<td><%= f.text_field :miscellaneous_amount,:class=>"text_field",:id=>"miscellaneous_amount", :onKeyUp => "cal_charges(id)"%></td>
+	<td>Other</td>
+	<td><%= text_field_tag('other','',:class=>"text_field",:id=>"other", :onKeyUp => "other_charge(id,event)") %></td>
+  </tr>
+  <tr>
+	<td colspan="6" align="center">
+		<table width="90%" border=1 cellspacing=0 id="charges">
+				<tr bgColor ="#0e92b8">
+					<th>Chrge Type</th>
+					<th>From</th>
+					<th>To</th>
+					<th>Days</th>
+					<th>Charge</th>
+					<th>Total Charge</th>
+				</tr>
+				<% @i=0 %>
+			<% f.fields_for :final_charges do |a| %>
+				<tr>
+					<td><%= a.text_field:charge_type, :id => "r#{@i+1}c0" %></td>
+					<td><%= a.text_field:from, :id => "r#{@i+1}c1" %></td>
+					<td><%= a.text_field:to, :id => "r#{@i+1}c2" %></td>
+					<td><%= a.text_field:days,:size =>15, :id => "r#{@i+1}c3", :onKeyup => "calculate_amount_by_day(id,'#{@i+1}')" %></td>
+					<td><%= text_field_tag('s_charge','',:size =>15,:id =>"r#{@i+1}c4",:value => @final_bill.final_charges[@i].charge/@final_bill.final_charges[@i].days, :onKeyup => "calculate_amount_by_amount_field(id,'#{@i+1}')") %></td>
+					<td><%= a.text_field:charge,:size =>15, :id => "r#{@i+1}c5", :onKeyup => "cal_charges(id)" %></td>
+				</tr>
+				<% @i=@i+1 %>
+			<% end %>
+		</table>
+	</td>
+  </tr>
+  <tr>	
+		<td>Gross Amount</td>
+    	<td><%= f.text_field :gross_amount,:class=>"text_field",:id=>"gross_amount" %></td>
+    	<td>Advance</td>
+    	<td><%= f.text_field :advance ,:class=>"text_field",:id=>"advance"%></td>
+    	<td>Sub Total</td>
+    	<td><%= f.text_field :due,:class=>"text_field",:id=>"due" %></td>
+  </tr>
+  <tr>
+    <td>ConcessionAuthority</td>
+    <td><%= f.text_field :concession_authority,:id => "concession_authority" ,:class=>"text_field"%></td>
+    <td><%= f.label :concession %>(%)</td>
+    <td><%= f.text_field :concession,:class=>"text_field", :id=>"concession",:onkeyup=>"calculate(id)" %></td>																						
+	<td> Net Amount<br/>(After Concession)</td>
+  	<td><%= f.text_field :remaining_amount,:class=>"text_field", :id=>"paid_amount", :readOnly => true %></td>
+  </tr>
+  <tr>
+	<td>Due Authority</td> 
+	<td><%= f.text_field :due_authority,:class=>"text_field",:id=>"due1" %></td> 
+	<td>Due Amount</td>
+	<td><%= f.text_field :balance_amount, :class=>"text_field", :id => "due11", 
+	:onkeyUp => "calculate_due(id)"   %></td>
+	<td>Paid Amount<sup>*</sup></td>
+    <td><%= f.text_field :paid_amount,:class=>"text_field",:id=>"remaining_amount" %></td> 
+</tr><tr>
+	<td>Payment Mode</td>
+	<td colspan="2"><%= f.radio_button :payment_mode, "Cash", :checked => true, :id => "button15" , :onchange => "checked_payment_type(id,'remaining_amount')" %>Cash
+		<%= f.radio_button :payment_mode, "Cheque", :id => "button16" ,:onchange => "checked_payment_type(id,'remaining_amount')"  %>Cheque
+		<%= f.radio_button :payment_mode, "Card", :id => "button17" ,:onchange => "checked_payment_type(id,'remaining_amount')"  %>Card
+              <%= f.radio_button :payment_mode, "Both", :id => "button14" ,:onchange => "checked_payment_type(id,'remaining_amount')"  %>Both</td>
+  </tr>
+  
+  
+  <tr style="display:none;" id="bank_det">
+		<td>Bank Name </td> 
+		<td><%= f.text_field :bank_name, :class=>"text_field" , :id => "bank" %></td>
+		<td>Acc No </td>
+		<td><%= f.text_field :acc_no, :class=>"text_field" , :id => "accno" %></td>		
+		<td>Cheque No </td>
+		<td><%= f.text_field :cheque_no, :class=>"text_field", :id => "cheqno" %></td>
+    </tr>
+		<tr style="display:none;" id="card_det">
+			<td>Card No</td>
+			<td><%= f.text_field :card_no, :id => "cardno", :class=>"text_field"   %></td>
+			<td>Card Type</td>
+			<td><%= f.select :card_type,[['Mastro'],['Visa'],['Master Card']],{:include_blank => true}, {:id => "cardtype"}  %></td>
+			<td>Expiry Date</td>
+			<td><%= f.date_select :expiry_date, :prompt => {:month => 'Month', :year => 'Year' },:start_year => 2010, :order => [:month,:year] %></td>
+		</tr>
+		<tr style="display:none;"  id="cheque_amount_det"> 
+  		    	<td>Cheque Amount</td>
+		    	<td><%= f.text_field :cheque_amount, :id => "cheque_amount", :class=>"text_field" %></td>
+		</tr>
+		<tr style="display:none;"  id="card_amount_det">
+   		       <td>Card Amount</td>
+		       <td><%= f.text_field :card_amount, :id => "card_amount", :class=>"text_field" %></td>
+               </tr> 
+ <tr>
+ </table></fieldset></td>
+  </tr> 
+
+</fieldset>
+</table>
+  </td></tr>
+  </table>
+  <table align="center">
+  <tr>
+  	
+  	<td colspan=8 align="center"><%= submit_tag "", :value => " Update ", :class => "submit_button", :onClick => "this.disabled=true;this.value='Process..';this.form.submit();" %>
+	<%= link_to "Back",  final_bills_path, :class=>"new1" %></td>
+  </tr>
+ </table> 
+<% end %>

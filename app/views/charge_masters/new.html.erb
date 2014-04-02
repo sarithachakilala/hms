@@ -1,0 +1,190 @@
+<script type="application/javascript"> 
+
+	function select_service_group(id)
+	{		
+			var service_name=document.getElementById('service_name').value
+			req = new Ajax.Request('/charge_masters/ajax_function/1', 
+				{
+					method: 'get',
+					parameters: { service_name: service_name },
+					onComplete: function(transport){
+						processReqChange(transport);
+						}
+				})
+			function processReqChange(req) 
+			{
+				if (req.readyState == 4) 
+				{
+					var results = req.responseText;
+					var temp=new Array
+					temp=results.split("<division>")
+					document.getElementById('test_name').length=0
+					var opt = document.createElement("option");
+					document.getElementById("test_name").options.add(opt);
+					opt.text = ""
+					opt.value = ""
+					for(i=0;i<temp.length-1;i++)
+					{
+							var opt = document.createElement("option");
+							document.getElementById("test_name").options.add(opt);
+							opt.text = temp[i]
+							opt.value = temp[i]
+					}	
+				}		
+			}
+	}
+	
+	function select_investigations(id)
+	{
+		if(document.getElementById(id).value=="Laboratory" || document.getElementById(id).value=="Radiology") 
+		{
+			document.getElementById('test_name').disabled=false
+			document.getElementById('service_name').disabled=false
+		}
+		else if(document.getElementById(id).value=="GeneralServices")
+		{
+			document.getElementById('test_name').disabled=true
+			document.getElementById('service_name').disabled=false
+		}
+		else
+		{
+			document.getElementById('test_name').disabled=true
+			document.getElementById('service_name').disabled=false
+		}
+		var investigation= document.getElementById(id).value
+		var org_code= document.getElementById("org_code").value
+		req = new Ajax.Request('/testmasters/select_investiogation/1', 
+			{
+				method: 'get',
+				parameters: {investigation: investigation, org_code:org_code },
+				onComplete: function(transport){
+					processReqChange(transport);
+					}
+			}); // end ajax req
+		function processReqChange(req) 
+		{
+			// request is complete
+			if(req.readyState == 4) 
+			{
+				var results = req.responseText;
+				var temp=results.split("<division>")
+				document.getElementById('service_name').length=0
+				var opt = document.createElement("option");
+				document.getElementById("service_name").options.add(opt);
+				opt.text = "Please select"
+				opt.value = ""
+				for(i=0;i<temp.length-1;i++)
+				{
+					var opt = document.createElement("option");
+					document.getElementById("service_name").options.add(opt);
+					opt.text = temp[i]
+					opt.value = temp[i]
+				}
+			}
+		}
+    }
+
+
+function select_lab_type(id)
+{
+	var lab=document.getElementById(id).value
+	if(lab=="Internal")
+	document.getElementById('external_lab_charge').disabled=true
+	else
+	document.getElementById('external_lab_charge').disabled=false
+
+}
+</script>
+
+<% form_for(@charge_master) do |f| %>
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Service Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/charge_masters?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Charge Masters</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<div width="100%">
+<fieldset><legend><div class="font">Charge Master</div></legend>
+<table width="100%">
+ <tr>
+	<td colspan="2" align="right">Lab Type</td>
+	<td colspan="4"><%= f.radio_button :lab_type, "Internal", :checked => true, :id => "button11" , :onchange => "select_lab_type(id)" %>Internal
+		<%= f.radio_button :lab_type, "Third Party", :id => "button12" ,:onchange => "select_lab_type(id)" %>Third Party
+</td>
+ </tr>
+ <tr>
+	<td>Org.Code</td>
+	<td><%= f.text_field :org_code,  :class =>"text_field", :id => "org_code", :value=>@org_code , :readonly =>true %></td>
+    <td>Org.Location</td>
+    <td><%= f.text_field :org_location,  :class =>"text_field", :id => "org_location", :value =>@org_location, :readonly =>true %></td>
+    <td>Service Group<sup>*</sup></td>
+	<td><%= f.select :service_group,  [['Laboratory'],['Radiology'],['GeneralServices'],['VaccinationServices'],['MiscellaneousServices']],{:prompt  => true, :id =>"service_name"}, {:onchange => "select_investigations(id)"} %></td> 
+    <td>Service Name</td>
+	<td><%= f.select :service_name,'',{:prompt => true},{:id => "service_name", :disabled =>"true", :onChange => "select_service_group(id)" } %></td>
+ </tr>
+ <tr>  
+	<td>Test Name</td>
+	<td><%= f.select :test_name, '' , {:prompt => true}, {:id=>"test_name", :disabled =>"true" } %></td>
+	<td><lable for="item_name">Daily Charge</label>
+	<%= f.radio_button :charge_ph, :checked => true, :name =>"charge", :id => "button1", :value =>"daily" %></td>
+	<td><lable for="item_name">Hourly Charge</label>
+	<%= f.radio_button :charge_ph, :id=>"button2", :name=>"charge", :value=>"hourly" %></td>
+	<td>Total Charge</td>
+	<td><%= f.text_field :charge,:class =>"text_field", :id => "charge" %></td>
+
+	<td>Lab Amount</td>
+	<td><%= f.text_field :lab_amount,:class =>"text_field", :id => "lab_charge" %></td>
+ </tr>
+ <tr>
+	<td>Hospital Amount</td>
+	<td><%= f.text_field :hospital_amount,:class =>"text_field", :id => "hos_charge" %></td>
+	<td>External Lab Amount</td>
+	<td><%= f.text_field :external_lab_amount, :class =>"text_field", :id => "external_lab_charge", :disabled => "true" %></td>
+ </tr>
+</table>
+<div id="tableContainer" class="tableContainer">
+<table border="0" cellpadding="0" cellspacing="0" class="scrollTable" id="displayTable">
+<thead class="fixedHeader">
+		<tr>
+			<th>S.No</th>
+			<th>Reg.Type</th>
+			<th>Name</th>
+			<th>Extra Price</th>
+			<th>Percentage</th>
+			<th>Amount</th>
+		</tr>
+</thead>
+<tbody class="scrollContent">
+ 	<% i=0 %>
+	<% j=0 %>
+		<tr>
+			<td colspan="6" align="center" style="background:black;color:white;"><b>Insurance</b></td>
+		</tr>
+		<% f.fields_for :charge_master_children do |a| %>
+			<tr>
+				<td><%= text_field_tag('s_no','', :class =>"text_field", :value => (i+=1), :class => "nbb") %></td> 
+				<td><%= a.text_field :reg_type, :class =>"text_field",  :class => "nbb", :id => (j+=1) %></td>
+				<td><%= a.text_field :name, :class =>"text_field",  :class => "nbb", :id => (j+=1) %></td>
+				<td><%= a.text_field :discount_price, :class =>"text_field",  :class => "nbb", :id => (j+=1) %></td>
+				<td><%= a.text_field :discount_persentage, :class =>"text_field",  :id => (j+=1), :class => "nbb" %></td>
+				<td><%= a.text_field :amount, :class =>"text_field",  :id => (j+=1), :class => "nbb" %></td>
+			</tr>	
+		<% end %>
+	</tbody>
+</table>
+</div>
+</fieldset>
+
+<br/>
+<table align="center">
+<tr>
+<td><%= submit_tag "", :value => " Save ", :class => "submit_button" %></td>
+<td><%= submit_tag "", :value => " Reset ", :class => "submit_button" %></td>
+	<td valign="middle"><%= link_to "Back",  charge_masters_path, :class=>"new1" %></td>
+
+</tr>
+</table>
+
+<% end %>

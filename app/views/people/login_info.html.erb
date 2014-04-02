@@ -1,0 +1,25 @@
+<div align="center" width="100%">
+<table width="50%" cellpadding="2" cellspacing="2">
+  <tr bgcolor =" #378bf8" style="color:white">
+    <th>S No</th>
+	<th>Name</th>
+    <th>First Name</th>
+	<th>Last Name</th>
+	<th>Result</th>
+  </tr>
+  <% i=0 %>
+	<% for people in @people %>
+		<% if((i%2)==0) 
+			id="datacellone"
+		else
+			id="datacelltwo"
+		end %>
+		<tr class='<%= id %>'>
+			<td><%= i+=1 %></td>
+			<td><%= people.name%></td>
+			<td><%= people.firstname %></td>
+			<td><%= people.lastname %></td>
+			<td align="center"><%= image_tag("buttons/show.png", :width => "54px", :height => "21px", :border => 0, :style => "cursor:pointer;", :onclick => "window.open('/people/login_history/1?name=#{people.name}','open_window','dependent, width=900, height=480, left=0, top=0');") %></td>
+		</tr>
+	<% end %>
+</table>

@@ -1,0 +1,215 @@
+<%= javascript_include_tag 'dashboards/jquery-1.4.2.min' %>
+<%= javascript_include_tag 'dashboards/jquery.min' %>
+<%= javascript_include_tag 'dashboards/jquery-1.5.2.min' %>
+<%= javascript_include_tag 'dashboards/exporting.src' %>
+<%= javascript_include_tag 'dashboards/highcharts.src' %>
+<%= javascript_include_tag 'dashboards/dark-blue' %>
+
+ 
+<% if(@type=="Yearly") %>  
+<script type="text/javascript" charset="utf-8">
+
+var chart;
+$(document).ready(function() {
+   chart = new Highcharts.Chart({
+      chart: {
+         renderTo: 'container',
+         defaultSeriesType: 'line'
+      },
+      title: {
+         text: 'OP/IP Departmentwise Finance'
+      },
+      subtitle: {
+         text: 'Majestic'
+      },
+      xAxis: {
+         categories: [<%= @year %>]
+      },
+      yAxis: {
+         title: {
+            text: 'Amount(Rs)'
+         }
+      },
+      tooltip: {
+         enabled: false,
+         formatter: function() {
+            return '<b>'+ this.series.name +'</b><br/>'+
+               this.x +': '+ this.y ;
+         }
+      },
+      plotOptions: {
+         line: {
+            dataLabels: {
+               enabled: true
+            },
+            enableMouseTracking: false
+         }
+      },
+       series: [{
+         name: 'IP Department',
+         data: [<% for j in 0...@consultant_visit.length %>
+				 <%= @consultant_visit[j] %>,
+				<% end %>]
+   
+      }, {
+         name: 'OP Department',
+         data: [<% for j in 0...@consultation.length %>
+				 <%= @consultation[j] %>,
+				<% end %>]
+   
+      }
+	  ]
+   });
+ });
+</script>
+	
+<% elsif(@type=="Weekly") %>
+<script type="text/javascript" charset="utf-8">
+
+var chart;
+$(document).ready(function() {
+   chart = new Highcharts.Chart({
+      chart: {
+         renderTo: 'container',
+         defaultSeriesType: 'line'
+      },
+      title: {
+         text: 'OP/IP Departmentwise Finance'
+      },
+      subtitle: {
+         text: 'Majestic'
+      },
+      xAxis: {
+         categories: [<% for j in @from_date...@to_date %>
+	       
+			'<%= j.to_s %>',
+		
+		
+		<% end %>]
+      }
+	   ,
+      yAxis: {
+         min: 0,
+         title: {
+            text: 'Amount(Rs)'}
+         },
+        tooltip: {
+         enabled: false,
+         formatter: function() {
+            return '<b>'+ this.series.name +'</b><br/>'+
+               this.x +': '+ this.y ;
+         }
+      },
+      plotOptions: {
+         line: {
+            dataLabels: {
+               enabled: true
+            },
+            enableMouseTracking: false
+         },
+      },
+	  	
+		 series: [{
+         name: 'IP Department',
+         data: [<% for j in 0...(@to_date.to_date-@from_date.to_date).to_i %>
+				 <%= @consultant_visit[j] %>,
+				<% end %>]
+         }, {
+         name: 'OP Department',
+         data: [<% for j in 0...(@to_date.to_date-@from_date.to_date).to_i %>
+				 <%= @consultation[j] %>,
+				<% end %>]
+   
+      }
+	  ]
+       
+   });
+   
+   
+});
+  
+</script> 
+<% else %> 
+
+<script type="text/javascript" charset="utf-8">
+var chart;
+$(document).ready(function() {
+   chart = new Highcharts.Chart({
+      chart: {
+         renderTo: 'container',
+         defaultSeriesType: 'column'
+      },
+      title: {
+         text: 'OP/IP Departmentwise Finance '
+      },
+      subtitle: {
+         text: 'Majestic'
+      },
+      xAxis: {
+         categories: [
+            'Jan', 
+            'Feb', 
+            'Mar', 
+            'Apr', 
+            'May', 
+            'Jun', 
+            'Jul', 
+            'Aug', 
+            'Sep', 
+            'Oct', 
+            'Nov', 
+            'Dec'
+         ]
+      },
+      yAxis: {
+         min: 0,
+         title: {
+            text: 'Amount (Rs)'
+         }
+      },
+      legend: {
+         layout: 'vertical',
+         align: 'left',
+         verticalAlign: 'top',
+         x: 100,
+         y: 70,
+         floating: true,
+         shadow: true
+      },
+      tooltip: {
+         formatter: function() {
+            return ''+
+               this.x +': '+ this.y +'/-';
+         }
+      },
+      plotOptions: {
+         column: {
+            pointPadding: 0.2,
+            borderWidth: 0
+         }
+      },
+           series: [{
+         name: 'IP Department',
+         data: [<% for j in 0...@consultant_visit.length %>
+				 <%= @consultant_visit[j] %>,
+				<% end %>]
+      }, {
+         name: 'OP Department',
+         data: [<% for j in 0...@consultation.length %>
+				 <%= @consultation[j] %>,
+				<% end %>]
+   
+      }
+	  ]
+   });
+   
+   
+});
+
+ </script>  
+<% end %>
+	
+<body>
+    <div id="container" style="width: 800px; height: 400px; margin: 0 auto"></div>
+ </body>   
+   

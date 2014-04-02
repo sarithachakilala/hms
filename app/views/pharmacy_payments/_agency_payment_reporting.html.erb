@@ -1,0 +1,35 @@
+
+<br/>
+<div align="center" width="100%">
+<table align="center" width="90%" border="1" cellspacing=0>
+	<tr bgcolor ="#378bf8" style="color:white;">
+		<th>S.No</th>
+		<th>Payment No</th>
+		<th>Payment Date</th>
+		<th>Agency Name</th>
+		<th>Invoice Total</th>
+		<th>Paid Amount</th>
+		<th>Status</th>
+		
+  </tr>
+<% @i=0 %>
+<% @total=0 %>
+<% @payments.each do |payment| %>
+
+ <% if((@i%2)==0) 
+		id="datacelltwo" 
+	else
+		id="datacellone"
+  end %>
+  <tr class='<%= id %>'>
+		<td><%= @i=@i+1 %>
+		<td><%=h payment.payment_no %></td>
+		<td><%=h payment.payment_date %></td>
+		<td><%=h payment.agency_name %></td>
+		<td><%=h payment.invoice_total %></td>
+		<td><%=h payment.paid_amount %></td>
+		<td><%=h payment.status %></td>
+		
+ </tr>  
+ <% end %>
+</table>

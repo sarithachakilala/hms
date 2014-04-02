@@ -1,0 +1,116 @@
+<br/>
+<style>
+
+p { cursor: pointer; }
+
+</style>
+
+<table width="100%">
+<tr><td width="70%"><table width="100%" align="center" cellspacing="0" border=1 >
+  <tr>
+	<td colspan="5" align="center"><b>Ward :</b> <%=@ward.name %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  </tr>
+<% k=0 %>
+<% @val=@beds.length/5.to_f %>
+<% j=0 %>
+<% for i in 0...@val.ceil %>
+<tr class="size">
+	<% for b in 0...@beds.length-1 %>
+		<% bed_master=BedMaster.find_by_name_and_room_master_id(@beds[b],@rooms_id[j]) %>
+		<% if(bed_master.status=="Available") %>
+			<td bgcolor="#f6f826" align="center" onclick="window.open('/admissions/new','open','width=300,height=300')" style="cursor:pointer;"><%= @beds[b] %></td>
+		<% else %>
+			<% room_master=RoomMaster.find_by_id(@rooms_id[j]) %>
+			<% admission=Admission.find_by_bed_and_room(bed_master.name,room_master.name) %>
+			<% registration=Registration.last(:conditions => "mr_no='#{admission.mr_no}'") %>
+			<td bgcolor="#55bf3b" align="center"><table><tr><td>Bed Name</td><td><%= @beds[b] %></td></tr><tr><td>Admn.No</td><td><%= admission.admn_no %></td></tr><tr><td>Patient Name</td><td><%= registration.patient_name %></td></tr><tr><td>Age</td><td><%= registration.age %></td><tr></table></td>
+		<% end %>
+		<% j=j+1 %>
+	<% end %>
+</tr>
+<% k+=5 %>
+<% end %>
+</table>
+</td>
+<td  width="30%">
+	<%= javascript_include_tag 'dashboards/jquery-1.4.2.min' %>
+<%= javascript_include_tag 'dashboards/jquery.min' %>
+<%= javascript_include_tag 'dashboards/jquery-1.5.2.min' %>
+<%= javascript_include_tag 'dashboards/rails' %>
+<%= javascript_include_tag 'dashboards/exporting.src' %>
+<%= javascript_include_tag 'dashboards/highcharts.src' %>
+<%= javascript_include_tag 'dashboards/dark-green' %> 
+<%= javascript_include_tag 'dashboards/exporting' %>
+
+
+<script type="text/javascript" charset="utf-8">
+
+var chart;
+$(document).ready(function() {
+   chart = new Highcharts.Chart({
+      chart: {
+         renderTo: 'container',
+         defaultSeriesType: 'column'
+      },
+      title: {
+         text: 'Bed Utilization'
+      },
+      subtitle: {
+         text: 'Majestic'
+      },
+      xAxis: {
+         categories: [
+            '<%= @label %>'
+         ]
+      },
+      yAxis: {
+         min: 0,
+         title: {
+            text: 'Beds '
+         }
+      },
+      legend: {
+         layout: 'vertical',
+         backgroundColor: Highcharts.theme.legendBackgroundColor || '#FFFFFF',
+         align: 'left',
+         verticalAlign: 'top',
+         x: 100,
+         y: 70,
+         floating: true,
+         shadow: true
+      },
+      tooltip: {
+         formatter: function() {
+            return ''+
+               this.x +': '+ this.y +' beds';
+         }
+      },
+      plotOptions: {
+         column: {
+            pointPadding: 0.2,
+            borderWidth: 0
+         }
+      },
+           series: [{
+         name: 'Available',
+         data: [<%= @available_data1 %>]
+   
+      }, {
+         name: 'Occupied',
+         data: [<%= @un_available  %>]
+   
+      }]
+   });
+   
+   
+});
+   
+</script>
+
+<body >
+   <center> <div id="container" style="width: 590px; height: 400px; margin: 0 auto"></div></center>
+</body>
+
+</td>
+</tr>
+</table>

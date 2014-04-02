@@ -1,0 +1,57 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%"> Doctor Workbench  >>&nbsp;&nbsp;&nbsp;<a HREF='/treatment_plans/new' class="nav" style="text-decoration:none;">Treatment Plan</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div  width="100%">
+<table align="center" width="70%" border="0" cellspacing="2" cellpadding="4">
+		<tr>
+			<td class="button" colspan="8"><center><b>Treatment Plan Information</b></center></td> 
+		</tr>
+<tr></tr>
+<tr>
+  <td class='<%= id %>'><b>Org code</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @treatment_plan.org_code %></td>
+  <td class='<%= id %>'><b>Org location</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @treatment_plan.org_location %></td>
+</tr>
+<tr>
+  <td class='<%= id %>'><b>Registration Id</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h  @treatment_plan.registration_id %></td>
+  <td class='<%= id %>'><b>Patient Type</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @treatment_plan.patient_type %></td>
+</tr>
+<tr>
+  <td class='<%= id %>'><b>Mr.No</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h  @treatment_plan.mr_no %></td>
+  <td class='<%= id %>'><b>Admn.No</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @treatment_plan.admn_no %></td>
+</tr>
+ <tr>
+  <td class='<%= id %>'><b>Treatment Date</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h  @treatment_plan.treatment_date %></td>
+  <td class='<%= id %>'><b>Treatment Time</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @treatment_plan.treatment_time.strftime("%H:%M") %></td>
+</tr> 
+<tr>
+  <td class='<%= id %>'><b>Consultant Id</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h  @treatment_plan.consultant_id %></td>
+</tr> 
+</table>
+</div>
+<br/>
+<center><%= link_to "back",  treatment_plans_path, :class=>"new1" %></center>

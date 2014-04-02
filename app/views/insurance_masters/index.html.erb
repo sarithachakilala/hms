@@ -1,0 +1,50 @@
+<center><h3><font color="#015a84">Insurance Master Details </font></h3>
+<%= link_to 'New', new_insurance_master_path, :class=>"new1" %></td>
+</center>
+ 
+ <div align="center" width="100%">
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+  <tr class="info">
+	<th>S.No</th>
+    <th>Company Name</th>
+    <th>Code</th>
+    <th>Phone</th>
+    <th>Person Name</th>
+    <th>Mobile</th>
+
+   
+	<th colspan=2>Permissions</th>
+  </tr>
+</thead>
+<tbody>
+
+<% @i=0 %>
+
+<% @insurance_masters.each do |insurance_master| %>
+ <% if((insurance_master.id % 2)==0) 
+    id="datacellone"
+  else
+    id="datacelltwo"
+     end %>
+<tr class='<%= id %>' style="height:30px">
+  <td style="background-color: #FFF;"><%= @i+=1 %></td>
+    <td><%=h insurance_master.company_name %></td>
+    <td><%=h insurance_master.code %></td>
+    <td><%=h insurance_master.phone %></td>
+    <td><%=h insurance_master.person_name %></td>
+    <td><%=h insurance_master.mobile %></td>
+ 
+  <td align="center"  class="submit_button"><%= link_to 'Edit', edit_insurance_master_path(insurance_master) %></td>   
+  <td align="center"  class="submit_button"><%= link_to 'Delete', insurance_master, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+<center>
+
+
+
+
+

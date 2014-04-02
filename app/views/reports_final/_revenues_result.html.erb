@@ -1,0 +1,106 @@
+
+<div align="center" width="100%" >
+<table width="60%" border=0 cellspacing=5 bgcolor="#ecf3f7" >
+  <tr  bgcolor="#808080">
+		<th>S.No</th>
+		<th>Details</th>
+		<th>Daily Average</th>
+		<th>Plan</th>
+		<th>Difference</th>
+		<th>Permissions</th>
+	</tr>
+<% @i=0 %>
+
+<tr  bgcolor="#d6e4e8">
+         <td><%= @i+1 %></td>
+		 <% @op= AppointmentPayment.find(:all, :conditions =>"appt_date  BETWEEN '#{@from_date}' AND '#{@to_date}'")%>
+
+   		<td>OPD Attandance(<%= @op.length %>)</td>
+		<td><%= ((@op.length/@diff).to_f).round %></td>
+		<td>&nbsp;</td>
+	    <td>&nbsp;</td>
+		<td align="center"><a href='javascript:void(0)' class="new1" onclick="window.open('/management_info_systems/revenue_details/1?date1=<%=h @from_date %>&date2=<%=h @to_date %>&revenue_type=registration&org_code=<%= @org_code %>','open_window','menubar, scroll=1,toolbar, location, width=700, height=480, left=0, top=0')">Show</a></td>
+</tr>
+<tr  bgcolor="#d6e4e8">
+         <td><%= @i+2 %></td>
+		 <% @adm= Admission.find(:all, :conditions =>"admn_date  BETWEEN '#{@from_date}' AND '#{@to_date}' AND admn_status='Admitted'")%>
+   		<td>No Of Admissions(<%= @adm.length%>)</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td align="center"><a href='javascript:void(0)' class="new1" onclick="window.open('/management_info_systems/revenue_details/1?date1=<%=h @from_date %>&date2=<%=h @to_date %>&revenue_type=registration&org_code=<%= @org_code %>','open_window','menubar, scroll=1,toolbar, location, width=700, height=480, left=0, top=0')">Show</a></td>
+</tr>
+<tr  bgcolor="#d6e4e8">
+         <td><%= @i+3 %></td>
+		 <% @fin= FinalBill.find(:all, :conditions =>"final_bill_date BETWEEN '#{@from_date}' AND '#{@to_date}'")%>
+   		<td> No Of Discharges(<%= @fin.length%>)</td>
+		<td><%= ((@fin.length/@diff).to_f).round %></td>
+		<td>&nbsp;</td>
+	   	<td>&nbsp;</td>
+		<td align="center"><a href='javascript:void(0)' class="new1" onclick="window.open('/management_info_systems/revenue_details/1?date1=<%=h @from_date %>&date2=<%=h @to_date %>&revenue_type=registration&org_code=<%= @org_code %>','open_window','menubar, scroll=1,toolbar, location, width=700, height=480, left=0, top=0')">Show</a></td>
+</tr>
+<tr  bgcolor="#d6e4e8">
+         <td><%= @i+4 %></td>
+		 <% @adm= Admission.find(:all, :conditions =>"admn_date BETWEEN '#{@from_date}' AND '#{@to_date}' AND admn_status='Available'")%>
+		<% @final= FinalBill.find(:all, :conditions =>"final_bill_date BETWEEN '#{@from_date}' AND '#{@to_date}'")%>
+   		<td>Bed Occupancy</td>
+		<% if(@final.length!=0)%>
+		<td><%= ((@adm.length/@final.length).to_f).round %>
+		<% else %>
+		<td><%= "0"%></td>
+		<% end %>
+		<td>&nbsp;</td>
+	    <td>&nbsp;</td>
+		<td align="center"><a href='javascript:void(0)' class="new1" onclick="window.open('/management_info_systems/revenue_details/1?date1=<%=h @from_date %>&date2=<%=h @to_date %>&revenue_type=registration&org_code=<%= @org_code %>','open_window','menubar, scroll=1,toolbar, location, width=700, height=480, left=0, top=0')">Show</a></td>
+</tr>
+
+<tr>
+<td colspan="6" align="center" bgcolor="#808080"><font color="white"><b>Radiological Investigations</b></font></td>
+
+
+</tr>
+<tr bgcolor="#d6e4e8">
+         <td><%= @i+10 %></td>
+		 <% @rad= TestBookingChild.find(:all, :conditions =>"created_at BETWEEN '#{@from_date}' AND '#{@to_date}' AND department='XRAY'")%>
+   		<td> X-Ray's(<%= @rad.length %>)</td>
+		
+		<td><%= ((@rad.length/@diff).to_f).round %></td>
+		<td>&nbsp;</td>
+	    <td>&nbsp;</td>
+		<td align="center"><a href='javascript:void(0)' class="new1" onclick="window.open('/management_info_systems/revenue_details/1?date1=<%=h @from_date %>&date2=<%=h @to_date %>&revenue_type=registration&org_code=<%= @org_code %>','open_window','menubar, scroll=1,toolbar, location, width=700, height=480, left=0, top=0')">Show</a></td>
+</tr>
+<tr bgcolor="#d6e4e8">
+         <td><%= @i+11 %></td>
+		 <% @ultra= TestBookingChild.find(:all, :conditions =>"created_at BETWEEN '#{@from_date}' AND '#{@to_date}' AND department='ULTRASCAN'")%>
+   		<td>Ultra Sonography(<%= @ultra.length %>)</td>
+		
+		<td><%= ((@rad.length/@diff).to_i).round %></td>
+		<td>&nbsp;</td>
+	    <td>&nbsp;</td>
+		<td align="center"><a href='javascript:void(0)' class="new1" onclick="window.open('/management_info_systems/revenue_details/1?date1=<%=h @from_date %>&date2=<%=h @to_date %>&revenue_type=registration&org_code=<%= @org_code %>','open_window','menubar, scroll=1,toolbar, location, width=700, height=480, left=0, top=0')">Show</a></td>
+</tr>
+<tr bgcolor="#d6e4e8">
+         <td><%= @i+12%></td>
+		 <% @spl= TestBookingChild.find(:all, :conditions =>"created_at BETWEEN '#{@from_date}' AND '#{@to_date}' AND department='Special Investigations'")%>
+   		<td> Special Investigations(<%= @spl.length %>)</td>
+		
+		<td><%= ((@rad.length/@diff).to_f).round %></td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td align="center"><a href='javascript:void(0)' class="new1" onclick="window.open('/management_info_systems/revenue_details/1?date1=<%=h @from_date %>&date2=<%=h @to_date %>&revenue_type=registration&org_code=<%= @org_code %>','open_window','menubar, scroll=1,toolbar, location, width=700, height=480, left=0, top=0')">Show</a></td>
+</tr>
+<tr bgcolor="#d6e4e8">
+         <td><%= @i+13 %></td>
+		 <% @cts= TestBookingChild.find(:all, :conditions =>"created_at BETWEEN '#{@from_date}' AND '#{@to_date}' AND department='CT SCAN'")%>
+   		<td> C.T Scan(<%= @cts.length %>)</td>
+		
+		<td><%= ((@rad.length/@diff).to_f).round %></td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td align="center"><a href='javascript:void(0)' class="new1" onclick="window.open('/management_info_systems/revenue_details/1?date1=<%=h @from_date %>&date2=<%=h @to_date %>&revenue_type=registration&org_code=<%= @org_code %>','open_window','menubar, scroll=1,toolbar, location, width=700, height=480, left=0, top=0')">Show</a></td>
+</tr>
+
+</table>
+</div>
+
+<br/>

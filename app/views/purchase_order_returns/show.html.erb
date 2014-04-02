@@ -1,0 +1,88 @@
+
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">IP Patients >>&nbsp;&nbsp;&nbsp;<a HREF='/purchase_order_returns' class="nav" style="text-decoration:none;">Purchase Returns</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<br/>
+<%= javascript_include_tag 'ezcalendar.js' %>
+<%= stylesheet_link_tag 'scroll' %>
+
+<% form_for(@purchase_order_return) do |f| %>
+  <%= f.error_messages %>
+ 
+	<div align="center">
+		 
+<table width="100%" bgcolor="#87CEEB">
+ <tr><td colspan="8">
+<fieldset>
+<legend><div class="font"><b>Return Details</b></div></legend>
+ 	<%= f.hidden_field :id, :id => "record_id" %>
+
+<table width="100%">
+ <tr>
+	<td>Org.Code</td>
+	
+		<td><%= f.text_field :org_code, :size => 20, :id => "org_code", :readonly => true %></td>
+	
+    <td>Org.Location</td>
+    <td><%= f.text_field :org_location, :size => 20, :id => "org_location", :readonly => true %></td>
+		<td>Return No</td>
+		<td><%= f.text_field :return_no , :id=> "return_no", :size => 20,:readOnly => true %>  </td>
+		<td>Return Date</td>
+		<td> <%= f.text_field :return_date ,:size => 20, :readOnly => true %>  </td>
+</tr>
+<tr>
+		<td>PO.No </td>
+		<td> <%= f.text_field :purchase_order_no, :id => "pocode", :readonly => true, :size=>20 %> </td> 
+		<td>PO.Date</td>
+		<td> <%= f.text_field :purchase_order_date, :readonly => true, :size=>20 , :id => "pdate" %>  </td>
+		<td>Vendor Code</td>
+		<td> <%= f.text_field :vendor,:size => 20, :readonly => true, :id => "vname" %> </td>
+	</tr>
+</table>
+</fieldset>
+
+
+<table border="1" cellspacing="0"  class="sofT" cellpadding="4" width="80%" align="center">
+  <tr class="info">
+	
+    <th>Item Name</th>
+    <th>Item Code</th>
+    <th>Batch No</th>
+    <th>Expiry Date</th>
+	<th>Return Qty</th>
+	<th>Return Rate</th>
+	<th>Amount</th>
+	</tr>
+<% for store in @purchase_order_return.purchase_order_return_children %>
+<tr>
+<td><%=h store.item_name %></td>
+<td><%=h store.item_code %></td>
+<td><%=h store.batch_no %></td>
+<td><%=h store.expiry_date %></td>
+<td><%=h store.return_qty %></td>
+<td><%=h store.return_rate %></td>
+<td><%=h store.return_amt %></td>
+
+</tr>
+
+<% end %>
+</table>
+
+<br>
+<table align="center">
+   <tr>
+	<td>Reason For Return </td>
+	<td><%= f.text_area :reason_for_return,:size => "105x3", :readonly => true %></td>
+   </tr>
+</table>
+</td></tr></table>
+</div>
+<br/>
+<center>
+<%= link_to "back",  purchase_order_returns_path, :class=>"new1" %>
+<% end %>

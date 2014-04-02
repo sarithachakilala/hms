@@ -1,0 +1,51 @@
+<% form_for(@store_test_result) do |f| %></td>
+ <%= f.error_messages %>
+
+    <%= f.hidden_field :lab_no %>
+    <%= f.hidden_field :mr_no %>
+    <%= f.hidden_field :admn_no %>
+    <%= f.hidden_field :patient_type %>
+	<%= f.hidden_field :service_name %>
+	<%= f.hidden_field :org_code %>
+	<%= f.hidden_field :org_location %>
+ 
+ <u><font size="4px">
+  <center><%= @store_test_result.service_name %></center>
+ </font></u>
+ <br/><br/>
+ <table align="center" width="80%">
+	
+	 <% j=0 %>
+  <% f.fields_for :store_test_result_children do |a| %>
+  <%= a.hidden_field :field_type, :size =>20,  :class => "nbb" %>
+
+<% if(@field[j]=="Heading") %>		
+		<tr>
+				<td colspan="6" align="center">
+				<%= a.text_field :test_name, :readOnly => true, :class => "nbb", :style => "background-color:#ecf3f7;border:0;font-weight:bold;font-family:Constantina,Georgia,'Nimbus Roman No9 L',serif;font-size:28;" %></td>
+				
+		</tr>
+		
+<% elsif(@field[j]=="Sub-Heading") %>
+		<tr>
+				<td><%= a.text_field :test_name, :size =>40,  :readOnly => true, :class => "nbb", :style => "background-color:#ecf3f7;border:0;font-weight:bold;font-size:18;font-family:'Trebuchet MS',sans-serif;" %></td>
+				
+		</tr>
+
+<% elsif(@field[j]=="Content") %>
+<tr>
+				<%= a.hidden_field :servce_name, :size =>20,  :class => "nbb" %>
+				<td><%= a.text_field :test_name, :size =>30,  :readOnly => true, :class => "nbb", :style => "background-color:#ecf3f7;border:0;" %></td>
+				<td><%= a.text_field :result, :size =>20,  :class => "nbb" %></td>
+				<td align="left">
+				<%= a.text_field :lbound, :size =>15,  :readOnly => true, :class => "nbb", :style => "background-color:#ecf3f7;text-align:right;border:0;" %>
+				</td>
+				<td><%= a.text_field :units, :size =>20,   :readOnly => true, :class => "nbb", :style => "background-color:#ecf3f7;text-align:center;border:0;" %></td>
+			
+		</tr>
+		 <% end %>
+		<% j=j+1 %>
+ <% end %>
+  </table>
+    <center><%= submit_tag "", :value => " Update ", :class => "submit_button" %></center>
+<% end %>

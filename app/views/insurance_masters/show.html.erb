@@ -1,0 +1,79 @@
+<script type="text/javascript">
+	function close_form()
+	{
+		var call_from='<%= @call_from %>'
+		if(call_from=="registrations")
+		{
+			var opt = opener.window.document.createElement('option');
+			opener.window.document.getElementById('ins_company_name').options.add(opt);
+			opt.text ='<%=@insurance_master.company_name%>'
+			opt.value='<%=@insurance_master.company_name%>'
+			window.close()
+		}
+	}
+</script>
+<body onLoad="close_form();">
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div align="center">
+<table>
+	<tr>
+			<td class="button" colspan="12"><center><b>Details of Insurance Master</b></center></td> 
+			
+		</tr>
+
+<tr>
+	<td class='<%= id %>'>Company name</td>
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.company_name %></td>
+	<td class='<%= id %>'>Code</td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.code %></td>
+	<td class='<%= id %>'>Phone</td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.phone %></td>
+	<td class='<%= id %>'>Fax</td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.fax %></td>
+</tr>
+<tr>
+	<td class='<%= id %>'>Address</td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.address %></td>
+	<td class='<%= id %>'>City</td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.city %></td>
+	<td class='<%= id %>'>State</td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.state %></td>
+	<td class='<%= id %>'>Country</td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.country %></td>
+</tr>
+<tr>
+	<td class='<%= id %>'>Zipcode</td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.zipcode %></td>
+	<td class='<%= id %>'>Email</td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.email %></td>
+	<td class='<%= id %>'>Person name</td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.person_name %></td>
+	<td class='<%= id %>'>Mobile</td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.mobile %></td>
+</tr>
+<tr>
+	<td class='<%= id %>'>Person email</td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.person_email %></td>
+	<td class='<%= id %>'>Notes</td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.notes %></td>
+</tr>
+</table><br/>
+<td valign="middle"><%= link_to "back",  insurance_masters_path, :class=>"new1" %>
+
+</div>
+</body>

@@ -1,0 +1,160 @@
+<%= javascript_include_tag 'popup/jquery-1.3.2.js' %>
+<%= stylesheet_link_tag 'popup/style' %>
+<%=javascript_include_tag 'jquery-1.7.1.min' %>	
+<%=javascript_include_tag 'jquery.reveal' %>
+<%= stylesheet_link_tag 'styles_dialog' %>
+<script type="text/javascript">
+	$(document).ready(function() {
+		if('<%= notice %>'!="")
+		{
+		   	$('#modal').reveal({ // The item which will be opened with reveal
+			  	animation: 'fade',                   // fade, fadeAndPop, none
+				animationspeed: 600,                       // how fast animtions are
+				closeonbackgroundclick: true,              // if you click background will modal close?
+				dismissmodalclass: 'close'    // the class of a button or element that will close an open modal
+			});
+		}
+	});
+</script>
+<script type="text/javascript">
+	
+	function ajaxSearch(id,source,hyper_link,name) 
+	{
+		document.getElementById("module_link").src=id;
+	}	
+	function dispaly_data(id)
+	{
+		document.getElementById("module_link").src=id;
+	}	
+	
+	function mrfun(id)
+	{
+		query=find_mr_no(id,new Array());
+		document.getElementById("module_link").src="/doctor_workbench/patient_info/1?mr="+query+"&org_code="+org_code;
+	}
+	function clear_file(id)
+	{
+		document.getElementById(id).value=""
+		document.getElementById(id).style.color="black"
+	}
+	function record_display(id,event)
+	{
+		if(event.keyCode!=13)
+			return false;
+		query=find_mr_no(id,new Array());
+		var org_code=""
+		document.getElementById("module_link").src="/doctor_workbench/patient_info/1?mr="+query+"&org_code="+org_code;
+	}
+</script>
+<div id="modal">
+	<div id="heading1">
+		MediEaz-Cloud Hospital Management System
+	</div>
+	<div id="content">
+		<p><font style="color:red;font-weight:bold;size=20px;"><%= notice %></font></p>
+	</div>
+</div>
+<table width="100%" height="595" border="0" style="margin:opx;padding:0px;" cellpadding="0" cellspacing="0">
+  <tr height="50">
+    <td>
+    	<table width="100%" border="1" style="margin:opx;">
+  			<tr>
+    			<% if(@home) %>
+				<td width="18%" align="left"><a HREF='javascript:void(0);' id="/home/home/1" onclick="ajaxSearch(id,'',id,'   Home')"><%= image_tag(@home.image_path, :size => "173x64") %></a></td>
+			<% else %>
+				<td width="18%" align="left"><a HREF='javascript:void(0);' id="/home/home/1" onclick="ajaxSearch(id,'',id,'   Home')"><%= image_tag("hs-gol.png", :size => "173x64") %></a></td>
+
+			<% end %>
+
+    			<td width="50%">
+                		<table width="100%" border="1" class="border1">
+  					<tr>
+    						<td align="center" class="td_style">Welcome</td><td></td><td width="50"></td><td>
+<td><%= image_tag("user.png", :size=>"27x30") %></td>
+                        			<td align="center" class="td_style"><%= @person.display_name %></td>
+                        			
+    						
+                        			<td class="td_style"><a href="javascript:void(0)" id="/people/<%= @person.id %>/edit" onclick="ajaxSearch(id,'',id,'Change password')">Change password</a></td>
+    						<td class="td_style"><a href="/sessions/destroy/<%= @session_id %>">Logout</a></td>
+  					</tr>
+  					<tr>
+    					<td colspan="15" align="center" class="td_style"><%= @person.client_name.upcase %></td>
+  					</tr>
+				</table>
+				</td>
+				<td style = "font-size:14px; color :#ffce00; face:Calibri;"><b> Call For Support: 040-40203231<br/>E-mail Us: support@exleaz.com</b></td>
+    			<td width="15%" align="right"><a HREF='javascript:void(0);' id="/home/medieaz_info" onclick="ajaxSearch(id,'',id,'   Home')"><%= image_tag("medieaznew-1.png", :size => "179x50") %></a></td>
+  			</tr>
+		</table>
+	</td>
+   </tr>
+   <tr height="10">
+  	<td><div id="smoothmenu1" class="ddsmoothmenu">
+	<ul>
+		
+		<li><a href='javascript:void(0);' id="/profilemasters" onclick="ajaxSearch(id,'Manage Users',id,'Profiles')">Manage Users</a>
+			<ul>
+				<li><a href='javascript:void(0);' id="/profilemasters" onclick="ajaxSearch(id,'Manage Users',id,'Profiles')">Profiles</a></li>
+				<li><a href='javascript:void(0);' id="/people?user_id=<%= @user_id %>" onclick="ajaxSearch(id,'Manage Users',id,'Users')">Users</a></li>
+				<li><a href='javascript:void(0);' id="/client_lists/manage_clients/1" onclick="ajaxSearch(id,'Manage Users',id,'Client history')">Client history</a></li>
+				<li><a href='javascript:void(0);' id="/people/login_history/1" onclick="ajaxSearch(id,'Manage Users',id,'Login-history')">Login-history</a></li>
+			</ul>
+		</li>
+
+		<li><a HREF='javascript:void(0);' id="/country_masters/new" onclick="ajaxSearch(id,'Registrations',id,'Registrations')">General Masters</a>
+			<ul>
+				<li><a HREF='javascript:void(0);' id="/country_masters/new" onclick="ajaxSearch(id,'Registrations',id,'Corporate Registrations')">CountryMaster</a></li>	
+				<li><a HREF='javascript:void(0);' id="/state_masters/new" onclick="ajaxSearch(id,'Registrations',id,'Corporate Registrations')">State Master</a></li>	
+				<li><a HREF='javascript:void(0);' id="/city_masters/new" onclick="ajaxSearch(id,'Registrations',id,'Corporate Registrations')">City Master</a></li>	
+			</ul>
+		</li>
+
+		<li><a HREF='javascript:void(0);' id="/ward_masters/new" onclick="ajaxSearch(id,'Registrations',id,'Registrations')">Hospital Masters</a>
+			<ul>
+				<li><a HREF='javascript:void(0);' id="/ward_masters/new" onclick="ajaxSearch(id,'Registrations',id,'Corporate Registrations')">Ward Master</a></li>	
+				<li><a HREF='javascript:void(0);' id="/room_masters/new" onclick="ajaxSearch(id,'Registrations',id,'Corporate Registrations')">Room Master</a></li>	
+				<li><a HREF='javascript:void(0);' id="/bed_masters/new" onclick="ajaxSearch(id,'Registrations',id,'Corporate Registrations')">Bed Master</a></li>	
+			</ul>
+		</li>
+		<li><a HREF='javascript:void(0);' id="/department_masters/new" onclick="ajaxSearch(id,'Registrations',id,'Registrations')">Employee Masters</a>
+			<ul>
+				<li><a HREF='javascript:void(0);' id="/department_masters/new" onclick="ajaxSearch(id,'Registrations',id,'Casualities')">Department Masters</a></li>
+				<li><a HREF='javascript:void(0);' id="/employee_masters/new" onclick="ajaxSearch(id,'Registrations',id,'Casualities')">Employee Masters</a></li>
+				<li><a HREF='javascript:void(0);' id="/consultant_masters/new" onclick="ajaxSearch(id,'Registrations',id,'Corporate Registrations')">Consultant Masters</a></li>
+				<li><a HREF='javascript:void(0);' id="/refferal_masters/new" onclick="ajaxSearch(id,'Registrations',id,'Corporate Registrations')">Referral Masters</a></li>
+			</ul>
+		</li>
+		<li><a HREF='javascript:void(0);' id="/servicemasters/new" onclick="ajaxSearch(id,'Registrations',id,'Registrations')">Service Masters</a>
+			<ul>
+				<li><a HREF='javascript:void(0);' id="/servicemasters/new" onclick="ajaxSearch(id,'Registrations',id,'Casualities')">Service Masters</a></li>
+				<li><a HREF='javascript:void(0);' id="/testmasters/new" onclick="ajaxSearch(id,'Registrations',id,'Casualities')">Test Masters</a></li>
+				<li><a HREF='javascript:void(0);' id="/charge_masters/new" onclick="ajaxSearch(id,'Registrations',id,'Casualities')">Charge Master</a></li>
+				<li><a href='javascript:void(0);' id="/insurance_masters/new" onclick="ajaxSearch(id,'Service Group Master',id,'Insurance Master')">Insurance Master</a></li>
+				<li><a HREF='javascript:void(0);' id="/package_master_majestics/new" onclick="ajaxSearch(id,'Registrations',id,'Casualities')">Package Master</a></li>
+			</ul>
+		</li>
+		
+		<li><a HREF='javascript:void(0);' id="/agency_masters/new" onclick="ajaxSearch(id,'Registrations',id,'Registrations')">Pharmacy Masters</a>
+			<ul>
+				<li><a HREF='javascript:void(0);' id="/manufacturers/new" onclick="ajaxSearch(id,'Registrations',id,'Corporate Registrations')">Company Master</a></li>	
+				<li><a HREF='javascript:void(0);' id="/agency_masters/new" onclick="ajaxSearch(id,'Registrations',id,'Corporate Registrations')">Supplier/Agency Master</a></li>	
+				<li><a HREF='javascript:void(0);' id="/drug_formulas/new" onclick="ajaxSearch(id,'Registrations',id,'Corporate Registrations')">Drug Farmula Master</a></li>
+				<li><a HREF='javascript:void(0);' id="/itemmasters/new" onclick="ajaxSearch(id,'Registrations',id,'Corporate Registrations')">Product Master</a></li>	
+
+			</ul>
+		</li>
+		
+		<li><a HREF='javascript:void(0);' id="/home/image_upload/1" onclick="ajaxSearch(id,'Upload',id,'')">Upload Logo</a></li>
+		
+	<br style="clear: left" />
+	</div></td>
+  </tr>
+  <tr height="520">
+    <td height="100%"><div id="module_link_div" style="width:100%;height:520px;">
+    	<iframe src="/home/home" width="100%" height="520px" id="module_link" style="background-color:#ecf3f7;" border="1" ALLOWTRANSPARENCY="true"></iframe>
+    </div></td>
+  </tr>
+  <tr height="10">
+  	<td class="bgbody" align="center"><p style="font-face:calibri;color:white;font-size:13px;"><b>All Copyrights&copy; Reserved to Exleaz Solutions Limited</b> </p></td>
+  </tr>
+</table>

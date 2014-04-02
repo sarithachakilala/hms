@@ -1,0 +1,61 @@
+<script type="text/javascript">
+	function open_new_window(record_id)
+	{
+		window.open('/test_cancels/new?record_id='+record_id,'open_window','dependent, width=900, height=480, left=0, top=0');
+	}
+</script>
+<table border="1" cellspacing="0" align="center" width="90%">
+	<tr bgcolor ="#378bf8">
+		<th>S.No</th>
+		<th>Lab No</td>
+		<th>Date</th>
+		<th>MR No</th>
+		<th>Patient Name</th>
+		<th>Department</th>
+		<th>Test Name</th>
+		<th colspan="3">Results</th>
+	</tr>
+	<% i=0 %>
+	<% for test_booking in @test_bookings %>
+		<% @test_booking_children=TestBookingChild.find(:all, :conditions => "test_booking_id = #{test_booking.id} and investigation LIKE '#{@department_name}%'") %>
+		<% if(!@lab_id.empty?) %>
+		<tr>
+			<td><%= i+=1 %></td>
+			<td><%= @lab_id %></td>
+			<td><%= test_booking.booking_date %></td>
+			<td><%= test_booking.mr_no %></td>
+			<td><%= test_booking.patient_name %></td>
+			<td>&nbsp;</td>
+			<td><%= @test_booking_children.length %></td>
+			<td align="center" colspan="3"><a href="javascript:void(0)" onclick="window.open('/store_test_result_children/print_selection/1?lab_no=<%= @lab_id %>','open_window','dependent, width=900, height=480, left=0, top=0');">Print By Selection</a></td>
+		</tr>
+		<% else %>
+			<% for test_booking_children in @test_booking_children %>
+				<% bool=0 %>
+				<% if(test_booking_children.investigation=="Laboratory") %>
+					<% store_test_result=StoreTestResult.find_by_service_name_and_test_booking_id(test_booking_children.test_name,test_booking.id)%>
+					<% if(!store_test_result) %>
+						<% bool=1 %>
+					<% end %>
+				<% else%>	
+					<% store_radiology_test_result=StoreRadiologyTest.find_by_test_name_and_lab_no(test_booking_children.test_name,test_booking.lab_no)%>
+					<% if(!store_radiology_test_result)%>
+						<% bool=1 %>
+					<% end %>
+				<% end %>
+				<% if(bool==1) %>
+				<tr style="height:30px">
+					<td><%= i+=1 %></td>
+					<td><%= test_booking.lab_no %></td>
+					<td><%= test_booking.booking_date %></td>
+					<td><%= test_booking.mr_no %></td>
+					<td><%= test_booking.patient_name %></td>
+					<td><%= test_booking_children.department %></td>
+					<td><%= test_booking_children.test_name %></td>
+					<td align="center"><a href="javascript:void(0)" onclick="open_new_window('<%= test_booking_children.id %>')" class="submit_button">Cancel</a></td>
+				</tr>
+				<% end %>
+			<% end %>
+		<% end %>
+	<% end %>
+</table>

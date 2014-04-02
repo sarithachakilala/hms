@@ -1,0 +1,60 @@
+<h1>Editing issue_op_child</h1>
+
+<% form_for(@issue_op_child) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :issues_to_op_id %><br />
+    <%= f.text_field :issues_to_op_id %>
+  </p>
+    <p>
+    <%= f.label :mr_no %><br />
+    <%= f.text_field :mr_no %>
+  </p>
+  <p>
+    <%= f.label :item_name %><br />
+    <%= f.text_field :item_name %>
+  </p>
+  <p>
+    <%= f.label :item_code %><br />
+    <%= f.text_field :item_code %>
+  </p>
+  <p>
+    <%= f.label :batch_no %><br />
+    <%= f.text_field :batch_no %>
+  </p>
+  <p>
+    <%= f.label :expiry_date %><br />
+    <%= f.text_field :expiry_date %>
+  </p>
+  <p>
+    <%= f.label :quantity %><br />
+    <%= f.text_field :quantity %>
+  </p>
+  <p>
+    <%= f.label :sale_rate %><br />
+    <%= f.text_field :sale_rate %>
+  </p>
+  <p>
+    <%= f.label :purchase_rate %><br />
+    <%= f.text_field :purchase_rate %>
+  </p>
+  <p>
+    <%= f.label :discount %><br />
+    <%= f.text_field :discount %>
+  </p>
+  <p>
+    <%= f.label :total %><br />
+    <%= f.text_field :total %>
+  </p>
+  <p>
+    <%= f.label :sum_tot %><br />
+    <%= f.text_field :sum_tot %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @issue_op_child %> |
+<%= link_to 'Back', issue_op_children_path %>

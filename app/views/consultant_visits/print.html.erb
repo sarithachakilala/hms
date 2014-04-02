@@ -1,0 +1,48 @@
+<body onload="window.print()">
+<script type="text/javascript"> 
+	function print_page()
+	{
+		document.getElementById('print').style.display='none'
+		document.getElementById('back').style.display='none'
+		window.print();
+		return false;
+	}
+</script>
+
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div align="center">
+<table width="80%">
+<tr>
+	
+ 
+
+  <td  class='<%= id %>'><b>Mr no</b></td>
+  <td  class='<%= id %>'><b>:</b></td>
+  <td  class='<%= id1 %>'><%=h @consultant_visit.mr_no %></td>
+
+  <td  class='<%= id %>'><b>Department</b></td>
+  <td  class='<%= id %>'><b>:</b></td>
+  <td  class='<%= id1 %>'><%=h @consultant_visit.department %></td>
+
+  <td  class='<%= id %>'><b>Consultant</b></td>
+  <td  class='<%= id %>'><b>:</b></td>
+  <td  class='<%= id1 %>'><%=h @consultant_visit.consultant %></td>
+</tr>
+<tr>
+  <td  class='<%= id %>'><b>Date of visit</b></td>
+  <td  class='<%= id %>'><b>:</b></td>
+  <td  class='<%= id1 %>'><%=h @consultant_visit.date_of_visit %></td>
+
+  <td  class='<%= id %>'><b>Time-of visit</b></td>
+  <td  class='<%= id %>'><b>:</b></td>
+  <td  class='<%= id1 %>'><%=h @consultant_visit.time_of_visit %></td>
+
+  <td  class='<%= id %>'><b>Charge</b></td>
+  <td  class='<%= id %>'><b>:</b></td>
+  <td  class='<%= id1 %>'><%=h @consultant_visit.charge %></td>
+</td>
+</tr></table>
+</div>
+<br/>
+

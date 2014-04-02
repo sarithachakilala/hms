@@ -1,0 +1,32 @@
+<h1>Editing attachment</h1>
+
+<% form_for(@attachment) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :org_code %><br />
+    <%= f.text_field :org_code %>
+  </p>
+  <p>
+    <%= f.label :org_location %><br />
+    <%= f.text_field :org_location %>
+  </p>
+  <p>
+    <%= f.label :mr_no %><br />
+    <%= f.text_field :mr_no %>
+  </p>
+  <p>
+    <%= f.label :admn_no %><br />
+    <%= f.text_field :admn_no %>
+  </p>
+  <p>
+    <%= f.label :image_path %><br />
+    <%= f.text_field :image_path %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @attachment %> |
+<%= link_to 'Back', attachments_path %>

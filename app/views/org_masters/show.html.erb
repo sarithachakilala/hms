@@ -1,0 +1,47 @@
+<table width="30%" align="center">
+<tr>
+  <td><b>Hospital Name</b></td>
+  <td>:</td>
+  <td><%=h @org_master.hospital_name %></td>
+</tr>
+
+<tr>
+  <td><b>No.of Branches</b></td>
+  <td>:</td>
+  <td><%=h @org_master.no_of_branches %></td>
+</tr>
+
+<tr>
+  <td><b>Port Number</b></td>
+  <td>:</td>
+  <td><%=h @org_master.port_number %></td>
+</tr>
+</table>
+<% i=0 %>
+<br/>
+<table align="center" width="60%" border="1" cellspacing="0">
+	<tr bgcolor ="#378bf8">
+		<th>S.No</th>
+		<th>Branch Code</th>
+		<th>Branch Name</th>
+		<th>Address</th>
+		<th>Contact No</th>
+		<th>Email</th>
+	</tr>
+<% for org_master in  @org_master.org_master_child_tables %>
+	<tr >
+		<td><%=h i+=1 %></td>
+		<td><%=h org_master.branch_code %></td>
+		<td><%=h org_master.branch_name %></td>
+		<td><%=h org_master.address %></td>
+		<td><%=h org_master.ph_no %></td>
+		<td><%=h org_master.email %></td>
+	</tr>
+<% end %>
+</table>
+
+<table align="center" width="60%">
+<tr></tr>
+<tr></tr>
+	<tr><td align="center"><%= link_to "Back",  org_masters_path, :class=>"new1" %></td></tr>
+</table>

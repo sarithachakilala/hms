@@ -1,0 +1,58 @@
+<% form_for(@modules_list) do |f| %>
+  <table align="center" border=0>
+	<tr>
+		<td>Module_name</td>
+		<td><%= f.text_field :module_name %></td>
+		<td>Position</td>
+		<td><%= f.text_field :position %></td>
+		<td>Path</td>
+		<td><%= f.text_field :path %></td>
+	</tr>
+	<tr>
+		<td colspan="6">
+	<div id="info">
+    <table class="tableone">
+	<caption style="background: url(/images/vertical1_04.jpg) repeat-x top left;text-align:center;" ><font color="#F0FFFF" face="Cambria" ><b>Forms List</b></font></caption>
+    <thead>
+        <tr>
+			<th class="th1"  style="color:black;">S.No</th> 
+			<th class="th2"  style="color:black;">Form Name</th> 
+			<th class="th2"  style="color:black;">Field Type</th> 
+			<th class="th2"  style="color:black;">Path</th> 
+        </tr>
+      </thead>
+     <tbody>
+		<tr><td colspan="4">
+			<div class="innerb">
+			<table class="tabletwo" id="displayTable">
+			<% i=0 %>
+			<% f.fields_for :module_list_children do |a| %>
+				<% if (i%2==0) %>
+					<tr>
+				<% else%>
+					<tr class="dk">
+				<% end %>
+					<td class="td1"><%= text_field_tag('s_no','', :style=>"width:100%", :id => "r#{i}c1", :class => "nbb") %></td> 
+					<td class="td2"><%= a.text_field :form_name, :style=>"width:100%", :id => "r#{i}c2", :class => "nbb" %></td> 
+					<td class="td2"><%= a.select :field_type, [['Content'],['Sub-Heading']], :id => "r#{i}c3", :class => "nbb" %></td> 
+					<td class="td2"><%= a.text_field :path, :style=>"width:100%", :id => "r#{i}c4", :class => "nbb" %></td> 
+				</tr>
+				<% i+=1 %>
+			<% end %>
+			</table>
+			</div>
+		</td>
+		</tr>
+	</tbody>
+     </table>
+   </div>
+		</td>
+	</tr>
+</table>
+<table  align="center">
+	<tr>
+	<td><%= submit_tag "", :value => " Save ", :class => "submit_button" %></td>
+	<td ><%= link_to "Back",  modules_lists_path, :class=>"new1" %></td> 
+	</tr>
+  </table>
+<% end %>

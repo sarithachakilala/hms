@@ -1,0 +1,314 @@
+<table border=1 cellspacing="0" cellpadding="0" width="100%">
+	<% if(@form_name=="appt_payments") %>
+		<tr>
+			<th width="50%">MR NO</th>
+			<th width="50%">Name</th>
+		</tr>
+		<% for admission in @registration %>
+		<% @appt_managements = AppointmentManagement.last(:conditions => " mr_no = '#{admission.mr_no}' and org_code ='#{admission.org_code}' and appt_type!='IP' and appt_status='Confirmed'") %>
+		<% if @appt_managements %>
+			<% @appt_pay = ApptPayment.last(:conditions=>"mr_no='#{@appt_managements.mr_no}' and org_code='#{@appt_managements.org_code}' and appt_no=#{@appt_managements.appt_no} and cons_date='#{@appt_managements.appt_date}'") %>
+			<% if !@appt_pay %>
+				<tr>
+					<td class="cursor_point" onclick="mrfun('<%= @appt_managements.id %>')"><%=  @appt_managements.mr_no %></td>
+					<td class="cursor_point" onclick="mrfun('<%= @appt_managements.id %>')"><%= admission.first_name %></td>
+				</tr>
+			<% end %>
+			<% end %>	
+		<% end %>
+	<% elsif(@form_name=="admissions") %>
+		<tr>
+			<th width="50%">MR NO</th>
+			<th width="50%">Name</th>
+		</tr>
+		<% for admission in @registration %>
+			<% adm =Admission.last(:conditions =>"(mr_no ='#{admission.mr_no}' and org_code ='#{admission.org_code}'and admn_status='Admitted')")%>
+			<% if (!adm ) %>
+				<tr>
+					<td  class="cursor_point" onclick="mrfun('<%= admission.id %>')"><%=  admission.mr_no %></td>
+					<td class="cursor_point" onclick="mrfun('<%= admission.id %>')"><%= admission.patient_name %></td>
+				</tr>
+			<% end %>	
+		<% end %>
+<% elsif(@form_name=="issues_to_op") %>
+		<tr>
+			<th width="50%">MR NO</th>
+			<th width="50%">Name</th>
+		</tr>
+		<% for admission in @registration %>
+			
+				<tr>
+					<td  class="cursor_point" onclick="mrfun('<%= admission.id %>')"><%=  admission.mr_no %></td>
+					<td class="cursor_point" onclick="mrfun('<%= admission.id %>')"><%= admission.first_name %></td>
+				</tr>
+		
+		<% end %>
+		
+	
+	<% elsif(@form_name=="ot_management") %>
+		<tr>
+			<th width="50%">Admn.NO</th>
+			<th width="50%">Name</th>
+		</tr>
+		<% for admission in @registration %>
+			<% adm =Admission.last(:conditions =>"(mr_no ='#{admission.mr_no}' and org_code ='#{admission.org_code}'and admn_status='Admitted')")%>
+			<% if(adm) %>
+				<tr>
+					<td class="cursor_point" onclick="ajaxSearch('<%= adm.id %>')"><%=  adm.admn_no %></td>
+					<td class="cursor_point" onclick="ajaxSearch('<%= adm.id %>')"><%= admission.first_name %></td>
+				</tr>
+			<% end %>	
+		<% end %>
+		
+	<% elsif(@form_name=="issues_to_ip") %>
+		<tr>
+			<th width="50%">Admn.NO</th>
+			<th width="50%">Name</th>
+		</tr>
+				<% for otm in @admission %>
+				<% reg=Registration.find_by_mr_no_and_org_code(otm.mr_no,otm.org_code) %>
+					<tr>
+						<td class="cursor_point" onclick="ajaxSearch('<%= otm.id %>')"><%= otm.admn_no %></td>
+						<td class="cursor_point" onclick="ajaxSearch('<%= otm.id %>')"><%= reg.first_name %></td>
+					</tr>
+				<% end %>
+				
+		
+		
+	<% elsif(@form_name=="ip_refunds") %>
+		<tr>
+			<th width="50%">Admn.NO</th>
+			<th width="50%">Name</th>
+		</tr>
+		<% for admission in @registration %>
+			<% adm =Admission.last(:conditions =>"(mr_no ='#{admission.mr_no}' and org_code ='#{admission.org_code}'and admn_status='Admitted')")%>
+			<% if(adm) %>
+				<% @ip_refund=IpRefund.find_by_admn_no_and_org_code(adm.admn_no,adm.org_code) %>
+						<% if(!@ip_refund) %>
+							<% @ip_post_discount = IpPostDiscount.find_by_admn_no_and_org_code(adm.admn_no,adm.org_code) %>
+								<% if @ip_post_discount %>
+								<tr>
+								<td class="cursor_point" onclick="ajaxSearch('<%= adm.id %>')"><%=  adm.admn_no %></td>
+								<td class="cursor_point" onclick="ajaxSearch('<%= adm.id %>')"><%= admission.first_name %></td>
+								</tr>
+								<% end %>
+						<% end %>
+			<% end %>	
+		<% end %>
+		
+		<% elsif(@form_name=="ip_post_discount") %>
+		<tr>
+			<th width="50%">Admn.NO</th>
+			<th width="50%">Name</th>
+		</tr>
+		<% for admission in @registration %>
+			<% adm =Admission.last(:conditions =>"(mr_no ='#{admission.mr_no}' and org_code ='#{admission.org_code}'and admn_status='Admitted')")%>
+			<% if(adm) %>
+					<%  @ip_post_discount=IpPostDiscount.find_by_admn_no_and_org_code(adm.admn_no,adm.org_code) %>
+					<%  if(!@ip_post_discount) %>
+						<% @final_bill=FinalBill.find_by_admn_no_and_org_code(adm.admn_no,adm.org_code) %>
+							 <% if(@final_bill) %>
+								<% if(@final_bill.balance_amount==0) %>
+								<tr>
+								<td class="cursor_point" onclick="ajaxSearch('<%= adm.id %>')"><%=  adm.admn_no %></td>
+								<td class="cursor_point" onclick="ajaxSearch('<%= adm.id %>')"><%= admission.first_name %></td>
+								</tr>
+							<% end %>
+							<% end %>
+
+					<% end %>
+			<% end %>	
+		<% end %>
+		
+	<% elsif(@form_name=="doctor_transfer") %>
+		<tr>
+			<th width="50%">Admn.NO</th>
+			<th width="50%">Name</th>
+		</tr>
+		<% for admission in @registration %>
+			<% adm =Admission.last(:conditions =>"(mr_no ='#{admission.mr_no}' and org_code ='#{admission.org_code}'and admn_status='Admitted')")%>
+			<% if(adm) %>
+				<tr>
+					<td class="cursor_point" onclick="mrfun('<%= adm.id %>')"><%=  adm.admn_no %></td>
+					<td class="cursor_point" onclick="mrfun('<%= adm.id %>')"><%= admission.first_name %></td>
+				</tr>
+			<% end %>	
+		<% end %>
+	<% elsif(@form_name=="attendent_detail") %>
+		<tr>
+			<th width="50%">Admn.NO</th>
+			<th width="50%">Name</th>
+		</tr>
+		<% for admission in @registration %>
+			<% adm =Admission.last(:conditions =>"(mr_no ='#{admission.mr_no}' and org_code ='#{admission.org_code}'and admn_status='Admitted')")%>
+			<% if(adm) %>
+			<% attendent_detail = AttendentDetail.find_by_admn_no_and_org_code(adm.admn_no,adm.org_code) %>
+			<% if(!attendent_detail) %>
+				<tr>
+					<td class="cursor_point" onclick="check_admn_no('<%= adm.id %>')"><%=  adm.admn_no %></td>
+					<td class="cursor_point" onclick="check_admn_no('<%= adm.id %>')"><%= admission.first_name %></td>
+				</tr>
+			<% end %>
+			<% end %>
+		<% end %>
+	<% elsif(@form_name=="discharge_intimation") %>
+		<tr>
+			<th width="50%">Admn.NO</th>
+			<th width="50%">Name</th>
+		</tr>
+		<% for admission in @registration %>
+			<% adm =Admission.last(:conditions =>"(mr_no ='#{admission.mr_no}' and org_code ='#{admission.org_code}'and admn_status='Admitted')")%>
+			<% if(adm) %>
+			<% discharge_intimation = DischargeIntimation.find_by_admn_no_and_org_code(adm.admn_no,adm.org_code) %>
+			<% if(!discharge_intimation) %>
+				<tr>
+					<td class="cursor_point" onclick="check_admn_no('<%= adm.id %>')"><%=  adm.admn_no %></td>
+					<td class="cursor_point" onclick="check_admn_no('<%= adm.id %>')"><%= admission.first_name %></td>
+				</tr>
+			<% end %>
+			<% end %>
+		<% end %>
+	<% elsif(@form_name=="discharge_summary") %>
+		<tr>
+			<th width="50%">Admn.NO</th>
+			<th width="50%">Name</th>
+		</tr>
+		<% for admission in @registration %>
+			<% adm =Admission.last(:conditions =>"(mr_no ='#{admission.mr_no}' and org_code ='#{admission.org_code}'and admn_status='Admitted')")%>
+			<% if(adm) %>
+				<tr>
+					<td class="cursor_point" onclick="check_admn_no('<%= adm.id %>')"><%=  adm.admn_no %></td>
+					<td class="cursor_point" onclick="check_admn_no('<%= adm.id %>')"><%= admission.patient_name %></td>
+				</tr>
+			<% end %>
+		<% end %>
+       <% elsif(@form_name=="advance") %>
+		<tr>
+			<th width="50%">Admn.NO</th>
+			<th width="50%">Name</th>
+		</tr>
+		<% for admission in @registration %>
+			<% adm =Admission.last(:conditions =>"(mr_no ='#{admission.mr_no}' and org_code ='#{admission.org_code}'and admn_status='Admitted')")%>
+			<% if(adm) %>
+			<% final_bill=FinalBill.find_by_admn_no_and_org_code(adm.admn_no,adm.org_code) %>
+			<% if(!final_bill) %>
+				<tr>
+					<td class="cursor_point" onclick="check_admn_no('<%= adm.id %>')"><%=  adm.admn_no %></td>
+					<td class="cursor_point" onclick="check_admn_no('<%= adm.id %>')"><%= admission.first_name+"."+admission.last_name %></td>
+				</tr>
+			<% end %>
+			<% end %>
+		<% end %>
+	<% elsif(@form_name=="ip_dues") %>
+		<tr>
+			<th width="50%">Admn.NO</th>
+			<th width="50%">Name</th>
+		</tr>
+		<% for admission in @registration %>
+			<% final_bill=FinalBill.last(:conditions =>"mr_no = '#{admission.mr_no}' and org_code = '#{admission.org_code}' and due!=0") %>
+			<% if(final_bill) %>
+				<% adm=Admission.find_by_admn_no_and_org_code(final_bill.admn_no,final_bill.org_code) %>
+				<tr>
+					<td class="cursor_point" onclick="check_admn_no('<%= adm.id %>')"><%=  adm.admn_no %></td>
+					<td class="cursor_point" onclick="check_admn_no('<%= adm.id %>')"><%= admission.first_name+"."+admission.last_name %></td>
+				</tr>
+			<% end %>
+		<% end %>
+		
+	<% elsif(@form_name=="final_bill_cancel") %>
+		<tr>
+			<th width="50%">Admn.NO</th>
+			<th width="50%">Name</th>
+		</tr>
+		<% for admission in @registration %>
+			<% adm=Admission.last(:conditions =>"mr_no = '#{admission.mr_no}' and org_code = '#{admission.org_code}' and admn_status='Admitted'") %>
+			<% if(adm) %>
+			<% final_bill=FinalBill.find_by_admn_no_and_org_code(adm.admn_no,adm.org_code) %>
+			<% if(final_bill) %>
+				<% final_bill_cancel=FinalBillCancel.find_by_admn_no_and_org_code(final_bill.admn_no,final_bill.org_code) %>
+				<% if(!final_bill_cancel) %>
+				<tr>
+					<td class="cursor_point" onclick="check_admn_no('<%= adm.id %>')"><%=  adm.admn_no %></td>
+					<td class="cursor_point" onclick="check_admn_no('<%= adm.id %>')"><%= admission.first_name+"."+admission.last_name %></td>
+				</tr>
+				<% end %>
+			<% end %>
+			<% end %>
+		<% end %>
+	<% elsif(@form_name=="op_billing") %>
+		<tr>
+			<th width="50%">MR NO</th>
+			<th width="50%">Name</th>
+		</tr>
+		<% for investigation in @registration %>
+		<% inv=Investigation.last(:conditions => "mr_no ='#{investigation.mr_no}' and org_code ='#{investigation.org_code}' and  appt_status='Recalling'") %>
+		<% if(inv) %>
+		<% opbilling=OpBilling.find_by_investigation_id(inv.id) %>
+		<% if(!opbilling) %>
+			<tr>
+				<td class="cursor_point" onclick="mrfun('<%= inv.id %>')"><%= investigation.mr_no %></td>
+				<td class="cursor_point" onclick="mrfun('<%= inv.id %>')"><%= investigation.first_name %></td>
+			</tr>
+		<% end %>
+		<% end %>
+		<% end %>
+		<% elsif(@form_name=="consultant_visit") %>
+		<tr>
+			<th width="50%">Admn.No</th>
+			<th width="50%">Name</th>
+		</tr>
+		<% for admission in @registration %>
+		<% adm=Admission.last(:conditions =>"mr_no = '#{admission.mr_no}' and org_code = '#{admission.org_code}' and admn_status='Admitted'") %>
+			<% if adm %>			
+					<tr>
+					<td class="cursor_point" onclick="check_admn_no('<%= adm.id %>')"><%=  adm.admn_no %></td>
+					<td class="cursor_point" onclick="check_admn_no('<%= adm.id %>')"><%= admission.patient_name %></td>
+				</tr>
+			<% end %>
+     	 	<% end %>
+		<% elsif(@form_name=="req_test") %>
+		<tr>
+			<th width="50%">Admn.No</th>
+			<th width="50%">Name</th>
+		</tr>
+		<% for admission in @registration %>
+		<% adm=Admission.last(:conditions =>"mr_no = '#{admission.mr_no}' and org_code = '#{admission.org_code}' and admn_status='Admitted'") %>
+			<% if adm %>			
+					<tr>
+					<td class="cursor_point" onclick="check_admn_no('<%= adm.id %>')"><%=  adm.admn_no %></td>
+					<td class="cursor_point" onclick="check_admn_no('<%= adm.id %>')"><%= admission.patient_name %></td>
+				</tr>
+			<% end %>
+      		<% end %>
+<% elsif(@form_name=="treatment_plans") %>
+		<tr>
+			<th width="50%">Admn.No</th>
+			<th width="50%">Name</th>
+		</tr>
+		<% for admission in @registration %>
+		<% adm=Admission.last(:conditions =>"mr_no = '#{admission.mr_no}' and org_code = '#{admission.org_code}' and admn_status='Admitted'") %>
+			<% if adm %>			
+					<tr>
+					<td class="cursor_point" onclick="mrfun('<%= adm.id %>')"><%=  adm.admn_no %></td>
+					<td class="cursor_point" onclick="mrfun('<%= adm.id %>')"><%= admission.patient_name %></td>
+				</tr>
+			<% end %>
+      		<% end %>
+			
+		<% elsif(@form_name=="test_bookings") %>
+		<tr>
+			<th width="50%">Admn.No</th>
+			<th width="50%">Name</th>
+		</tr>
+		<% for admission in @registration %>
+		<% adm=Admission.last(:conditions =>"mr_no = '#{admission.mr_no}' and org_code = '#{admission.org_code}' and admn_status='Admitted'") %>
+			<% if adm %>			
+					<tr>
+					<td class="cursor_point" onclick="ajax('<%= adm.id %>')"><%=  adm.admn_no %></td>
+					<td class="cursor_point" onclick="ajax('<%= adm.id %>')"><%= admission.patient_name %></td>
+				</tr>
+			<% end %>
+      		<% end %>
+
+	<% end %>
+</table>

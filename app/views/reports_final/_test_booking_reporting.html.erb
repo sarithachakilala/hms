@@ -1,0 +1,86 @@
+
+<br/>
+<div align="center" width="100%">
+<table align="center" width="90%" border="1" cellspacing=0>
+	<tr bgcolor ="#378bf8">
+		<th>S.No</th>
+		<th>MR No</th>		
+		<th>Patient Name</th>
+		<th>Age/Gender</th>		
+		<th>Reffered By</th>
+		<th>Test Name</th>		
+		<th>Amount</th>
+  </tr>
+<% @i=0 %>
+<% j=0 %>
+<% @total=0 %>
+<% @testbooking.each do |testbooking| %>
+<% if(@testbooking) %>
+<% if((@i%2)==0) 
+		id="datacelltwo"
+	else
+		id="datacellone"
+  end %>
+	<% j=1 %>
+	<% registration=Registration.last(:conditions => "mr_no='#{testbooking.mr_no}'") %>
+	<% if !@test.empty? || !@department.empty?%>
+		<% @child=TestBookingChild.find(:all,:conditions => "test_booking_id = '#{testbooking.id}' and test_name LIKE '#{@test}%' and department LIKE '#{@department}%'") %>
+		
+		<% if(@child[0]) %>
+			<tr class='<%= id %>'>
+				<td><%= @i=@i+1 %>
+				<td><%=h testbooking.mr_no %></td>
+				<td><%=h testbooking.patient_name %> </td>
+				<td><%=h registration.age.to_s+"/"+registration.gender %></th>
+				<td><%=h testbooking.refferal_doctor %></td>
+				<% for testname in @child %>
+					<% if(j==0) %>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					<% end %>
+					<td><%= testname.test_name %></td>
+					<td><%= testname.amount %></td>
+					<% @total=@total+testname.amount %>
+					<% if(j==1) %>
+						<%=  %>
+					<% end %>
+					<% j=0 %>
+				<% end %>
+		 	</tr>  
+		<% end %>
+	<% else %>
+		<tr class='<%= id %>'>
+		<td><%= @i=@i+1 %>
+		<td><%=h testbooking.mr_no %></td>
+		<td><%=h testbooking.patient_name %> </td>
+		<td><%=h registration.age.to_s+"/"+registration.gender %></th>
+		<td><%=h testbooking.refferal_doctor %></td>
+		<% for testname in testbooking.test_booking_child %>
+			<% if(j==0) %>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+			<% end %>
+			<td><%= testname.test_name %></td>
+			<td><%= testname.amount %></td>
+			<% @total=@total+testname.amount %>
+			<% if(j==1) %>
+				<%=  %>
+			<% end %>
+			<% j=0 %>
+		</tr>  
+	<% end %>
+	<% end %>
+ <% end %>
+<% end %>
+<tr bgcolor ="yellow"><td colspan="6" align="right">Total:</td>
+<td><%= @total %></td></tr>
+</table>
+

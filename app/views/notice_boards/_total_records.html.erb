@@ -1,0 +1,35 @@
+<div align="center" width="100%">
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+  <tr>
+    <th width="10%">S.No</th>    
+	<th width="20%">Date</th>
+	<th width="10%">Time</th>
+	<th width="20%">Department</th>
+	<th width="20%">Employee</th>
+	<th width="40%">Notice</th>
+	<th width="40%">Edit</th>
+  </tr>
+  <br />
+</thead>
+<tbody>
+<% @i=0 %>
+<% @notice_boards.each do |notice_board| %>
+<% if((@i % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+		 end %>
+  <tr class='<%= id %>'>
+	<td width="10%"><%= @i+=1 %></td>
+	<td width="15%"><%=h notice_board.notice_date %></td>
+	<td width="10%">&nbsp;&nbsp;&nbsp;<%=h notice_board.notice_time.strftime("%H:%M") %>&nbsp;&nbsp;&nbsp;</td>
+	<td width="15%"><%=h notice_board.department %></td>
+	<td width="15%"><%=h notice_board.employee %></td>
+	<td width="40%"><%=h notice_board.notice %></td>
+	<td><%= link_to 'Edit', edit_notice_board_path(notice_board), :class => "submit_button" %></td>
+  </tr>
+<% end %>
+</table>
+</div>
+

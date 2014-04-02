@@ -1,0 +1,34 @@
+<%= stylesheet_link_tag 'css' %>
+<div align="center" >
+	<div align="center" width="100%">
+<table width="90%" id="tablesorter-demo">
+<tr style="background-color:#378bf8;color:white;">
+    <th style="bgcolor:#3a73a1;">S.No</th>    
+	<th style="bgcolor:#3a73a1;">Item Name</th>
+	<th style="bgcolor:#3a73a1;">Packing</th>
+	<th style="bgcolor:#3a73a1;">Units</th>
+</tr>
+
+<% @i=0%>
+<% @items.each do |itemmaster| %>
+ <% if((@i % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+end %>
+  <tr class='<%= id %>'>
+	<td><%= @i+=1 %></td>
+   
+     <td><%=h itemmaster.product_name %></td>
+     <td><%=h itemmaster.packing %></td>
+     <td><%=h itemmaster.units %></td>
+
+				
+			<% end %>
+		 
+	
+		
+
+		
+</div>
+	

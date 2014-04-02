@@ -1,0 +1,108 @@
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Doctor Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/employee_masters?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Employee Masters</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<div align="center">
+<table width="50%">
+
+
+		<tr>
+	<td class='<%= id %>'><b>Org.Code</b></td>
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id1 %>'> <%=h @employee_master.org_code %></td>
+	<td class='<%= id %>'><b>Org.Location:</b></td>
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id1 %>'><%=h @employee_master.org_location %></td>
+  </tr>
+<tr>
+  <td class='<%= id %>'><b>EmpId</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @employee_master.empid %></td>
+  <td class='<%= id %>'><b>Name</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @employee_master.name %></td>
+  </tr>
+ <tr>
+  <td class='<%= id %>'><b>Category</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1%>'><%=h @employee_master.category %></td>
+  <td class='<%= id %>'><b>Department</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @employee_master.department %></td>
+</tr>
+<tr>
+  <td class='<%= id %>'><b>Designation</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1%>'><%=h @employee_master.designation %></td>
+  <td class='<%= id %>'><b>DOB</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1%>'><%=h @employee_master.dob %></td>
+</tr>
+<tr>
+  <td class='<%= id %>'><b>Join Date</b>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1%>'><%=h @employee_master.join_date %></td>
+  <td class='<%= id %>'><b>Payment Type</b></td>
+   <td class='<%= id %>'>:</td> 
+  <td class='<%= id1%>'><%=h @employee_master.payment_type %></td>
+</tr>
+<tr>
+  <td class='<%= id %>'><b>Bank Name</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1%>'><%=h @employee_master.bank_name %></td>
+  <td class='<%= id %>'><b>Acc.No</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1%>'><%=h @employee_master.acc_no %></td>
+</tr>
+<tr>
+  <td class='<%= id %>'><b>Branch Name</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1%>'><%=h @employee_master.branch_name %></td>
+  <td class='<%= id %>'><b>Address</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1%>'><%=h @employee_master.address %></td>
+</tr>
+<tr>
+  <td class='<%= id %>'><b>City</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1%>'><%=h @employee_master.city %></td>
+  <td class='<%= id %>'><b>State</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1%>'><%=h @employee_master.state %></td>
+</tr>
+<tr>
+	<td class='<%= id%>'> <b>Country</b></td>
+    <td class='<%= id %>'>:</td> 
+	<td class='<%= id1%>'><%=h @employee_master.country %></td>
+	<td class='<%= id%>'><b>Zip  Code</b></td>
+    <td class='<%= id %>'>:</td> 
+	<td class='<%= id1%>'><%=h @employee_master.zipcode %></td>
+</tr>
+<tr>
+	<td class='<%= id %>'><b>Phno</b></td>
+    <td class='<%= id %>'>:</td> 
+	<td class='<%= id1%>'><%=h @employee_master.phno %></td>
+	<td class='<%= id%>'><b>Email:</b></td>
+    <td class='<%= id %>'>:</td> 
+	<td class='<%= id1%>'><%=h @employee_master.email_id %></td>
+</tr>
+<tr>
+	<td class='<%= id%>'><b>From Time</b></td>
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id1%>'> <%=h @employee_master.from_time %></td>
+	<td class='<%= id%>'><b>To Time</b></td>
+    <td class='<%= id %>'>:</td> 
+	<td class='<%= id1%>'><%=h @employee_master.to_time %></td>
+</tr>
+</table>
+ 
+ </div>
+<br/>
+<center>
+<td valign="middle"><%= link_to "back",  employee_masters_path, :class=>"new1" %></td>

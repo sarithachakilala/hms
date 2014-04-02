@@ -1,0 +1,78 @@
+<script type="text/javascript"> 
+	function date_range()
+	{
+		var patient_name=document.getElementById('patient_name').value
+		var father_name=document.getElementById('father_name').value
+		var city_name=document.getElementById('city_name').value	
+		var org_code='<%= @org_code %>'
+		req = new Ajax.Request('/discharge_summaries/mrno_search/1', {
+				method: 'get',
+				parameters: { patient_name: patient_name, city_name :city_name, father_name:father_name, org_code : org_code },
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			});
+		function processReqChange(req) 
+		{
+			
+			if(req.responseText=="No Records")
+			
+				document.getElementById("table").value=req.responseText
+			else
+				document.getElementById("table").innerHTML=req.responseText
+			
+		}
+	
+	}
+	function Ajax_Code(id,value)
+	{
+		var openerWindow = window.opener;
+		openerWindow.document.getElementById(id).value=value;
+		var text_input = openerWindow.document.getElementById (id);
+		text_input.focus (); 
+		window.close();
+			
+	}		
+	
+	function clear_function()
+	{
+	
+		var patient_name=document.getElementById('patient_name').value = " "
+		var father_name=document.getElementById('father_name').value = " "
+		var city_name=document.getElementById('city_name').value = " "	
+	
+	}
+</script> 
+
+<style type="text/css">
+	p.cursor
+	{
+		cursor :pointer;
+	}
+</style>
+<body>
+<font size="3" face="Calibri">
+
+<fieldset>
+<legend><div class="font"><b>Search</b></div></legend>
+<table  align="center">
+
+<tr>
+	<td><label for="item_name">Patient Name</label></td>
+	<td><%= text_field 'patient_name','',:size => 20, :id=>"patient_name" %></td>
+	<td><label for="item_name">Father Name</label></td>
+	<td><%= text_field 'father_name','',:size => 20, :id=>"father_name" %></td>
+	<td>City</td>
+	<td><%= select('city','name',CityMaster.find(:all).collect{|p|[p.name]},{:prompt => true}, :id=>"city_name") %>
+</tr>
+<tr></tr><tr></tr>
+<td><a href="javascript:void(0);" class="new1" onClick ="date_range()">Search</a></td>
+<td><a href="javascript:void(0);" class="new1" onClick ="clear_function()">Clear</a></td>
+</tr>
+</table>
+</fieldset>
+</body>
+<div class="font">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Results :</b></div>
+<div id="table" align="center">
+
+</div>

@@ -1,0 +1,122 @@
+<%= stylesheet_link_tag 'css' %>
+<%= javascript_include_tag :defaults %>
+<%= javascript_include_tag 'jquery-1.7.1.min.js' %>
+<script type="text/javascript"> 
+	
+	function save_image_name(input)
+	{
+		if(!/(\.bmp|\.gif|\.jpg|\.jpeg|\.png)$/i.test(input.value))
+		{
+			alert("Invalid image file type.");
+			document.getElementById('upload_image').value="";
+			input.focus();
+			return false;
+		}
+		else if(input.files[0].size > 102400)
+		{
+			alert("upload less than 100  kb")
+			document.getElementById('registration_uploaded_file').value="";
+			input.focus();
+			return false;
+		}
+		if (input.files && input.files[0])
+        {
+        	var image = document.getElementById("image_display");
+        	image.style.display = '';
+		    var reader = new FileReader();
+			reader.onload = function (e)
+			{
+				$('#blah').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+		var image_path=document.getElementById("home_uploaded_file").value;
+		var temp=new Array();
+		temp=image_path.split("\\")
+		document.getElementById("home_image_path").value=temp[temp.length-1];
+	
+	}
+
+function check()
+{
+
+	if(document.getElementById('home_uploaded_file').value == "")
+	{
+		alert("Please Choose Your Image Path");
+		return false;
+	}
+}
+</script>
+
+<style type="text/css">
+#emr_links {
+	font-family: Calibri, Arial;
+	font-size: 12px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: bold;
+	text-decoration: none;
+	position: absolute;
+	height: 510px;
+	width: 15%;
+	left: 0px;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	background:#e0eee0;
+}
+#links_data {
+	font-family: Calibri, Arial;
+	font-size: 13px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: normal;
+	text-decoration: none;
+	position: absolute;
+	height: 510px;
+	width: auto;
+	left: 15%;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	background:#ecf3f7;
+}
+
+html{
+	overflow :hidden;
+}
+</style>
+<div id="emr_links">
+	<table>
+		<tr>
+			<th align="center"><u>Old Images</u></th>
+		</tr>
+		<% home=Home.all %>
+		<% for h in home %>
+			<tr>
+				<td><img src="/images/<%= h.image_path %>" alt="your image" border="1" width="150px" height="150px;" /></td>
+			</tr>
+		<% end %>	
+    </table>
+</div>
+<div id="links_data">
+<% form_for :home,:url => {:controller => "home", :action => "create",:method => :post}, :html => {:multipart => true} do |form| %>
+<br/><br/><br/>
+<table align="center" width="40%">
+	<tr style="display:none;" id="image_display">
+		<td colspan="2"><img id="blah" src="/images/useraccountsicon.png" alt="your image" border="1" width="100%" height="150px;" /></td>
+	</tr>
+	<tr>
+		<td>Upload Hospital Image</td>
+		<td><%= file_field :home,:uploaded_file, :onChange => "save_image_name(this)" %></td>
+	</tr>
+	<tr>
+		<td colspan="2" align="center"><%= submit_tag "", :value => " Save ", :class => "submit_button" , :onClick => "return check();" %></td>
+		
+	</tr>
+
+</table>
+<%= hidden_field :home, :image_path %>
+
+<% end %>
+</div>

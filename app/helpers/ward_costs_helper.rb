@@ -1,0 +1,2 @@
+module WardCostsHelper
+end

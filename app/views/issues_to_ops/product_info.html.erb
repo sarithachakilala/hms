@@ -1,0 +1,65 @@
+
+<script type="text/javascript"> 
+	//Ajax Code
+	function Ajax_Code(product_name,batch_no,product_id,quantity,sale_rate,vat,expiry_date)
+	{
+		var openerWindow = window.opener;
+		medicine_name=product_name
+		batch_no=batch_no
+		product_id=product_id
+		openerWindow.get_medicine1(medicine_name,batch_no,product_id,quantity,sale_rate,vat,expiry_date)
+		self.close();
+	}
+</script>
+<style>
+	tr.cursor_style
+	{
+ 		cursor: pointer; 
+	}
+</style>
+
+  <%= stylesheet_link_tag 'css' %>
+  <%= stylesheet_link_tag 'table_style' %>
+<div id="demo">
+		<center><font color='blue'>Product List</font></center>
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div align="center">
+<table width="80%" class="sofT">
+<thead>
+<tr bgcolor ="#378bf8" style="color:white;">
+				<th>S.No</th>
+				<th>Prod.Name</th>
+				<th>Batch No</th>
+				<th>Exp.Date</th>
+				<th>Avai.Qty</th>
+				<th>Rate</th>
+				
+					</tr>
+		</thead>
+		<tbody>
+			<% i=1 %>
+		
+			<% @purchase_invoice_children.each do |purchase_invoice_children| %>
+<% if ((i%2==0))
+  id="datacelltwo"
+  else
+  id="datacellone"
+  end %>
+		
+			<tr  class="cursor_style" onclick="Ajax_Code('<%= purchase_invoice_children.item_name %>','<%= purchase_invoice_children.batch_no %>','<%= purchase_invoice_children.goodsrecieptnotemaster_id %>','<%= purchase_invoice_children.quantity %>','<%= purchase_invoice_children.sale_rate %>','<%= purchase_invoice_children.vat %>','<%= purchase_invoice_children.expiry_date %>')">	
+			    <td><%= i %></td>
+			    <td><%=h purchase_invoice_children.item_name %></td>
+			    <td><%=h purchase_invoice_children.batch_no %></td>
+			    <td><%=h purchase_invoice_children.expiry_date %></td>
+			    <td><%=h purchase_invoice_children.quantity %></td>
+			    <td><%=h purchase_invoice_children.mrp %></td>
+			   
+			  </tr>
+			  <% i=i+1 %>
+			<% end %>
+		</tbody>
+		<tfoot>
+	</table>
+</div>
+

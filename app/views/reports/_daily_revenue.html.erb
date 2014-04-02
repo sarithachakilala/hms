@@ -1,0 +1,200 @@
+<br/>
+<div class="font"><b>Daily Revenue Report</b></div>
+<br/>
+<% @date=Date.today %>
+<% if(@patient_type=="OP") %>
+<div align="center" width="50%">
+<table width="100%" border=1 cellspacing=0>
+  <tr class="info">
+		<th>S.No</th>
+		<th>Revenue Type</th>
+		<th>Amount</th>
+
+	</tr>
+<% @i=0 %>
+<% @total=0 %>
+<% @total_amount=0 %>
+<% @array=Array.new %>
+<% @array1=Array.new %>
+<% @array2=Array.new %>
+<% @array3=Array.new %>
+
+
+<tr>
+	<td align="center"  colspan=2> <b>Out Patient Fee Details </b> &nbsp;&nbsp;&nbsp;&nbsp; : &nbsp;&nbsp;&nbsp;&nbsp;On&nbsp;&nbsp; <%= @date %></td>
+	<td>Total Amount</td>
+	
+</tr>
+
+<tr>
+        <td><%= @i=@i+1 %></td>
+   		<td>Appointment Payments</td>
+		<% j=0 %>
+		<td class="value"><%= @array1[j]=AppointmentPayment.sum(:consultant_fee, :conditions => " appt_date = '#{Date.today}' AND org_code like '#{@org_code}%'") %></td>
+		<% j+=1 %>
+	
+</tr>
+ 
+<tr>
+        <td><%= @i=@i+1 %></td>
+   		<td>Test Bookings</td>
+		<% j=0 %>
+		<td class="value"><%=h @array3[j]=TestBooking.sum(:total_amount, :conditions => " booking_date = '#{Date.today}' AND org_code like '#{@org_code}%'") %></td>
+		<% j+=1 %>
+	
+</tr>
+
+<tr bgcolor="pink">
+	<td colspan="2" align="center"><b>Total</b></td>
+	<% i=0 %>
+	<% j=0 %>
+	<td class="value"><%= @total=@array[i].to_f+@array1[i].to_f+@array3[i].to_f %></td>
+	<% @total_amount=@total_amount+@total %>
+
+</tr>
+
+<tr>
+	<td align="center"> <b>Total Amount</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : &nbsp;&nbsp;&nbsp;&nbsp;
+	<%= @total_amount %></td>
+	
+</tr>
+</table>
+</div>
+<% end %>
+<br/>
+<% if(@patient_type=="IP") %>
+<div align="center" width="100%">
+<table width="100%" border=1 cellspacing=0>
+  <tr class="info">
+		<th>S.No</th>
+		<th>Revenue Type</th>
+		<th>Amount</th>
+
+	</tr>
+<% @i=0 %>
+<% @total=0 %>
+<% @total_amount=0 %>
+<% @array=Array.new %>
+<% @array1=Array.new %>
+<% @array2=Array.new %>
+<tr>
+	<td align="center"  colspan=2> <b>In-Patient Fee Details </b> &nbsp;&nbsp;&nbsp;&nbsp; : &nbsp;&nbsp;&nbsp;&nbsp;On&nbsp;&nbsp; <%= @date %></td>
+	<td>Total Amount</td>
+	
+</tr>
+
+<tr>
+        <td><%= @i=@i+1 %></td>
+   		<td>Advances</td>
+		<% j=0 %>
+		<td class="value"><%= @array1[j]=AdvancePayment.sum(:gross_amount, :conditions => " advance_date = '#{Date.today}' AND org_code like '#{@org_code}%'") %></td>
+		<% j+=1 %>
+	
+</tr>
+<tr class='<%= id %>'>
+        <td><%= @i=@i+1 %></td>
+   		<td>Final Bills</td>
+		<% j=0 %>
+		<td class="value"><%=h @array2[j]=FinalBill.sum(:paid_amount, :conditions => " final_bill_date = '#{Date.today}' AND org_code like '#{@org_code}%'") %></td>
+		<% j+=1 %>
+	
+</tr>   
+
+
+<tr bgcolor="cyan">
+	<td colspan="2" align="center"><b>Total</b></td>
+	<% i=0 %>
+	<% j=0 %>
+	<td class="value"><%= @total=@array1[i].to_f+@array2[i].to_f %></td>
+	<% @total_amount=@total_amount+@total %>
+</tr>
+
+<tr>
+	<td align="center"> <b>Total Amount</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : &nbsp;&nbsp;&nbsp;&nbsp;
+	<%= @total_amount %></td>
+</tr>
+</table>
+</div>
+<% end %>
+<br/>
+
+
+<% if(@patient_type=="Both") %>
+<div align="center" width="100%">
+<table width="100%" border=1 cellspacing=0>
+  <tr class="info">
+		<th>S.No</th>
+		<th>Revenue Type</th>
+		<th>Amount</th>
+
+	</tr>
+<% @i=0 %>
+<% @total=0 %>
+<% @total_amount=0 %>
+<% @array=Array.new %>
+<% @array1=Array.new %>
+<% @array2=Array.new %>
+<% @array3=Array.new %>
+<% @array5=Array.new %>
+<% @array6=Array.new %>
+<% @array7=Array.new %>
+<tr>
+	<td align="center"  colspan=2> <b>Out Patient Fee Details </b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : On&nbsp;&nbsp; <%= @date %></td>
+</tr>
+
+<tr>
+        <td><%= @i=@i+1 %></td>
+   		<td>Appointment Payments</td>
+		<% j=0 %>
+		<td class="value"><%= @array1[j]=AppointmentPayment.sum(:consultant_fee, :conditions => " appt_date = '#{Date.today}' AND org_code like '#{@org_code}%'") %></td>
+		<% j+=1 %>
+	
+</tr>
+<tr>
+        <td><%= @i=@i+1 %></td>
+   		<td>Test Bookings</td>
+		<% j=0 %>
+		<td class="value"><%=h @array3[j]=TestBooking.sum(:total_amount, :conditions => " booking_date = '#{Date.today}' AND org_code like '#{@org_code}%'") %></td>
+		<% j+=1 %>
+	
+</tr>
+
+<tr>
+	<td align="center"  colspan=2> <b>In-Patient Fee Details </b> &nbsp;&nbsp;&nbsp;&nbsp; : &nbsp;&nbsp;&nbsp;&nbsp;On&nbsp;&nbsp; <%= @date %></td>
+</tr>
+
+<tr>
+        <td><%= @i=@i+1 %></td>
+   		<td>Advances</td>
+		<% j=0 %>
+		<td class="value"><%= @array6[j]=AdvancePayment.sum(:gross_amount, :conditions => " advance_date = '#{Date.today}' AND org_code like '#{@org_code}%'") %></td>
+		<% j+=1 %>
+	
+</tr>
+<tr class='<%= id %>'>
+        <td><%= @i=@i+1 %></td>
+   		<td>Final Bills</td>
+		<% j=0 %>
+		<td class="value"><%=h @array7[j]=FinalBill.sum(:paid_amount, :conditions => " final_bill_date = '#{Date.today}' AND org_code like '#{@org_code}%'") %></td>
+		<% j+=1 %>
+	
+</tr>   
+</tr>
+
+<tr bgcolor="lightsteelblue">
+	<td colspan="2" align="center"><b>Total</b></td>
+	<% i=0 %>
+	<% j=0 %>
+	<td class="value"><%= @total=@array[i].to_f+@array1[i].to_f+@array3[i].to_f+@array6[i].to_f+@array7[i].to_f %></td>
+	<% @total_amount=@total_amount+@total %>
+
+</tr>
+
+<tr>
+	<td colspan="2" align="center" bgcolor="yellow"><b>Total</b></td>
+	<td><%= @total_amount %></td>
+</tr>
+</table>
+</div>
+<% end %>
+<br/>

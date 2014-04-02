@@ -1,0 +1,33 @@
+<p>
+  <b>Charge master:</b>
+  <%=h @charge_master_child.charge_master_id %>
+</p>
+
+<p>
+  <b>Reg type:</b>
+  <%=h @charge_master_child.reg_type %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%=h @charge_master_child.name %>
+</p>
+
+<p>
+  <b>Discount price:</b>
+  <%=h @charge_master_child.discount_price %>
+</p>
+
+<p>
+  <b>Discount persentage:</b>
+  <%=h @charge_master_child.discount_persentage %>
+</p>
+
+<p>
+  <b>Amount:</b>
+  <%=h @charge_master_child.amount %>
+</p>
+
+
+<%= link_to 'Edit', edit_charge_master_child_path(@charge_master_child) %> |
+<%= link_to 'Back', charge_master_children_path %>

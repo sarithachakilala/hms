@@ -1,0 +1,91 @@
+<%= javascript_include_tag :defaults %>
+<%= stylesheet_link_tag 'css' %>
+<%= javascript_include_tag 'commonFunctionality.js' %>
+<script type="text/javascript"> 
+//Fill the fields In Based on the entering MR_NUMBER
+    var query1=""
+    var selectid;
+	function ajaxSearch(id) 
+	{
+			var admn_no=find_admn_no(id,new Array());
+				query1=admn_no
+				selectid="admn_no";
+				Ajax_Code()
+	}
+		
+	//Ajax Code
+	function Ajax_Code()
+	{
+		org_code=document.getElementById('org_code').value
+		req = new Ajax.Request('/admissions/print_case_sheets/1', {
+			method: 'get',
+			parameters: { q: query1,org_code:org_code  },
+			onComplete: function(transport) {
+			processReqChange(transport);
+			}
+
+		}); 
+		function processReqChange(req) 
+		{
+			// request is complete
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				if(selectid=="admn_no")
+				{
+					if(results=="Invalid AD_NUMBER")
+						document.getElementById("table").innerHTML="Invalid Admission Number"
+					else
+					{
+						window.location.href ="/admissions/report/1?admn_no="+query1+"&org_code="+org_code+"&format=pdf";
+					}	 
+				}
+				
+			}
+		}		
+	}
+	
+	function search_Admn_No()
+	{
+		window.open('/admissions/search_admn_no/1','open_window','dependent, width=900, height=600, left=0, top=0');
+	}
+
+	function get_casesheet(id,event)
+	{
+		if(event.keyCode!=13)
+			return false;
+		var admn_no=find_admn_no(id,new Array());
+		query1=admn_no
+		selectid="admn_no";
+		Ajax_Code()
+	}
+</script>
+	
+<script type="text/javascript"> 
+	function print_page()
+	{
+		window.print();
+		document.getElementById('print').style.display='none'
+		return false;
+	}
+</script>
+   <div >
+<br/><br/><br/>
+<table width="30%" align="center">
+   <div >
+<table align="center">
+  <tr>
+    <td>Admn No<sup>*</sup>
+	<%= text_field_tag :admn_no,"", :size =>"20" ,:id => "admn_no", :onFocusOut => "ajaxSearch(id)", :onKeyUp => "get_casesheet(id,event)" %>
+	<%= link_to image_tag ("search1.png", :border=>0, :height => "20", :width => "22"),"javascript: search_Admn_No()"  %></td>
+	<%= hidden_field_tag :org_code,"", :size =>"20" ,:id => "org_code", :value => "#{@org_code}" %>
+	</tr>
+	</table>
+	
+<br/><br/>
+ <div id="table" align="center" style="color:red;font-size:12px;">
+ </div>
+<div id="table" >
+ </div>
+ <br/>
+ </div>

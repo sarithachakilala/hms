@@ -1,0 +1,149 @@
+<%= javascript_include_tag :defaults %>
+<%= stylesheet_link_tag 'css' %>
+<script type="text/javascript"> 
+	function ip_value(id) 
+	{
+		var len=document.getElementById(id).value;
+		if(len.length>15)
+		{
+			return false
+		}
+		
+		else if(len.length==3 || len.length==7 || len.length==11)
+		{
+			document.getElementById(id).value=document.getElementById(id).value+".";
+			return true;
+		}
+	}	
+</script>
+<script type="text/javascript">
+	var query
+	var conditionval=1;
+	var type
+	function ajaxSearch(id) 
+	{
+		query = document.getElementById(id).value;
+		type=id
+		if(query=="")
+			alert("Invalid Data")
+		else
+			ajax()
+	}
+	
+	function ajax()
+	{
+	
+		req = new Ajax.Request('/people/verify_name/1', 
+			{
+				method: 'get',
+				parameters: { name: query, type : type },
+				onComplete: function(transport){
+					processReqChange(transport);
+					}
+			}); // end ajax req
+		function processReqChange(req) 
+		{
+			// request is complete
+			
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				var data=new Array;
+				if(type=="org_code")
+				{
+					document.getElementById("org_location").value=results
+				}					
+				else
+				{
+					if(results!="0")
+					{
+						document.getElementById("error").innerHTML="Already Exit"
+						conditionval=1;
+					}
+					else
+					{
+						document.getElementById("error").innerHTML=""
+						conditionval=0;
+					}
+				}
+			} // end if req == 4
+		}
+	}
+	
+	function check_name()
+	{
+		if(conditionval==1)
+		{
+			alert("Invalid user name")
+			return false;
+		}
+		else
+			return true;
+	}
+	function keyPressTest(id)
+	{
+		var fee=parseInt(document.getElementById("amount").value)
+		var con=(fee-((fee/100)*parseInt(document.getElementById(id).value)))
+		document.getElementById("paid_amount").value=con
+	
+	}
+
+	function check_pwd()
+	{
+		pwd=document.getElementById("pwd").value
+		cpwd=document.getElementById("cpwd").value
+		if(pwd!=cpwd)
+		{
+			alert("Password does not match")
+			return fasle;
+		}
+		else
+			return true;
+	}
+
+	function disable_fields(id)
+	{
+		if(document.getElementById(id).checked)
+		{
+			document.getElementById("org_code").disabled=true
+			document.getElementById("org_location").disabled=true
+		}
+		else
+		{
+			document.getElementById("org_code").disabled=false
+			document.getElementById("org_location").disabled=false
+		}
+	}
+</script>
+<% form_for @person do |f| %>
+
+<table align="center">
+	<tr>  
+	  	<td><label for="person_name">User Name</label></td>
+  		<td><%= f.text_field :name %></td>
+     </tr>
+     <tr>
+  		<td><label for="person_password">Password</label></td>
+  		<td><%= f.password_field :password %></td>
+  	</tr>
+  	<tr>
+  		<td><label for="person_password_confirmation">Password Confirmation</label></td>
+  		<td><%= f.password_field :password_confirmation %></td>
+     </tr>
+     <tr>
+  		<td><label for="display_name">Display Name</label></td>
+  		<td><%= f.text_field :display_name %></td>
+     </tr>
+	<tr>
+  		<td><label for="client_name">Client Name</label></td>
+  		<td><%= f.text_field :client_name %></td>
+     </tr>
+     <tr>
+ 		<td><label for="person_profile">Profile</label></td>
+		<td><%= f.select :profile, Profilemaster.find(:all).collect{|p| [p.profile_name]},{:prompt => true} %></td>
+  	</tr>
+  	<tr>
+		<td colspan="2" align="center"><%= submit_tag "Submit" %></td>
+	</tr>
+</table>
+<% end %>

@@ -1,0 +1,34 @@
+<br/>
+<div align="center" width="100%">
+<table align="center" width="90%" border="1" cellspacing=0>
+	<tr bgcolor ="#378bf8">
+		<th>S.No</th>
+		<th>Date</th>
+		<th>Service</th>
+		<th>Employee Name</th>
+		<th>Authorized By</th>
+		<th>Amount</th>
+  </tr>
+<% @i=0 %>
+<% @total=0 %>
+<% @mis1.each do |mis1| %>
+
+<% @total=@total.to_f+mis1.total_amount.to_f %>
+ <% if((@i%2)==0) 
+		id="datacelltwo"
+	else
+		id="datacellone"
+  end %>
+  <tr class='<%= id %>'>
+		<td><%= @i=@i+1 %>
+		<td><%=h mis1.date %></td>
+		<td><%=h mis1.miscellaneous_child[0].service %></td>
+		<td><%=h mis1.employee %></td>
+		<td><%=h mis1.authorized_by %></td>
+		<td><%= mis1.total_amount %></td>	
+ </tr>  
+ <% end %>
+
+<tr bgcolor ="yellow"><td colspan="5" align="right">Total:</td>
+<td><%= @total %></td></tr>
+</table>

@@ -1,0 +1,28 @@
+<h1>Editing org_master_child_table</h1>
+
+<% form_for(@org_master_child_table) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :org_master_id %><br />
+    <%= f.text_field :org_master_id %>
+  </p>
+  <p>
+    <%= f.label :branch_code %><br />
+    <%= f.text_field :branch_code %>
+  </p>
+  <p>
+    <%= f.label :branch_name %><br />
+    <%= f.text_field :branch_name %>
+  </p>
+  <p>
+    <%= f.label :branch_location %><br />
+    <%= f.text_field :branch_location %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @org_master_child_table %> |
+<%= link_to 'Back', org_master_child_tables_path %>

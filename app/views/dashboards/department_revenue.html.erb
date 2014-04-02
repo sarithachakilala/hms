@@ -1,0 +1,146 @@
+<%= stylesheet_link_tag 'css' %>
+<%= javascript_include_tag :defaults %>
+
+<script type="text/javascript"> 
+	function clear_function()
+	{
+		document.getElementById('org_code').value=""
+		document.getElementById('depts').value=""
+		document.getElementById('date').value=""		
+		document.getElementById('date1').value=""		
+	}
+	
+	
+    function type_selection(id)
+	{
+		
+		var selObj = document.getElementById('type')
+		var ch= selObj.options[selObj.selectedIndex].value
+		
+		if(ch=="Weekly")
+		{
+		 	
+			document.getElementById('year_c').disabled = true
+		    document.getElementById('date').disabled = false
+			document.getElementById('to_year').disabled = true
+			document.getElementById('date1').disabled = false
+		}
+		else if(ch=="Monthly")
+		{
+				
+			document.getElementById('year_c').disabled = false
+			document.getElementById('to_year').disabled = true
+			document.getElementById('date').disabled = true
+			document.getElementById('date1').disabled = true
+		}
+		else if(ch=="Yearly")
+		{
+			document.getElementById('year_c').disabled = false
+			document.getElementById('to_year').disabled = false
+			document.getElementById('date').disabled = true
+			document.getElementById('date1').disabled = true
+		}
+	}
+	function check()
+	{
+	    
+	     var ch=document.getElementById('type').value
+	    var department=document.getElementById('department_c').value
+		var from_date=document.getElementById('date').value
+		var to_date=document.getElementById('date1').value
+		var year=document.getElementById('year_c').value
+		var to_year=document.getElementById('to_year').value
+		var org_code=document.getElementById('org_code_c').value
+		
+		document.getElementById("frame").src="/dashboards/graphical_representation_of_department_revenue/1?type="+ch+"&from_date="+from_date+"&to_date="+to_date+"&department="+department+"&year="+year+"&to_year="+to_year+"&org_code="+org_code
+	}
+</script> 
+<body style="margin:0px;" onload="check()">
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Dashboards >>&nbsp;&nbsp;&nbsp;<a HREF='/dashboards/department_revenue/1' class="nav" style="text-decoration:none;">Department Revenues</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<div id="form_data">
+
+<font size="3" face="Calibri">
+<fieldset>
+<% form_tag (:controller => "dahboards", :action => "corporate_deptrevenue1" ) do %>
+<legend><div class="font"><b>Search</b></div></legend>
+<% @date=format_date(:sort, Date.today ) %>
+<% @prev_date=format_date(:sort, Date.today-7 ) %>
+<table width="100%"  align="center">
+<tr>
+	<td>Org.Code</td>
+	<td><%= select :org_code,"c", Person.find(:all, :select =>"DISTINCT org_code").collect{|p| [p.org_code]}, {:prompt=>false},{:id=>"org_code_c"} %>
+		
+    	<td><label for="item_name">Type</label></td>
+	<td><%= select("type","",[['Weekly'],['Monthly'],['Yearly']],{:prompt => false}, :id => "type", :onchange => "type_selection(id)") %></td>
+	<td><label for="item_name">Department</label></td>
+	<td><%= select "department","c", DepartmentMaster.find(:all).collect{|p|[p.department]}, {:prompt=> 'All'} %>
+	
+	<td><label for="item_name">From Date</label></td>
+	<td><input type=text id="date" name="date" size="17" value='<%= @prev_date %>'><a href="javascript:void(0)" onClick="setYears(2011, 2012);showCalender(this,'date');" >
+      <img src="/images/cal.gif" ></a></td>
+       <td><label for="item_name">To Date</label></td>
+	<td><input type=text id="date1" name="date1" size="17" value='<%= @date %>'><a href="javascript:void(0)" onClick="setYears(2011, 2012);showCalender(this,'date1');" >
+      	<img src="/images/cal.gif" ></a></td>
+	<td><label for="item_name">From Year</label></td>
+	<% @ar=Array.new(20) %>
+	<% j=0 %>
+	<% for i in 1..20 %>
+	<% @ar[i-1]=2010+i %>
+	<% end %>
+	<td><%= select("year", "c",@ar,{:include_blank => true, :id => "consultant"},:disabled =>true) %></td>
+	<td><label for="item_name">To Year</label></td>
+	<td><%= select("to", "year",@ar,{:include_blank => true, :id => "consultant1"},:disabled =>true) %></td>
+			<td><a href="javascript:void(0);" class="new1" onClick ="check()">Search</a>
+	
+    
+	</tr>	
+</table>
+<% end %>
+<table id="calenderTable">
+        <tbody id="calenderTableHead">
+          <tr>
+            <td colspan="4" align="center">
+	          <select onChange="showCalenderBody(createCalender(document.getElementById('selectYear').value,
+	           this.selectedIndex, false));" id="selectMonth">
+	              <option value="0">Jan</option>
+	              <option value="1">Feb</option>
+	              <option value="2">Mar</option>
+	              <option value="3">Apr</option>
+	              <option value="4">May</option>
+	              <option value="5">Jun</option>
+	              <option value="6">Jul</option>
+	              <option value="7">Aug</option>
+	              <option value="8">Sep</option>
+	              <option value="9">Oct</option>
+	              <option value="10">Nov</option>
+	              <option value="11">Dec</option>
+	          </select>
+            </td>
+            <td colspan="2" align="center">
+			    <select onChange="showCalenderBody(createCalender(this.value, 
+				document.getElementById('selectMonth').selectedIndex, false));" id="selectYear">
+				</select>
+			</td>
+         
+		  </tr>
+       </tbody>
+       <tbody id="calenderTableDays">
+         <tr style="">
+           <td>Sun</td><td>Mon</td><td>Tue</td><td>Wed</td><td>Thu</td><td>Fri</td><td>Sat</td>
+         </tr>
+       </tbody>
+       <tbody id="calender"></tbody>
+    </table>
+
+</fieldset>
+<center>
+   <iframe src="" id="frame" width="60%" height="420px" align="center" style="border:none"/>
+</center>
+</body>

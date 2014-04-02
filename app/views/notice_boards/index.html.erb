@@ -1,0 +1,26 @@
+<h1>Listing notice_boards</h1>
+
+<table>
+  <tr>
+    <th>Notice date</th>
+    <th>Notice time</th>
+    <th>Department</th>
+    <th>Notice</th>
+  </tr>
+
+<% @notice_boards.each do |notice_board| %>
+  <tr>
+    <td><%=h notice_board.notice_date %></td>
+    <td><%=h notice_board.notice_time %></td>
+    <td><%=h notice_board.department %></td>
+    <td><%=h notice_board.notice %></td>
+    <td><%= link_to 'Show', notice_board %></td>
+    <td><%= link_to 'Edit', edit_notice_board_path(notice_board) %></td>
+    <td><%= link_to 'Destroy', notice_board, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New notice_board', new_notice_board_path %>

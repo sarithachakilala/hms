@@ -1,0 +1,47 @@
+<center><h3><font color="#015a84">Agency Master</font></h3>
+
+ <%= link_to image_tag("buttons/new.png", :class => "info", :border =>"0"), new_vendormaster_path(:user_id=>@user_id) %>
+</center>
+ 
+ <div align="center" width="100%">
+<table class="sofT" width="70%">
+  <tr class="info">
+    <th>S.No</th>  
+   <th>Org.Code</th>
+    <th>Agency Code</th>
+    <th>Agency Name</th>
+    <th>Contact Person</th>
+    <th>Email Id</th>
+    <th>Contact No</th>
+   <th colspan="3">Permissions</th>
+  </tr>
+
+<% @i=0 %>
+
+<% @vendormasters.each do |vendormaster| %>
+<% if((vendormaster.id % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+		 end %>
+  <tr class='<%= id %>'>
+	<td><%= @i+=1 %></td>
+
+
+    <td class='<%= id %>'><%=h vendormaster.org_code %></td>
+    <td class='<%= id %>'><%=h vendormaster.vendor_code %></td>
+    <td class='<%= id %>'><%=h vendormaster.vendor_name %></td>
+    
+   
+    <td class='<%= id %>'><%=h vendormaster.contact_person %></td>
+    <td class='<%= id %>'><%=h vendormaster.vendor_emailid %></td>
+    <td class='<%= id %>'><%=h vendormaster.contact_num %></td>
+    
+<td  align="center"><a href="vendormasters/<%= vendormaster.id %>?user_id=<%= @user_id %>"><image src="images/buttons/display1.png" size = "54x21" border ="0" /></a></td>
+<td  align="center"><a href="vendormasters/<%= vendormaster.id %>/edit?user_id=<%= @user_id %>"><image src="images/buttons/modify.png" size = "54x21" border ="0" /></a></td>
+	<td align="center"><%= link_to image_tag("buttons/delete.png", :class => "info", :border =>"0"), vendormaster,:confirm => 'Are you sure?', :method => :delete %></td>
+ 
+ </tr>
+<% end %>
+ </table>
+ </div>

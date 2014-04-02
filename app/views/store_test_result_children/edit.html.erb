@@ -1,0 +1,40 @@
+<h1>Editing store_test_result_child</h1>
+
+<% form_for(@store_test_result_child) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :store_test_result_id %><br />
+    <%= f.text_field :store_test_result_id %>
+  </p>
+  <p>
+    <%= f.label :servce_name %><br />
+    <%= f.text_field :servce_name %>
+  </p>
+  <p>
+    <%= f.label :test_name %><br />
+    <%= f.text_field :test_name %>
+  </p>
+  <p>
+    <%= f.label :rate %><br />
+    <%= f.text_field :rate %>
+  </p>
+  <p>
+    <%= f.label :lbound %><br />
+    <%= f.text_field :lbound %>
+  </p>
+  <p>
+    <%= f.label :ubound %><br />
+    <%= f.text_field :ubound %>
+  </p>
+  <p>
+    <%= f.label :units %><br />
+    <%= f.text_field :units %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @store_test_result_child %> |
+<%= link_to 'Back', store_test_result_children_path %>

@@ -1,0 +1,34 @@
+</table><table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+<tr>
+    <th>S.No</th>      
+
+    <th>Return No</th>
+    <th>Return Date</th>
+    
+    <th>Vendor</th>
+    <th colspan=3>Permissions</th>
+  </tr>
+ </thead>
+<tbody>
+<% @i=0 %>
+<% @purchase_order_return.each do |purchase_order_return| %>
+ 	    <% if((purchase_order_return.id % 2)==0) 
+	    	id="datacellone"
+	    else
+			id="datacelltwo"
+        end %>
+
+        <tr class='<%= id %>'>
+		 	<td><%= @i+=1 %></td>
+	
+			<td><%=h purchase_order_return.return_no %></td>
+			<td><%=h purchase_order_return.return_date %></td>
+	
+			<td><%=h purchase_order_return.agency_names %></td>
+			<td align="center" class="submit_button"><%= link_to 'show', purchase_order_return %></td>
+			<td align="center"  class="submit_button"><%= link_to 'edit', edit_purchase_order_return_path(purchase_order_return) %></td>   
+		</tr>
+	<% end %>
+</tbody>
+</table>

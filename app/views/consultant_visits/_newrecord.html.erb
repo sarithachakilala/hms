@@ -1,0 +1,108 @@
+<%= stylesheet_link_tag 'scroll_new1' %>
+<body>
+<% form_for(@consultant_visit) do |f| %>
+<% @date=format_date(:sort, Date.today ) %>
+<%= hidden_field('form_name','', :value => "IP_Nurse") %>
+<div width="100%">
+<fieldset>
+<legend><div class="font"><b>Consultant Visits</b></div></legend>
+<%= f.hidden_field :org_code, :value => @org_code, :class =>"text_field", :id => "org_code", :readonly => true %>
+<%= f.hidden_field :org_location, :value => @org_location, :class =>"text_field", :id => "org_location",  :readonly => true %></td>				
+<%= f.hidden_field :user_id, :value => @person.id, :class =>"text_field", :id => "org_location",  :readonly => true %></td>				
+<%= f.hidden_field :consultant, :class =>"text_field", :id =>"consultant" %>
+<%= f.hidden_field :time_of_visit, :class =>"text_field", :id => "appt_time" %>
+<%= f.hidden_field :charge, :class =>"text_field", :id =>"cost"  %>
+<%= hidden_field ('cons_type','',:id=>"cons_type")  %>
+
+<table width="100%" >
+	<tr>	
+			<td>Admn No</td>
+			<td><%= f.text_field :admn_no, :class =>"text_field", :id =>"admn_no", :readonly=>true %>
+			<td>MR No </td>
+			<td><%= f.text_field :mr_no, :class =>"text_field", :id =>"rno", :readonly=>true %></td>
+			<td>Patient Name </td>
+			<td><%= f.text_field :patient_name, :class =>"text_field", :id =>"patient_name", :readonly=>true %></td>
+     </tr>
+	 <tr>
+			<td>Ward </td>
+			<td><%= text_field_tag :ward,"", :id =>"ward", :class =>"text_field", :value => @ward, :readonly=>true, :value=>@ward %></td>	
+			<td>Room </td>
+			<td><%= text_field_tag :room,"", :id =>"room", :class =>"text_field", :value => @room, :readonly=>true, :value=>@room %></td>
+			<td>Bed</td>
+			<td><%= text_field_tag :bed,"", :id =>"bed", :class =>"text_field", :value => @bed, :readonly=>true, :value=>@bed%></td>
+
+	</tr>
+    <tr>
+		<td>Floor</td>
+		<td><%= text_field_tag :floor,"", :id =>"floor", :class =>"text_field", :value => @floor, :readonly=>true %> </td>
+		<td>Date Of Visit</td> 
+        <td><%= f.text_field :date_of_visit, :class =>"text_field", :id =>"dov", :value =>@date, :readonly=>true %><a href="javascript:void(0)" onClick="setYears(2000, 2050);showCalender(this,'dov'); "  >
+        <img src="/images/cal.gif" onblur = "alert('hai')"></a></td>	
+	</tr>
+    <tr>
+	    <td>Department</td>
+        <td colspan="3"><%= f.select :department, DepartmentMaster.find(:all).collect{|p| [p.department]},{:prompt => true},{:id =>"dept"} %>
+	    <%= link_to image_tag ("book.png"),"javascript: consultant();"  %>
+	</tr>
+</table>
+</fieldset>
+<table align="center" width="100%">
+  <tr>
+	<td colspan="7">
+	<div id="info">
+    <table class="tableone">
+     <caption style="background: url(/images/vertical1_04.jpg) repeat-x top left;text-align:center;" ><font color="#F0FFFF" face="Cambria" ><b>Consultant Visits</b></font></caption>
+   
+       <thead>
+        <tr>
+			<th width="120px"  style="color:black;">S.No</th> 
+			<th width="180px" style="color:black;">Date & Time</th>
+			<th width="180px" style="color:black;">Department</th> 
+			<th width="180px" style="color:black;">Cons.Name</th>
+			<th width="180px" style="color:black;">Con.Type</th>
+			<th width="180px" style="color:black;">Charge</th>
+			<th width="70px" style="color:black;">Remove</th>
+	    </tr>
+      </thead>
+     <tbody> 
+		<tr><td colspan="7">
+			<div class="innerb">
+			<table class="tabletwo" id="displayTable">
+				<% i=0 %>
+				
+			<% f.fields_for :consultant_visit_children do |a| %>
+				<% if (i%2==0) %>
+					<tr>
+				<% else%>
+					<tr class="dk">
+				<% end %>
+					<td width="120px"><%= a.text_field :sno, :style=>"width:100%", :id => "r#{i}c1", :class => "nbb",:readOnly => true %></td> 
+					<td width="180px"><%= a.text_field :date_and_time, :style=>"width:100%", :id => "r#{i}c2", :class => "nbb",:readOnly => true %></td> 
+					<td width="180px"><%= a.text_field :department, :style=>"width:100%", :id => "r#{i}c3", :class => "nbb",:readOnly => true %></td> 
+					<td width="180px"><%= a.text_field :cons_name, :style=>"width:100%", :id => "r#{i}c4", :class => "nbb",:readOnly => true %></td> 
+					<td width="180px"><%= a.text_field :cons_type, :style=>"width:100%", :id => "r#{i}c5", :class => "nbb",:readOnly => true %></td> 
+					<td width="180px"><%= a.text_field :charge, :style=>"width:100%", :id => "r#{i}c6", :class => "nbb",:readOnly => true %></td> 
+					<td width="70px" id="r<%= i %>c7">&nbsp;</td>
+				</tr>
+				<% i+=1 %>
+			<% end %>
+			</table>
+			</div>
+		</td>
+		</tr>
+	</tbody>
+     </table>
+   </div>
+	</td>
+  </tr>
+ </table>
+<table align="center">
+<tr>
+	<td><%= submit_tag "", :value => " Save&Process ", :class => "submit_button", :onClick => "if(document.getElementById('dept').value) { this.disabled=true;this.value='Process..';this.form.submit();} else { alert('Please Select Department'); return false;}" %></td>
+	<td  align="center"><%= link_to '&nbsp;&nbsp;Reset&nbsp;&nbsp;', {:action => 'new'}, :class=>"submit_button" %></td> 
+	<td valign="middle"><%= link_to "Back",  consultant_visits_path, :class=>"new1" %></td>
+</tr>
+</table>
+</div>
+<% end %>
+</body>

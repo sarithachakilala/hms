@@ -1,0 +1,37 @@
+
+<br/>
+<div align="center">
+<table class="sofT" width="90%" cellpadding="3">
+  <tr class="info">
+   <th>S.No</th>
+    <th>PO.No</th>
+    <th>PO.Date</th>
+    <th>Vendor Name</th>
+      <th>Batch No</th>
+	  <th>Expiry Date</th>
+    <th>Medicine Name</th>
+  </tr>
+<% @i=0 %>
+<% @store_child.each do |store_child| %>
+<% @goods=Goodsrecieptnotemaster.find_by_id_and_org_code(store_child.goodsrecieptnotemaster_id,store_child.org_code) %>
+<% @vendor=Vendormaster.find_by_vendor_code_and_org_code(@goods.vendor_code,store_child.org_code) %>
+  
+  <% if((@i%2)==0) 
+		id="datacelltwo"
+	else
+		id="datacellone"
+  end %>
+  <tr class='<%= id %>'>
+    <td><%= @i=@i+1 %></td>
+	<td><%= @goods.po_number %></td>
+     <td><%= @goods.po_date %></td>
+	<td><%= @vendor.vendor_name %></td>
+    <td><%=h store_child.batch_no %></td>
+    <td><%=h store_child.expiry_date %></td>
+    <td><%=h store_child.item_name %></td>
+	
+	</tr>  
+    
+  
+<% end %>
+</table>

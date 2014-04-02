@@ -1,0 +1,33 @@
+<script type="application/javascript">
+		function closing()
+		{
+		opener.window.location.reload()
+ self.close()
+ }
+ </script>
+
+
+ 
+<body onload=closing();>
+<h3><font color="#015a84">Pharmacy Record</font></h3>
+<div align="center">
+<table width="80%" " border="0">
+<tr>
+	<td bgcolor=#c6dfff>Item type</td>
+	<td bgcolor=#c6dfff>:</td>
+   <td bgcolor="#d9e8f0"><%=h @pharmacy_range.item_type %></td>
+   </tr>
+   <tr>
+    <td bgcolor=#c6dfff>Range</td>
+	<td bgcolor=#c6dfff>:</td>
+   <td bgcolor="#d9e8f0"><%=h @pharmacy_range.range %></td>
+   
+
+ </tr> 
+
+
+</table>
+
+</div>
+<center>
+<%= link_to image_tag("buttons/back.png", :size => "60x25"), pharmacy_ranges_path %>

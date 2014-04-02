@@ -1,0 +1,27 @@
+<br /><% @i=0 %>
+
+<table width="90%"  border="0" cellspacing="3" cellpadding="6">
+			
+  <tr  bgcolor="#378bf8" style="color:white">
+	<th>S.No</th>
+	<th>Item Name</th>
+    <th>Item Code</th>
+    <th colspan=3>Permissions</th>
+  </tr>
+<% @itemmasters.each do |itemmaster| %>
+  <% if((itemmaster.id % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+  end %>
+  <tr>
+  
+	<td class='<%= id %>'><%= @i+=1 %></td>
+    <td class='<%= id %>'><%=h itemmaster.item_name %></td>
+    <td class='<%= id %>'><%=h itemmaster.item_code %></td>
+   <td class='<%= id %>'><a href="itemmasters/<%= itemmaster.id %>?user_id=<%= @user_id %>"><image src="images/buttons/display1.png" size = "54x21" border ="0" /></a></td>
+<td class='<%= id %>'><a href="itemmasters/<%= itemmaster.id %>/edit?user_id=<%= @user_id %>"><image src="images/buttons/modify.png" size = "54x21" border ="0" /></a></td>
+<td class='<%= id %>'><%= link_to image_tag("buttons/delete.png", :class => "info", :border =>"0"),  itemmaster,:confirm => 'Are you sure?', :method => :delete %></td>
+ 	</tr>
+	<% end %>
+</table>

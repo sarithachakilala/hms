@@ -1,0 +1,68 @@
+
+ <%= stylesheet_link_tag 'table_style' %>
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div align="center">
+
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+<tr>
+<th>S.No</th>
+<th>Agency Name</th>
+<th>Invoice No</th>
+<th>Item Name</th>
+<th>Packing</th>
+<th>Units</th>
+<th>Batch No</th>
+<th>Expiry Date</th>
+<th>Strips</th>
+<th>Free Strips</th>
+<th>Rec.Qty</th>
+<th>Iss.Qty</th>
+<th>Avi.Qty</th>
+<th>Single Item Sale Rate</th>
+<th>1-Strip Sale Rate</th>
+<th>1-strip Pur.Rate</th>
+</tr>
+<tbody>
+<% @i=0 %>
+
+<% @ip_child.each do |ip_child| %>
+  <% goods=Goodsrecieptnotemaster.find_by_id(ip_child.goodsrecieptnotemaster_id) %>
+ <% if((@i%2)==0) 
+		id="datacelltwo"
+	else
+		id="datacellone"
+  end %>
+  <tr class='<%= id %>'>
+		<td><%= @i=@i+1 %></td>
+		<td><%= goods.agency_name %></td>
+		<td><%= goods.invoice_number %></td>
+		<td><%=h ip_child.item_name %></td>
+		<td><%=h ip_child.packing %></td>
+	<% item=Itemmaster.last(:conditions =>"product_name='#{ip_child.item_name}' and packing='#{ip_child.packing}'") %>
+	<% if(item) %>	
+		<td align="right"><%=h item.units %></td>
+	<% else %>
+		<td>&nbsp;</td>
+	<% end %>	
+		<td><%=h ip_child.batch_no %></td>
+	<% if(ip_child.expiry_date) %>
+		<td><%=h ip_child.expiry_date.strftime("%m/%Y")  %></td>
+	<% else %>
+		<td><%=h ip_child.expiry_date  %></td>
+	<% end %>
+		<td align="right"><%=h ip_child.sheets %></td>
+		<td align="right"><%=h ip_child.free %></td>
+		<td align="right"><%=h ip_child.received_quantity %></td>
+		<td align="right"><%=h ip_child.issued_quantity %></td>
+		<td align="right"><%=h ip_child.quantity %></td>	
+	
+		<td align="right"><%=h number_with_precision(ip_child.mrp, :precision => 2) %></td>	
+	
+	<td align="right"><%=h number_with_precision(ip_child.sale_rate, :precision => 2) %></td>	
+	<td align="right"><%=h number_with_precision(ip_child.purchase_rate, :precision => 2) %></td>
+		
+ </tr>
+<% end %>
+</div>

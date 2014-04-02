@@ -1,0 +1,46 @@
+<h1>Listing store_children</h1>
+
+<table>
+  <tr>
+    <th>Parent store</th>
+	<th>Purchase Return</th>
+    <th>Item name</th>
+    <th>Item code</th>
+    <th>Batch no</th>
+    <th>Expiry date</th>
+    <th>Quantity</th>
+    <th>Issue qty</th>
+    <th>Purchase rate</th>
+    <th>Purchase amt</th>
+    <th>Sale rate</th>
+    <th>Sale amt</th>
+    <th>Discount</th>
+    <th>Total amt</th>
+  </tr>
+
+<% @store_children.each do |store_child| %>
+  <tr>
+    <td><%=h store_child.parent_store_id %></td>
+	 <td><%=h store_child.purchase_order_return_id %></td>
+    <td><%=h store_child.item_name %></td>
+    <td><%=h store_child.item_code %></td>
+    <td><%=h store_child.batch_no %></td>
+    <td><%=h store_child.expiry_date %></td>
+    <td><%=h store_child.quantity %></td>
+    <td><%=h store_child.issue_qty %></td>
+    <td><%=h store_child.purchase_rate %></td>
+    <td><%=h store_child.purchase_amt %></td>
+    <td><%=h store_child.sale_rate %></td>
+    <td><%=h store_child.sale_amt %></td>
+    <td><%=h store_child.discount %></td>
+    <td><%=h store_child.total_amt %></td>
+    <td><%= link_to 'Show', store_child %></td>
+    <td><%= link_to 'Edit', edit_store_child_path(store_child) %></td>
+    <td><%= link_to 'Destroy', store_child, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New store_child', new_store_child_path %>

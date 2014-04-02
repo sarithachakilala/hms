@@ -1,0 +1,95 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Service Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/testmasters?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Test Masters</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<% @i=0 %><br/>
+<center><font color="#015a84"> TestMaster Records</font></center><br/>
+<center>
+<%= link_to 'New', new_testmaster_path(:user_id => @user_id), :class=>"new1" %></td>
+</center>
+<script type="application/javascript">
+var testname
+  	function date_range(event)
+	{
+		if(event.keyCode==13)
+		{
+		testname=document.getElementById('search_field').value
+			req = new Ajax.Request('/testmasters/search/1', {
+				method: 'get',
+				parameters: {testname: testname },
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			});
+			function processReqChange(req) 
+			{
+				document.getElementById("tablesorter-demo").innerHTML=req.responseText
+			}
+		}
+	}
+
+
+	function click_search()
+	{
+		testname=document.getElementById('search_field').value
+		req = new Ajax.Request('/testmasters/search/1', {
+			method: 'get',
+			parameters: {testname: testname},
+			onComplete: function(transport) {
+			processReqChange(transport);
+			}
+		});
+		function processReqChange(req) 
+		{
+			document.getElementById("tablesorter-demo").innerHTML=req.responseText
+		}
+	}
+
+ </script>
+
+ <div align="center" width="100%">
+<table align ="right">
+  <tr>
+	<td><%= text_field_tag :search, params[:search], :id => 'search_field', :Placeholder => "Enter TestName", :onKeyUp =>"date_range(event)" %></td>
+    <td><a href='javascript:void(0)'  onclick = "click_search()" ><img src="/images/buttons/search.png" class="info"/> </a></td>
+    </td>
+  </tr>
+</table>
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+  <tr>
+	<th>S.NO</th>
+    <th>Org code</th>
+    <th>Org location</th>
+    <th>Department name</th>
+    <th>Test Name</th>
+  <th colspan="2" align="center">Permissions</th>
+  </tr>
+ </thead>
+ <tbody>
+ <% @i=0 %>
+<% @testmasters.each do |testmaster| %>
+  <% if((@i%2)==0) 
+		id="datacelltwo"
+	else
+		id="datacellone"
+  end %>
+  <tr class='<%= id %>' style="height:30px">
+    <td><%= @i+=1 %></td>
+    <td><%=h testmaster.org_code %></td>
+    <td><%=h testmaster.org_location %></td>
+    <td><%=h testmaster.department_name %></td>
+    <td><%=h testmaster.test_name %></td>
+
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Edit&nbsp;&nbsp;&nbsp;', edit_testmaster_path(testmaster), :class=>"submit_button" %></td>   
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Delete&nbsp;&nbsp;&nbsp;', testmaster, :confirm => 'Are you sure?', :method => :delete, :class=>"submit_button" %></td>
+	
+  </tr>
+<% end %>
+</tbody>
+</table>
+<p align="right"><div align="right" class="pagination"><%= will_paginate @testmasters,  :style => "font: bold 15px Arial red;" %></p>

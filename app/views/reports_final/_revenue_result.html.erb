@@ -1,0 +1,62 @@
+<br/>
+<div class="font"><b>Recovery</b></div>
+<br/>
+<div align="center" width="100%">
+<table width="100%" border=1 cellspacing=0>
+  <tr class="info" style="background-color:blue; color:white;">
+		<th>S.No</th>
+		<th>Revenue Type</th>
+		<% for i in @from_date.to_date..@to_date.to_date %>
+			<th><%= i %></th>
+		<% end %>
+		<th>Details</th>
+	</tr>
+<% @i=0 %>
+<% @total=0 %>
+<% @total_amount=0 %>
+<% @array1=Array.new %>
+<% @array2=Array.new %>
+<% @array3=Array.new %>
+
+<tr>
+        <td><%= @i=@i+1 %></td>
+   		<td>AppointmentPayment & TestBooking</td>
+		<% j=0 %>
+		<% for i in @from_date.to_date..@to_date.to_date %>
+			<td class="value"><%= @array1[j]=AppointmentPayment.sum(:consultant_fee, :conditions => " appt_date = '#{i.to_s}' AND org_code Like '#{@org_code}%'")+TestBooking.sum(:total_amount, :conditions => " booking_date = '#{i.to_s}' AND org_code Like '#{@org_code}%'") %></td>
+			<% j+=1 %>
+		<% end %>
+		<td align="center"><a href='javascript:void(0)' onclick="window.open('/reports/revenue_details/1?date1=<%=h @from_date %>&date2=<%=h @to_date %>&revenue_type=OP&org_code=<%= @org_code %>','open_window','menubar, scroll=1,toolbar, location, width=700, height=480, left=0, top=0')"><input type="button" value="show" class="new1"></a></td>
+</tr>
+<tr>
+        <td><%= @i=@i+1 %></td>
+   		<td>AdvancePayment & FinalBill</td>
+		<% j=0 %>
+		<% for i in @from_date.to_date..@to_date.to_date %>
+			<td class="value"><%=h @array2[j]=AdvancePayment.sum(:gross_amount, :conditions => " advance_date = '#{i}' AND org_code Like '#{@org_code}%'")+FinalBill.sum(:paid_amount, :conditions => " final_bill_date = '#{i}' AND org_code = '#{@org_code}'") %></td>
+			<% j+=1 %>
+		<% end %>
+		<td align="center"><a href='javascript:void(0)' onclick="window.open('/reports/revenue_details/1?date1=<%=h @from_date %>&date2=<%=h @to_date %>&revenue_type=IP&org_code=<%= @org_code %>','open_window','menubar, scroll=1,toolbar, location, width=700, height=480, left=0, top=0')"><input type="button" value="show" class="new1"></a></td>
+</tr>
+<tr>
+<td><%= @i=@i+1 %></td>
+
+       <td>Dues</td>
+		<% j=0 %>
+		<% for i in @from_date.to_date..@to_date.to_date %>
+			<td class="value"><%=h @array3[j]=IpDue.sum(:gross_amount, :conditions => " due_date = '#{i}' AND org_code Like '#{@org_code}%'") %></td>
+			<% j+=1 %>
+		<% end %>
+		<td align="center"><a href='javascript:void(0)' onclick="window.open('/reports/revenue_details/1?date1=<%=h @from_date %>&date2=<%=h @to_date %>&revenue_type=Dues&org_code=<%= @org_code %>','open_window','menubar, scroll=1,toolbar, location, width=700, height=480, left=0, top=0')"><input type="button" value="show" class="new1"></a></td>
+	</tr>
+<tr bgcolor="yellow">
+	<td colspan="2" align="center"><b>Total</b></td>
+	<% j=0 %>
+	<% for i in 0..(@to_date.to_date-@from_date.to_date) %>
+	<td class="value"><%= @total=@array1[j].to_f+@array2[j].to_f+@array3[j].to_f %></td>
+	<% @total_amount=@total_amount+@total %>
+	<% end %>
+	<td>&nbsp;</td>
+</tr>
+</table>
+</div>

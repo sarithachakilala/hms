@@ -1,0 +1,19 @@
+# test-dicom.rb
+# 
+# read a sample dicom file and displays it using RMagick lib
+#
+# based on sample: 
+# http://github.com/cuthbert/ruby-dicom
+# The sample dicom file was downloaded from: 
+# http://www.barre.nom.fr/medical/samples/
+
+require 'rubygems'
+require 'dicom'
+require 'RMagick'
+include Magick
+
+obj = DICOM::DObject.new("/MR-MONO2-16-knee")
+obj.information
+obj.print
+image = obj.get_image_magick.normalize
+image.display

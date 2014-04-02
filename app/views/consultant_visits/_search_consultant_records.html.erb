@@ -1,0 +1,32 @@
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+    <th>S.No</th>    
+    <th>Admn.No</th>
+    <th>MR No</th>
+	<th>Patient Name</th>
+   <th colspan="2">Permissions</th>
+  </tr>
+</thead>
+<tbody>
+<% @i=0 %>
+<% @consultant_visits.each do |consultant_visit| %>
+<% registration=Registration.find_by_mr_no_and_org_code(consultant_visit.mr_no,consultant_visit.org_code) %>
+
+<% @i=0 %>
+<% if((@i % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+		 end %>
+  <tr class='<%= id %>'>
+	<td><%= @i+=1 %></td>
+    <td><%=h consultant_visit.admn_no %></td>
+    <td><%=h consultant_visit.mr_no %></td>
+    <td><%=h consultant_visit.patient_name %></td>
+    
+    <td align="center" class="submit_button"><%= link_to 'show', consultant_visit %></td>
+	<td align="center"  class="submit_button"><%= link_to 'edit', edit_consultant_visit_path(consultant_visit) %></td>   
+  </tr>
+<% end %>
+</tbody>
+</table>

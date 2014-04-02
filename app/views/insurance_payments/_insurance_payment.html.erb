@@ -1,0 +1,32 @@
+<div align="center" width="100%">
+<table width="90%" border=1 cellspacing="0">
+  <tr class="info" style="color:white;">
+		<th>S.No</th>
+		<th>Ins.No</th>
+		<th>MR No</th>
+		<th>Admn.No</th>
+		<th>Admn.Date</th>
+		<th>Dis.Date</th>
+		<th>Patient Name</th>
+		<th>Ins.Comp.Name</th>
+		<th>Ins.Comp.Code</th>
+		<th>Show</th>
+		
+	</tr>
+<% @i=0 %>
+	<% for insurance_payment in @insurance_payment %>
+		<% registration=Registration.find_by_ins_no_and_org_code(insurance_payment.ins_no,insurance_payment.org_code) %>
+		<tr>
+			<td><%= @i=@i+1 %></td>
+			<td><%= insurance_payment.ins_no %></td>
+	   		<td><%= insurance_payment.mr_no %></td>
+			<td><%= insurance_payment.admn_no %></td>
+			<td><%= insurance_payment.admn_date %></td>
+			<td><%= insurance_payment.dis_date %></td>
+			<td><%= insurance_payment.patient_name %></td>
+			<td><%= registration.ins_comp_name %></td>
+			<td><%= registration.ins_comp_code %></td>
+			<td class="button"><a href='javascript:void(0)' onclick="window.open('/final_bills/insurance_bills/1?admn_no=<%= admission.admn_no %>&org_code=<%= admission.org_code %>','open_window','menubar, scroll=1,toolbar, location, width=700, height=480, left=0, top=0')">
+			<%= image_tag("buttons/show.png", :size => "54x21", :border =>"0") %></td>
+		</tr>
+	<% end %>

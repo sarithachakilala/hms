@@ -1,0 +1,23 @@
+<p>
+  <b>Miscellaneous master:</b>
+  <%=h @miscellaneous_child.miscellaneous_master_id %>
+</p>
+
+<p>
+  <b>Service:</b>
+  <%=h @miscellaneous_child.service %>
+</p>
+
+<p>
+  <b>Service code:</b>
+  <%=h @miscellaneous_child.service_code %>
+</p>
+
+<p>
+  <b>Amount:</b>
+  <%=h @miscellaneous_child.amount %>
+</p>
+
+
+<%= link_to 'Edit', edit_miscellaneous_child_path(@miscellaneous_child) %> |
+<%= link_to 'Back', miscellaneous_children_path %>

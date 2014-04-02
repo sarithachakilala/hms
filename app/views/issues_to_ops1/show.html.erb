@@ -1,0 +1,159 @@
+
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Pharmacy >>&nbsp;&nbsp;&nbsp;<a HREF='/issues_to_ops' class="nav" style="text-decoration:none;">Sales</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+
+<% if @issues_to_op %>	
+ <% form_for(@issues_to_op) do |f| %>
+  <%= f.error_messages %>
+  <%= f.hidden_field :id, :id => "record_id" %>
+<table width="100%" bgcolor="#87CEEB">
+
+  <tr><td colspan="8"><fieldset><legend><div class="font"><b><%=h @issues_to_op.mr_no %>  Details</b></div></legend>
+   <%= f.hidden_field :id, :id => "record_id" %>
+
+	 <table width="100%">
+  <tr>
+		<td>Org.Code</td>
+		<td><%= f.text_field :org_code, :size => 20, :id => "org_code", :readonly => true %></td>
+		<td>Org.Location</td>
+		<td><%= f.text_field :org_location, :size => 20, :id => "org_location", :readonly => true %></td>
+		<td> Issue No</td>
+		<td> <%= f.text_field :issue_no, :size => 20, :id => "issue_no", :readonly => true %></td>
+		<td> Issue Dt </td>
+		<td><%= f.text_field :issue_date, :size => "20",  :readOnly => true %> </td> 
+</tr>
+	<tr>	
+		<td>MR No</td>
+		<td><%= f.text_field :mr_no, :size => "20",:id => "mr_no", :readonly => true %></td>
+		<td>Admn.No</td>
+		<td><%= f.text_field :admn_no, :size => "20", :readonly => true %></td>
+		<td> Dept.Code</td>
+		<td><%= f.text_field :dep_code, :readonly => true , :size => "20" %></td> 
+		<td> Dept.Name </td>
+		<td><%= f.text_field :dep_name, :size => "20", :id => "dname", :readonly => true   %></td>
+</tr>
+<tr>
+	
+
+		<td> Patient Name </td>
+		<td><%= f.text_field :patient_name, :value=>@patient_name, :size=>20, :readonly=>"true" %></td>
+		<td>Age</td>
+		<td><%= f.text_field :age, :size=>20, :value=>@age, :readonly=>"true" %></td>
+		<td>Consultant</td>
+		<td><%= text_field_tag :consultant, "", :value=>@consultant_id, :size=>20,  :readonly=>"true" %></td>
+  </tr>
+ 
+ </table>
+</fieldset>
+<br />
+<fieldset><legend><div class="font"><b>OP-Patient Details</b></div></legend>
+<table border="1" cellspacing="0"  class="sofT" cellpadding="4" align="center">
+  <tr class="info">
+
+  <tr class="info">
+		  
+	<th class='<%= id %>'>S.No</th>
+	<th class='<%= id %>'>Product Name</th>
+	<th class='<%= id %>'>Product Code</th>
+	<th class='<%= id %>'>MFR</th>
+	<th class='<%= id %>'>Batch No</th>
+	<th class='<%= id %>'>Expiry Dt</th>
+	<th class='<%= id %>'>Quantity</th>
+	<th class='<%= id %>'>Sale Rate</th>
+	<th class='<%= id %>'>Issued Qty</th>
+	<th class='<%= id %>'>Discount</th>
+	<th class='<%= id %>'>Total Amount</th>
+	<th class='<%= id %>'>Vat</th>
+</tr>
+<% for store in @issues_to_op.issue_op_child %>
+<tr>
+<td><%=h store.s_no  %>  </td>
+<td><%=h store.item_name  %>  </td>
+<td><%=h store.item_code  %>  </td>
+<td><%=h store.mfr %>  </td>
+<td><%=h store.batch_no  %>  </td>
+<td><%=h store.expiry_date  %>  </td>
+<td><%=h store.quantity  %>  </td>
+<td><%=h store.sale_rate  %>  </td>
+<td><%=h store.issue_qty  %>  </td>
+<td><%=h store.discount  %>  </td>
+<td><%=h store.total  %>  </td>
+<td><%=h store.vat  %>  </td>
+</tr>
+<% end %>
+</table>
+</div>
+</fieldset>
+
+<div align="center">
+<fieldset>
+<legend><div class="font"><b>Receipt Details</b></div></legend>
+<table width="100%" align="center" >
+	<tr> 
+		<td>Receipt No </td>
+		<td><%= f.text_field :receipt_no, :size => "20", :readOnly => true,:id => "receipt_no" %>  </td>
+		<td> Grand Amt</td>
+		<td><%= f.text_field :total_amount, :size => "20",:id => "gross", :readonly => true %></td>
+		<td> Con.Authority </td>
+		<td>  <%= f.text_field :ref , :size => 20, :readonly => true %></td>
+		<td>Concession(%)</td>
+		<td><%= f.text_field :discount_percentage, :size => "20" ,:id => "concession", :readonly => true  %></td>
+	</tr>
+	 <tr> 
+		<td>Total Amt</td>
+		<td><%= f.text_field :due_amount, :size => "20" ,:id => "total", :readOnly => true %></td>
+		<td>Due Authority</td>
+		<td><%= f.text_field :due_authorization, :size => 20, :readonly => true  %>
+		
+		<td> Due Amt</td>
+		<td><%= f.text_field :due, :size => "20",:id => "due11",  :readonly => true  %></td>
+		<td>Paid Amt </td>
+		<td><%= f.text_field :paid_amt, :size => "20",:id => "reciept_amount", :readOnly => true %></td>
+		
+	</tr> 
+<tr>
+	   	<td>Payment Mode</td>
+		<td><%= f.text_field :payment_type,  :size => 20, :readonly => true %></td>
+</tr>					
+	<tr>	
+		<td>Bank Name</td>
+		<td><%= f.text_field :bank_name,  :size => 20, :id => "bank_name", :readonly => true  %></td>
+		<td>Acc.No</td>
+		<td><%= f.text_field :acc_no ,:readonly => "true", :size => 20, :id => "acc_no" %></td>
+		<td>Cheque No</td>
+		<td><%= f.text_field :cheque_number, :readonly => "true", :size => 20, :id => "cheque_no" %></td>
+        <td>Cheque Amount</td>
+		<td><%= f.text_field :cheque_amount, {:readonly => "true" ,:id => "cheque_amount", :size => 20} %></td>
+
+	</tr>		
+	<tr>	
+		<td>Card No</td>
+		<td><%= f.text_field :card_number, {:readonly => "true", :size => 20  ,:id => "card_no"}  %></td>
+		<td>Card Type</td>
+		<td><%= f.text_field :card_type, :readonly => "true", :id => "card_type" , :size => 20 %></td>
+		<td>Expiry Date</td>
+		<td><%= f.text_field :c_expiry_date, :size => 20, :readonly => true %></td>
+	    <td>Card Amount</td>
+		<td><%= f.text_field :card_amount, {:readonly => "true" ,:id => "card_amount", :size => 20} %></td>
+  </tr></table></fieldset></td>
+  </tr>
+ 
+ </table>
+<% end %>
+</div>
+</body>
+<% end%>
+</table>
+<table align="center">
+<tr>
+<td>
+<center><%= link_to "back",  issues_to_ops_path, :class=>"new1" %></center>
+</td>
+</tr>
+</table>

@@ -1,0 +1,112 @@
+<script type="text/javascript">
+function select_city(id)
+	{
+		var city_name=document.getElementById(id).value
+		var field_names=new Array('state','country');
+		if(city_name)
+		{
+			req = new Ajax.Request('/agency_masters/select_city/1', {
+				method: 'get',
+				parameters: { city_name: city_name },
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			}); // end ajax req
+		}
+		else
+		{
+			alert("Please Select city")
+			for(var i=0;i<2;i++)
+			{
+				document.getElementById(field_names[i]).style.background='white'
+				document.getElementById(field_names[i]).readOnly=false
+				document.getElementById(field_names[i]).value=""
+			}
+		}
+	}
+	</script>
+
+
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Pharmacy Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/manufacturers' class="nav" style="text-decoration:none;">Company Masters</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<br/>
+<% form_for(@manufacturer) do |f| %>
+
+<div  width="100%">
+<fieldset>
+<legend><div class="font"><b>Manufacturer Information</b></div></legend>
+<table align="center"  width="100%">
+<td><%= f.hidden_field :org_code, :size => 20, :id => "org_code", :readOnly => true, :value => @person.org_code %></td>
+	<td><%= f.hidden_field :org_location, :size => 20, :id => "org_location", :readOnly => true,:value => @person.org_location %></td>
+  <tr>
+	<td>Company Name<sup>*</sup></td>
+	<td><%= f.text_field :manufacturer_name, :class => "text_field", :required =>true, :pattern =>'[a-zA-z]+[\.\ ]*[a-zA-Z]*[\.\ ]*[a-zA-Z]*' %></td>
+	<td>Company Code </td>
+	<td><%= f.text_field :manufacturer_code, :class => "text_field" %></td>
+	<td>Address1</td>
+	<td><%= f.text_field :address1, :class => "text_field" %></td>
+	<td>Address2</td>
+	<td><%= f.text_field :address2, :class => "text_field" %></td>
+  </tr>
+ <tr>
+     <td>City</td>
+    <td><%= f.select :city,CityMaster.find(:all).collect{|p| [p.name]},{:prompt => true},{:id => "city", :onchange => "select_city(id)"} %></td>
+    <td><%= f.label :state %></td>
+    <td><%= f.text_field :state, :id => "state", :class => "text_field" %></td>
+    <td><%= f.label :country %></td>
+    <td><%= f.text_field :country, :id => "country", :class => "text_field" %></td>
+    <td>PIN</td>
+    <td><%= f.text_field :pin, :id => "pin", :class => "text_field" %></td>
+ </tr>
+<tr>
+    <td><%= f.label :website %></td>
+    <td><%= f.text_field :website, :id => "website", :class => "text_field" %></td>
+    <td><%= f.label :email %></td>
+    <td><%= f.text_field :email, :id => "email", :class => "text_field" %></td>
+</tr>
+ </table>
+
+</fieldset>
+<fieldset>
+		<legend><div class="font"><b>Tax Info</b></div></legend>
+		<tr> 	
+	<table>
+	
+			<td>CST NO</td>
+			<td><%= f.text_field :cstno, :id => "cstno", :size =>40 %></td>
+		</tr>
+		<tr>
+			<td>ST NO</td>
+			<td><%= f.text_field :stno, :id => "stno", :size =>40 %></td>
+		</tr>
+		<tr>
+			<td>DL NO1</td>
+			<td><%= f.text_field :dlno1, :id => "dlno1", :size =>40 %></td>
+		</tr>
+		<tr>
+			<td>DL NO2</td>
+			<td><%= f.text_field :dlno2, :id => "dlno2", :size =>40 %></td>
+		</tr>
+		<tr>
+			<td>TIN/GRN</td>
+			<td><%= f.text_field :tin, :id => "tin", :size =>40 %></td>
+		</tr>
+
+	
+	</table>
+
+</fieldset>
+
+<table align ="center">
+  <tr>
+  	<td><%= submit_tag "", :value => " Update ", :class => "submit_button", :onClick => "this.disabled=true;this.value='Process..';this.form.submit();" %></td>
+	<td valign="middle"><%= link_to "Back",  manufacturers_path, :class=>"new1" %></td> 
+  </tr>
+</table>
+<% end %>

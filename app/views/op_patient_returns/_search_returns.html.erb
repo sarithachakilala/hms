@@ -1,0 +1,27 @@
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+	<tr>
+  <th>S.No</th>      
+     <th>Sc.No</th>
+  <th>Invoice NO</th>
+   <th>Tot.Return Amt</th>
+	<th  align=center>Permissions</th>
+   </tr>
+ </thead>
+<tbody>
+<% @i=0 %>
+          <% @op_patient_return.each do |op_patient_return| %>
+		  <% if((@i % 2)==0) 
+	    	id="datacellone"
+			else
+			id="datacelltwo"
+         end %>
+         <tr class='<%= id %>' style="height:30px">
+			<td><%= @i+=1 %></td>
+             <td><%=h op_patient_return.return_no %></td>
+             <td><%=h op_patient_return.receipt_no %></td>
+             <td><%=h op_patient_return.return_amount %></td>
+
+	         <td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;edit&nbsp;&nbsp;&nbsp;', edit_op_patient_return_path(op_patient_return), :class=>"submit_button" %></td>   
+		</tr>
+<% end %>

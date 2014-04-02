@@ -1,0 +1,35 @@
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+  <tr>
+    <th>S.No</th>
+    <th>Date</th>
+    <th>Time</th>
+	<th>Department</th>
+	<th>Employee</th>
+    <th>Status</th>
+	<th>Complaints</th>
+	<th>Edit</th>
+  </tr>
+ </thead>
+<tbody>
+<% @i=@complaints.length+1 %>
+<% @complaints.each do |complaint| %>
+<% if((@i % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+		 end %>
+  <tr class='<%= id %>'>
+	<td width="10%"><%= @i-=1 %></td>
+    <td width="80"><%=h complaint.pdate %></td>
+    <td width="120"><%=h complaint.ptime.strftime("%H:%M") %></td>
+    <td width="120"><%=h complaint.department %></td>
+	<td width="120"><%=h complaint.name %></td>
+	<td width="120"><u><%=h complaint.status %><u></td>
+    <td width="400"><%=h complaint.about %></td>
+	<td><%= link_to 'Edit', edit_complaint_path(complaint) , :class => "submit_button"%></td>
+   </tr>
+<% end %>
+</table>
+
+

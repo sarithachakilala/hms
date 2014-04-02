@@ -1,0 +1,41 @@
+ <%= stylesheet_link_tag 'table_style' %>
+  <%= javascript_include_tag 'jquery-latest.js' %>
+  <%= javascript_include_tag 'jquery.tablesorter.js' %>
+  <%= javascript_include_tag 'docs.js' %>
+
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+   <tr>
+   <th>S.No</th> 	
+     <th>Org Code</th>
+    <th>Admn.No</th>
+    <th>MR No</th>
+	<th>Patient Name</th>
+    <th>Admn.Date</th>
+    <th>Bed</th>
+    <th>Room</th>
+    <th>Ward</th>
+  </tr>
+ </thead>
+<tbody>
+<% @i=@admissions.length %>
+<% @admissions.each do |admission| %>
+<% if((@i % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+		 end %>
+  <tr>
+	<td><%= @i %></td>
+ <% @i-=1 %>
+	 <td><%=h admission.org_code %></td>
+    <td><%=h admission.admn_no %></td>
+    <td><%=h admission.mr_no %></td>
+	<td><%=h admission.patient_name %></td>
+    <td><%=h admission.admn_date %></td>
+   	<td><%=h admission.bed %></td>
+    <td><%=h admission.room %></td>
+    <td><%=h admission.ward %></td>
+<% end %>
+</tbody>
+</table>

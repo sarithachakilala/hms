@@ -1,0 +1,94 @@
+<script type="text/javascript">
+function select_city(id)
+	{
+		var city_name=document.getElementById(id).value
+		var field_names=new Array('state','country');
+		if(city_name)
+		{
+			req = new Ajax.Request('/registrations/select_city/1', {
+				method: 'get',
+				parameters: { city_name: city_name },
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			}); // end ajax req
+		}
+		else
+		{
+			alert("Please Select city")
+			for(var i=0;i<2;i++)
+			{
+				document.getElementById(field_names[i]).style.background='white'
+				document.getElementById(field_names[i]).readOnly=false
+				document.getElementById(field_names[i]).value=""
+			}
+		}
+	}
+	</script>
+<% form_for(@vendormaster) do |f| %>
+  <%= f.error_messages %>
+ <div align="center" >
+ <fieldset>
+<legend>Agency Details</legend> 
+<table width="100%">
+  <tr>
+		<td>Org.Code</td>
+		<td><%= f.text_field :org_code, :value => @org_code, :size => 20, :id => "org_code", :required => true, :readonly => true %></td>
+		<td>Org.Location</td>
+		<td><%= f.text_field :org_location, :value => @org_location, :size => 20, :id => "org_location", :required => true, :readonly => true %></td>
+		<td>Agency Code<sup>*</sup> </td>
+		<td><%= f.text_field :vendor_code, :size => 20,:required => true %></td>
+		<td>Agency Name<sup>*</sup></td>
+		<td>    <%= f.text_field :vendor_name, :size => 20,:required => true %></td> 
+ </tr>   
+ <tr>
+	  <td>Agency Tin No<sup>*</sup></td>
+	  <td> <%= f.text_field :vendor_tin_no, :size => 20,:required => true %></td> 
+	  <td>Vat No </td>
+	  <td><%= f.text_field :vat_no, :size => 20 %> </td> 
+	  <td>List Of Items Supplied </td>  
+	  <td><%= f.text_field :list_of_items_supplied, :size => 20 %> </td> 
+	  <td>Address1<sup>*</sup></td>
+	  <td><%= f.text_field :address1, :size => 20,:required => true %></td> 
+</tr>
+<tr>
+	<td>Address2</td>
+	<td><%= f.text_field :address2, :size => 20 %></td> 
+    <td><%= f.label :city %><sup>*</sup></td>
+    <td><%= f.select :city,CityMaster.find(:all).collect{|p| [p.name]},{:prompt => true},{:id => "city",:required => true, :onchange => "select_city(id)"} %></td>
+    <td><%= f.label :state %></td>
+    <td><%= f.text_field :state, :id => "state", :size => 20, :required => true %></td>
+    <td><%= f.label :country %></td>
+    <td><%= f.text_field :country, :id => "country", :size => 20, :required => true %></td>
+</tr>
+<tr>
+	<td>Contact Person<sup>*</sup></td>
+	<td><%= f.text_field :contact_person, :size => 20, :required => true %></td> 
+	<td>Agency Email</td>
+	<td><%= f.text_field :vendor_emailid, :size => 20 %></td> 
+	<td>Contact No<sup>*</sup></td>
+	<td><%= f.text_field :contact_num, :size => 20, :required => true %></td>  
+	<td><%= f.label :status %></td>
+	<td><%= f.text_field :status, :size => 20 %></td>  
+</tr>
+</table>
+
+
+<table align="left">
+<tr>
+	<td></td>
+	<td>Note</td>
+	<td><%= f.text_area :note, :size=>"45x5" %> </td>
+  </tr>
+</table>
+</fieldset>
+</div>
+<table align="center">
+    <tr>
+		<td><%= image_submit_tag("buttons/update.png", :height => "21", :width => "54", :border =>"0") %></td>
+ 		<td><%= link_to image_tag("buttons/back.png",:class => "info", :border =>"0"),  vendormasters_path(:user_id=>@user_id) %></td>
+</tr>
+    
+  </table><% end %>
+
+</div>

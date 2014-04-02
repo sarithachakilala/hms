@@ -1,0 +1,56 @@
+<script type="text/javascript">
+	function ajaxSearch(id,form_name) 
+	{
+		if(id!="")
+		{
+		document.getElementById('link_page').innerHTML=source+" >> "+ "<a href='javascript:void(0)' class='nav' id="+hyper_link+" onclick='dispaly_data(id)'>"+name+"</a>";
+		document.getElementById("home").src=id;
+		}	
+		else if(id=="/home/Main")
+			document.getElementById("links").innerHTML="<a href='javascript:void(0)' class='nav' id="+hyper_link+" onclick='dispaly_data(id)'>"+name+"</a>";
+		else if((id=="")&&(source=="page"))
+			document.getElementById("home").src="/logins/image_tag/1"
+		else
+			document.getElementById("links").innerHTML=source+" >> "+ "<a href='javascript:void(0)' class='nav' id="+hyper_link+" onclick='dispaly_data(id)'>"+name+"</a>";
+	}	
+	function dispaly_data(id)
+	{
+		document.getElementById("home").src=id;
+	}
+	function select_patient_type()
+	{
+	var selobj=document.getElementById('type')
+	var select_value=selobj.options[selobj.selectedIndex].value
+	if(select_value=="OP")
+	document.getElementById("home").src="/issues_to_ops?user_id=<%= @people.id %>";
+	else if(select_value=="IP")
+	document.getElementById("home").src="/issues_to_ips?user_id=<%= @people.id %>";
+	else if(select_value=="OSP")
+	document.getElementById("home").src="/issues_to_osps?user_id=<%= @people.id %>";
+	
+	}
+</script>
+
+
+	<table align="center">
+	<tr>
+	<td>Org.Code</td>
+	<% if(@people.code_option=="0") %>
+		<td><%= text_field_tag :org_code,"", :value => @org_code, :size => 20, :id => "org_code", :required => true, :readonly => true %></td>
+	<% else %>
+		<td><%= select :org_code,"","", @org_code, {:prompt =>true},{:id => "org_code", :onChange => "select_org_code(id)"} %></td>
+	<% end %>
+		<td>Org.Location</td>
+		<td><%= text_field_tag :org_location,"", :value => @org_location, :size => 20, :id => "org_location", :required => true, :readonly => true %></td>
+		
+	<td>Patient Type</td>
+		<td><select id="type" onchange="select_patient_type()" >
+		<option>  </option>
+		<option>OP</option>
+		<option>IP</option>
+		<option>OSP</option>
+		</select></td>
+	</tr>
+	</table>
+
+			<iframe src="" width="100%" height="523px" id="home" style="background-color:#ecf3f7;" border="1" ALLOWTRANSPARENCY="true"></iframe>

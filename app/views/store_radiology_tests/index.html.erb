@@ -1,0 +1,44 @@
+
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+  <tr>
+  <th>S.NO</th>
+   
+    <th>Mr no</th>
+    <th>Admn no</th>
+    <th>Collection date</th>
+    <th>Collection time</th>
+    <th>Lab no</th>
+    
+    <th>Image path</th>
+	<th colspan="3" align="center">Permissions</th>
+  </tr>
+  <br />
+</thead>
+<tbody>
+<% @i=0 %>
+<% @store_radiology_tests.each do |store_radiology_test| %>
+<% if((@i % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+  end %>
+  <tr class='<%= id %>' style="height:30px">
+	<td><%= @i+=1 %></td>
+    
+    <td><%=h store_radiology_test.mr_no %></td>
+    <td><%=h store_radiology_test.admn_no %></td>
+    <td><%=h store_radiology_test.collection_date %></td>
+    <td><%=h store_radiology_test.collection_time %></td>
+    <td><%=h store_radiology_test.lab_no %></td>
+    
+    <td><%=h store_radiology_test.image_path %></td>
+    <td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Show&nbsp;&nbsp;&nbsp;', store_radiology_test, :class=>"submit_button" %></td>
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Edit&nbsp;&nbsp;&nbsp;', edit_store_radiology_test_path(store_radiology_test), :class=>"submit_button" %></td>   
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Delete&nbsp;&nbsp;&nbsp;', store_radiology_test, :confirm => 'Are you sure?', :method => :delete, :class=>"submit_button" %></td>
+  </tr>
+<% end %>
+</table>
+</div>
+<br />
+

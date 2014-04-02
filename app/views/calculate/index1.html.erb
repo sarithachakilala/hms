@@ -1,0 +1,44 @@
+<%= stylesheet_link_tag 'calculator/calculator' %>
+<script type="text/javascript">
+	var total_value=0;
+	var operation;
+	function add_text(value)
+	{
+		document.getElementById('text').value=document.getElementById('text').value+value;
+	}
+	function do_operation(type)
+	{
+		operation=type
+		total_value=parseFloat(document.getElementById('text').value);
+	}
+</script>
+<table width="90%" border=1 cellspacing=3 height="90%">
+	<tr>
+		<td colspan="4"><input type=text style="width:100%" id="text" dir="rtl"></td>
+	</tr>
+	<tr>
+		<td align="center" class="submit_button" onClick="add_text(7)"><a href="javascript:void(0)" style="text-decoration: none;">7</a>
+		<td align="center" class="submit_button" onClick="add_text(8)"><a href="javascript:void(0)" style="text-decoration: none;">8</a>
+		<td align="center" class="submit_button" onClick="add_text(9)"><a href="javascript:void(0)" style="text-decoration: none;">9</a>
+		<td align="center" class="submit_button" onClick="do_operation('division')"><a href="javascript:void(0)" style="text-decoration: none;">/</a>
+	</tr>
+	<tr>
+		<td align="center" class="submit_button" onClick="add_text(4)"><a href="javascript:void(0)" style="text-decoration: none;">4</a>
+		<td align="center" class="submit_button" onClick="add_text(5)"><a href="javascript:void(0)" style="text-decoration: none;">5</a>
+		<td align="center" class="submit_button" onClick="add_text(6)"><a href="javascript:void(0)" style="text-decoration: none;">6</a>
+		<td align="center" class="submit_button" onClick="add_text(*)"><a href="javascript:void(0)" style="text-decoration: none;">*</a>
+	</tr>
+	<tr>
+		<td align="center" class="submit_button" onClick="add_text(1)"><a href="javascript:void(0)" style="text-decoration: none;">1</a>
+		<td align="center" class="submit_button" onClick="add_text(2)"><a href="javascript:void(0)" style="text-decoration: none;">2</a>
+		<td align="center" class="submit_button" onClick="add_text(3)"><a href="javascript:void(0)" style="text-decoration: none;">3</a>
+		<td align="center" class="submit_button" onClick="add_text(*)"><a href="javascript:void(0)" style="text-decoration: none;">-</a>
+		
+	</tr>
+	<tr>
+		<td colspan="2" align="center" class="submit_button" onClick="add_text(0)"><a href="javascript:void(0)" style="text-decoration: none;">0</a>
+		<td align="center" class="submit_button" onClick="add_text('.')"><a href="javascript:void(0)" style="text-decoration: none;">.</a>
+		<td align="center" class="submit_button" onClick="add_text()"><a href="javascript:void(0)" style="text-decoration: none;">+</a>	
+	</tr>
+</table>
+

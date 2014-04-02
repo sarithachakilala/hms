@@ -1,0 +1,87 @@
+<script type="text/javascript"> 
+	var date_value
+	var date_value1
+	var org_code
+	function searchConsultation_Number()
+	{
+		date_value=document.getElementById('appt_date1').value
+		date_value1=document.getElementById('appt_date2').value
+		vat_percentage=document.getElementById('vat_percentage').value
+		ajax()
+	}	
+	
+	
+	function ajax()
+	{
+	    org_code= document.getElementById('org_code_c').value
+		  req = new Ajax.Request('/issues_to_ops/sales_tax_report/1', {
+				method: 'get',
+				parameters: { org_code:org_code,date_value:date_value,date_value1:date_value1, vat_percentage: vat_percentage},
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			});
+		function processReqChange(req) 
+		{
+			if(req.responseText=="No Records")
+				document.getElementById("table").value=req.responseText
+			else
+				document.getElementById("table").innerHTML=req.responseText
+		}
+	}
+	function clear_function()
+	{
+		document.getElementById('appt_date1').value=""
+		document.getElementById('appt_date2').value=""
+		document.getElementById('org_code_c').value=""
+		document.getElementById('vat_percentage').value=""
+	}
+	
+</script> 
+
+<b<body style="margin:0px;" onload="setMyDiv('/goodsrecieptnotemasters/goodsrecieptnotemaster_report/1?user_id=<%= @user_id %>','new','')">
+<div id="links" class="header">
+	&nbsp;&nbsp;&nbsp;Report >>&nbsp;&nbsp;&nbsp; Pharmacy Reports >>&nbsp;&nbsp;&nbsp;<a HREF='javascript:void(0);' id="management_info_system_report" onclick="setMyDiv('/goodsrecieptnotemasters/goodsrecieptnotemaster_report/1?user_id=<%= @user_id %>','new','')" class="nav" style="text-decoration:none;">Sales Tax Reports</a>
+</div>
+<div class="dateformat"><%= format_date(:short, Date.today ) %></div>
+
+ <div >
+<%= form_tag ({:controller => "issues_to_ops", :action => "generate_reports_vat"}, {:method => "post"}) %>
+<fieldset>
+<legend><div class="font"><b>Medicine Tax Information</b></div></legend>
+<table  width="100%">
+  <tr>
+	<td>Org.Code</td>
+	<td><%= select :"org","code",Person.find(:all, :select =>"DISTINCT org_code").collect{|p| [p.org_code]},{:prompt=>'All'},{:id=>"org_code_c"} %>
+	
+	<td><label for="item_name">From Date</label></td>
+	<td><input type=text id="appt_date1" name="appt_date1" value='<%= Date.today %>'>
+	<a href="javascript:void(0)" onClick="setYears(2000, 2050);showCalender(this,'appt_date1');" >
+    	<img src="/images/cal.gif" ></a></td>
+	
+	<td><label for="item_name">To Date</label></td>
+	<td><input type=text id="appt_date2" value='<%= Date.today %>'>
+	<a href="javascript:void(0)" onClick="setYears(2000, 2050);showCalender(this,'appt_date2');" >
+	<img src="/images/cal.gif" ></a></td>
+	
+	<td>Vat Percentage</td>
+	<td><%= select :"vat","percentage",[['5'],['14.5']],{:prompt=>false},{:id=>"vat_percentage"} %>(%)
+	
+	
+	<td><a href='javascript:void(0)' onclick="searchConsultation_Number()">
+	<%= image_tag ("buttons/search.png", :border=>0, :class=>"info") %></a>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= link_to image_tag("buttons/clear.png", :size=>"54x21", :border =>"0"), "javascript: clear_function()" %></td>
+</tr>
+	
+	</table>
+	</fieldset>
+	</div>
+
+<div id="table" align ="center">
+
+</div>
+ <center><%= image_submit_tag("buttons/save-as.png", :width => "54px", :height =>"21px", :border =>"0") %></center>
+ <%= form_tag %>
+ 
+
+

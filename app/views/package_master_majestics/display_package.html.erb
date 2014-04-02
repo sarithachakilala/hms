@@ -1,0 +1,57 @@
+<%= stylesheet_link_tag 'css' %>
+
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div align="center" >
+<table width="80%">
+<caption align="center"><h3><font color="#015a84"><%=h @registration.patient_name %> Record</font></h3></caption>
+  <tr>
+	<td class='<%= id %>'><b>Org.Code</td>
+	 <td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @registration.org_code %></td>
+	<td class='<%= id %>'><b>Org.Location</td>
+	 <td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @registration.org_location %></td>	
+</tr>
+<tr>
+	<td class='<%= id %>'><b>MR No</td>
+	 <td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @registration.mr_no %></td>
+	<td class='<%= id %>'><b>Patient Name</td>
+	 <td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @registration.patient_name %></td>
+</tr>
+<tr>	
+ 	<td class='<%= id %>'><b>Reg.No</td>
+	 <td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @registration.reg_no %></td>
+ 	<td class='<%= id %>'><b>Reg.Date</td>
+	 <td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @registration.reg_date %></td>
+</tr>
+<tr>
+	<td class='<%= id %>'><b>Address</td>
+	 <td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @registration.city %></td>
+	<td class='<%= id %>'><b>Reg.Type</td>
+	 <td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'> <%=h @registration.reg_type %></td>
+</tr>
+<tr></tr><tr></tr><tr></tr><tr>
+<td colspan="6" align="center"><b>Package Details:</b></td>
+</tr>
+<tr>
+ <td class='<%= id %>'><b>Package</td>
+ <td class='<%= id %>'>:</td>
+  <td class='<%= id1 %>'> <%=h @admission.package_category %></td>
+  <td class='<%= id %>'><b>Sub Package Name</td>
+   <td class='<%= id %>'>:</td>
+  <td class='<%= id1 %>'><%=h @admission.sub_category %></td>
+</tr>
+<tr>
+  <td class='<%= id %>'><b>Days</td>
+   <td class='<%= id %>'>:</td>
+  <td class='<%= id1 %>'> <%=h @admission.days %></td>
+ </tr>
+ </table>
+</div>

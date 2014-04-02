@@ -1,0 +1,93 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Pharmacy >>&nbsp;&nbsp;&nbsp;<a HREF='/purchase_order_returns/new?user_id=<%= @user_id %>' class="nav" style="text-decoration:none;">Purchase Order Return</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<div id="form_data">
+<br/>
+<center>
+<%= link_to 'New',new_purchase_order_return_path, :class=>"new1" %>
+</center>
+<script type="application/javascript">
+var type
+	function clear_file()
+	{
+		document.getElementById("return_no").value=""
+		document.getElementById("return_date").value=""
+		document.getElementById("purchase_order_no").value=""
+		document.getElementById("purchase_order_date").value=""
+		document.getElementById("vendor").value=""
+	}
+ </script>
+<div align="center" width="100%">
+<center>
+<table class="tablesorter" border="0" cellpadding="0" cellspacing="1" >
+<tbody>
+	<tr>
+	<td width="12%">&nbsp;</td>
+
+	
+	<td width="15%"><input type="text" style="width:100%" id="return_no" onKeyUp = "search_function(id,event)" placeholder="Search Return No"></td>
+					<%= javascript_include_tag:defaults %>
+					<%= observe_field 'return_no', :frequency => 0.01,
+					:update => :name,
+					:url => {:action => :observe_field_ex },
+					:with => "'return_no='+escape($('return_no').value)+ '&return_date=' + escape($('return_date').value)+ '&vendor=' + escape($('vendor').value) " %>
+					  
+	<td width="15%"><input type="text" style="width:100%" id="return_date" onKeyUp = "search_function(id,event)" placeholder="Search Return Date "></td>
+					<%= observe_field 'return_date', :frequency => 0.01,
+					:update => :name,
+					:url => {:action => :observe_field_ex },
+					:with => "'return_no='+escape($('return_no').value)+ '&return_date=' + escape($('return_date').value)+ '&vendor=' + escape($('vendor').value) " %>
+	
+	<td width="15%"><input type="text" style="width:100%" id="vendor" onKeyUp = "search_function(id,event)" placeholder="Search Vendor"></td>
+					<%= observe_field 'vendor', :frequency => 0.01,
+					:update => :name,
+					:url => {:action => :observe_field_ex },
+					:with => "'return_no='+escape($('return_no').value)+ '&return_date=' + escape($('return_date').value)+ '&vendor=' + escape($('vendor').value) " %>
+	<td colspan="3" align="center" valign="top">
+		<%= link_to 'Clear','', :class=>"new1",:onClick => "clear_file()"  %>
+	</td>
+  </tr>
+ </tbody>
+</table>
+</center>
+</div>
+<% @i=0 %>
+<div id="name" align="center" width="100%">
+</table><table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+<tr>
+    <th>S.No</th>      
+    <th>Return No</th>
+    <th>Return Date</th>
+    <th>Vendor</th>
+    <th colspan=2 align=center>Permissions</th>
+  </tr>
+ </thead>
+<tbody>
+<% @purchase_order_returns.each do |purchase_order_return| %>
+ 	    <% if((purchase_order_return.id % 2)==0) 
+	    	id="datacellone"
+	    else
+			id="datacelltwo"
+        end %>
+
+        <tr class='<%= id %>' style="height:30px">
+		 	<td><%= @i+=1 %></td>
+			<td><%=h purchase_order_return.return_no %></td>
+			<td><%=h purchase_order_return.return_date %></td>
+			<td><%=h purchase_order_return.agency_names %></td>
+			
+	       <td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Edit&nbsp;&nbsp;&nbsp;', edit_purchase_order_return_path(purchase_order_return), :class=>"submit_button" %></td>   
+<td  align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Print&nbsp;&nbsp;&nbsp;', {:controller=>'reports', :action => 'purchase_invoice_20_return', :id =>  purchase_order_return.id}, :class=>"submit_button" %></td>
+			
+		</tr>
+	<% end %>
+</tbody>
+</table>
+<p align="right"><div align="right" class="pagination"><%= will_paginate @purchase_order_return,  :style => "font: bold 15px Arial red;" %></p>
+</DIV>

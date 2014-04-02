@@ -1,0 +1,34 @@
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+	<th>S.No</th>
+    <th>Consultant Type</th>
+    <th>Consultant Id</th>
+    <th>Consultant Name</th>
+    <th>Payment Type</th>
+    <th>Salary</th>
+    <th>Salary Type</th>
+	<th colspan="3">Permissions</th>
+  </tr>
+ </thead>
+ <tbody>
+ <% @i=0 %>
+<% @consultant_masters.each do |consultant_master| %>
+<% @emp_name=EmployeeMaster.find_by_empid(@consultant_masters[0].consultant_id) %>
+ <% if((@i%2)==0) 
+		id="datacelltwo"
+	else
+		id="datacellone"
+  end %>
+  <tr class='<%= id %>'>
+    <td><%= @i=@i+1 %></td>
+    <td><%=h consultant_master.consultant_type %></td>
+    <td><%=h consultant_master.consultant_id %></td>
+    <td><%=h @emp_name.name %></td>
+    <td><%=h consultant_master.payment_type %></td>
+    <td><%=h consultant_master.salary %></td>
+	<td><%=h consultant_master.salary_type %></td>
+	<td align="center"><%= link_to image_tag("buttons/display1.png", :class => "info", :border =>"0"), consultant_master %></td>
+	<td align="center"><%= link_to image_tag("buttons/modify.png", :class => "info", :border =>"0"), edit_consultant_master_path(consultant_master) %></td>
+   </tr>
+<% end %>
+</table>

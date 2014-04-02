@@ -1,0 +1,41 @@
+<br />
+<%= image_tag("add.png")%><font size="4"><%= link_to 'New Client', new_client_list_path %></font>
+<br/>
+<div align="center" width="100%">
+<table width="100%" cellpadding="2" cellspacing="2">
+  <tr bgcolor =" #378bf8" style="color:white">
+    <th>S.No</th>
+	<th>Hospital name</th>
+    <th>Branch code</th>
+    <th>Branch name</th>
+    <th>No of users</th>
+	<th>Created Users</th>
+	<th>Available Users</th>
+    <th>Port number</th>
+    <th>Display name</th>
+	<th colspan="2">Permissions</th>
+  </tr>
+<% @i=0 %>
+<% @client_lists.each do |client_list| %>
+  <% people=Person.find(:all,:conditions => "org_code = '#{client_list.branch_code}'") %>
+  <% if((@i % 2)==0) 
+		id="datacelltwo"
+	else
+		id="datacellone"
+	end %>
+	<tr class='<%= id %>' style="height:30px">
+	<td><%=h @i=@i+1 %></td>
+    <td><%=h client_list.hospital_name %></td>
+    <td><%=h client_list.branch_code %></td>
+    <td><%=h client_list.branch_name %></td>
+    <td><%=h client_list.no_of_users %></td>
+	<td><%=h people.length %></td>
+	<td><%=h client_list.no_of_users.to_i-people.length %></td>
+    <td><%=h client_list.port_number %></td>
+    <td><%=h client_list.display_name %></td>
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;show&nbsp;&nbsp;&nbsp;', client_list, :class=>"submit_button" %></td>
+    <td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;edit&nbsp;&nbsp;&nbsp;', edit_client_list_path(client_list), :class=>"submit_button" %></td>   
+  </tr>
+<% end %>
+</table>
+</div>

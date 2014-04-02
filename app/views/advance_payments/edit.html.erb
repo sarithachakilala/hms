@@ -1,0 +1,155 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Payments>>&nbsp;&nbsp;&nbsp;<a HREF='/advance_payments' class="nav" style="text-decoration:none;">Advance Payments</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<div id="form_data">
+<script type="text/javascript">
+	function check_admn_no(id)
+	{
+		var field_names=new Array('admn_no','mr_no','receipt_no','patient_name','floor','ward','room','bed','already_paid_amount','total_amount');
+		var admn_no=id; // Call the function.this is available in commonFunctionality.js file
+		req = new Ajax.Request('/advance_payments/ajax_function/1', 
+			{
+				method: 'get',
+				parameters: { admn_no:admn_no },
+				onComplete: function(transport){
+					processReqChange(transport);
+					}
+			}); // end ajax req
+		function processReqChange(req) 
+		{
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				var temp=new Array
+				temp=results.split("<division>")
+				for(var i=0;i<field_names.length;i++)
+				{
+					document.getElementById(field_names[i]).value=temp[i]
+					document.getElementById(field_names[i]).style.background="#FEF5CA"
+					document.getElementById(field_names[i]).readOnly=true
+				}			
+			}
+		}
+	}
+	
+	function select_admn_category(id)
+	{
+		admn_category=document.getElementById(id).value
+		var field_names=new Array('admn_no','mr_no','receipt_no','first_name','last_name','floor','ward','room','bed','already_paid_amount','total_amount');
+		if(admn_category=="Package")
+		{
+			document.getElementById('with_package').style.display='block'
+			document.getElementById('with_out_package').style.display='none'
+			document.getElementById('total_amount').disabled=false
+		}
+		else
+		{
+			document.getElementById('with_package').style.display='none'
+			document.getElementById('with_out_package').style.display='block'
+			document.getElementById('total_amount').disabled=true
+		}
+		for(var i=0;i<field_names.length;i++)
+		{
+			document.getElementById(field_names[i]).value=""
+			document.getElementById(field_names[i]).style.background="white"
+			document.getElementById(field_names[i]).readOnly=false
+		}			
+	}
+</script>
+<% form_for(@advance_payment) do |f| %>
+<% @date=format_date(:sort, Date.today ) %>
+<body style="margin:0px;" onload="document.getElementById('admn_no').focus();">
+<table width="100%">
+<%= hidden_field :user_id, :value => @person.id %>
+  <tr>
+	<td colspan="8"><fieldset><legend><div class="font"><b>Advance Payments</b></div></legend>
+	<table width="100%">
+	 <tr>
+	<td colspan="3" align="right">Admn.Category</td>
+       <td colspan="3"><%= f.radio_button :admn_category, "General", :checked => true, :id => "button11" , :onchange => "select_admn_category(id)" %>General
+		<%= f.radio_button :admn_category, "Package", :id => "button12" ,:onchange => "select_admn_category(id)" %>Package
+	</td>
+	</tr>	
+    	<%= f.hidden_field :org_location, :value => @person.org_location, :size => 20, :id => "org_location", :readonly => true %>
+		<%= f.hidden_field :org_code, :value => @person.org_code, :size => 20, :id => "org_location", :readonly => true %>
+	<tr>
+		<td>Admn.No<sup>*</sup></td>
+	    <td><%= f.text_field :admn_no, :id => "admn_no", :class => "text_field",:readonly => true %></td>
+    	<td>MR No</td>
+    	<td><%= f.text_field :mr_no, :id=>"mr_no",  :class => "text_field",:readonly => true %></td>
+		<td>Advance Date</td>
+    	<td><%= f.text_field :advance_date,  :class => "text_field", :readonly =>true, :value => "#{@date}" %></td>
+	</tr>	
+	<tr>
+		<td>Receipt No</td>
+    	<td><%= f.text_field :receipt_no,:id => "receipt_no",  :class => "text_field", :readOnly => true %></td>
+      	<td>Patient Name</td>
+		<td><%= text_field_tag ('patient_name','',  :class => "text_field",:value => @patient_name,:readonly => true) %></td>
+		<td>Ward</td>
+		<td><%= text_field_tag ('ward','',  :class => "text_field", :value => @ward,:readonly => true) %></td>
+	<tr>
+	</tr>	
+		
+		<td>Room</td>
+		<td><%= text_field_tag ('room','',  :class => "text_field",:value => @room,:readonly => true) %></td>
+		<td>Bed</td>
+		<td><%= text_field_tag ('bed','',  :class => "text_field",:value => @bed,:readonly => true) %></td>
+		<td>Floor</td>
+		<td><%= text_field_tag ('floor','',  :class => "text_field",:value => @floor,:readonly => true) %></td>
+	</tr>
+	<tr>
+		<td>Total Amount</td>
+		<td><%= f.text_field :total_amount, :id => "total_amount",  :class => "text_field", :disabled=>true %></td>
+   		<td>Already Paid Amount</td>
+    	<td><%= f.text_field :already_paid_amount,  :class => "text_field", :id => "already_paid_amount",:readonly => true %></td>	
+   		<td>Payment</td>
+    	<td><%= f.text_field :gross_amount,:id => "gross_amount",  :class => "text_field" %></td>
+   </tr>
+ <tr>
+	<td>Payment Mode</td>
+	<td colspan="2"><%= f.radio_button :payment_mode, "Cash", :checked => true, :id => "button15" , :onchange => "checked_payment_type(id,'gross_amount')" %>Cash
+		<%= f.radio_button :payment_mode, "Cheque", :id => "button16" ,:onchange => "checked_payment_type(id,'gross_amount')"  %>Cheque
+		<%= f.radio_button :payment_mode, "Card", :id => "button17" ,:onchange => "checked_payment_type(id,'gross_amount')"  %>Card
+              <%= f.radio_button :payment_mode, "Both", :id => "button14" ,:onchange => "checked_payment_type(id,'gross_amount')"  %>Both</td>
+  </tr>
+  
+  
+  <tr style="display:none;" id="bank_det">
+		<td>Bank Name </td> 
+		<td><%= f.text_field :bank_name, :class=>"text_field" , :id => "bank" %></td>
+		<td>Acc No </td>
+		<td><%= f.text_field :acc_no, :class=>"text_field" , :id => "accno" %></td>		
+		<td>Cheque No </td>
+		<td><%= f.text_field :cheque_no, :class=>"text_field", :id => "cheqno" %></td>
+    </tr>
+		<tr style="display:none;" id="card_det">
+			<td>Card No</td>
+			<td><%= f.text_field :card_no, :id => "cardno", :class=>"text_field"   %></td>
+			<td>Card Type</td>
+			<td><%= f.select :card_type,[['Mastro'],['Visa'],['Master Card']],{:include_blank => true}, {:id => "cardtype"}  %></td>
+			<td>Expiry Date</td>
+			<td><%= f.date_select :expiry_date, :prompt => {:month => 'Month', :year => 'Year' },:start_year => 2010, :order => [:month,:year] %></td>
+		</tr>
+		<tr style="display:none;"  id="cheque_amount_det"> 
+  		    	<td>Cheque Amount</td>
+		    	<td><%= f.text_field :cheque_amount, :id => "cheque_amount", :class=>"text_field" %></td>
+		</tr>
+		<tr style="display:none;"  id="card_amount_det">
+   		       <td>Card Amount</td>
+		       <td><%= f.text_field :card_amount, :id => "card_amount", :class=>"text_field" %></td>
+               </tr> 
+           </table></fieldset></td>
+  </tr>
+  <tr>
+ 	<td colspan=8 align="center"><%= submit_tag "", :value => " Update ", :class => "submit_button", :onClick => "this.disabled=true;this.value='Process..';this.form.submit();" %>
+ 	<%= link_to "Back",  advance_payments_path, :class=>"new1" %></td>	
+</tr>
+</table>
+<% end %>
+</div>
+</body>

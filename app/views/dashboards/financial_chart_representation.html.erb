@@ -1,0 +1,296 @@
+<%= javascript_include_tag 'dashboards/jquery-1.4.2.min' %>
+<%= javascript_include_tag 'dashboards/jquery.min' %>
+<%= javascript_include_tag 'dashboards/jquery-1.5.2.min' %>
+<%= javascript_include_tag 'dashboards/rails' %>
+<%= javascript_include_tag 'dashboards/exporting.src' %>
+<%= javascript_include_tag 'dashboards/highcharts.src' %>
+<%= javascript_include_tag 'dashboards/dark-green' %> 
+<%= javascript_include_tag 'dashboards/exporting' %>
+<div style="position:absolute;left:0%;top:0px;height:240px;width:45%;">
+		<script type="text/javascript" charset="utf-8">
+var chart;
+$(document).ready(function() {
+   chart = new Highcharts.Chart({
+      chart: {
+         renderTo: 'container_bed',
+         defaultSeriesType: 'column',
+         margin: [ 50, 50, 100, 80]
+      },
+      title: {
+         text: 'Bed Utilization'
+      },
+      xAxis: {
+         categories: [
+				<% for j in 0...@ward_names.length %>
+	       			'<%= @ward_names[j] %>',
+				<% end %>
+         ],
+         labels: {
+            rotation: -45,
+            align: 'right',
+            style: {
+                font: 'normal 13px Verdana, sans-serif'
+            }
+         }
+      },
+      yAxis: {
+         min: 0,
+         title: {
+            text: 'No.Of Available beds'
+         }
+      },
+      legend: {
+         enabled: false
+      },
+      tooltip: {
+         formatter: function() {
+            return '<b>'+ this.x +'</b><br/>'+
+                'No.Of Available beds in <%= @mon%> <%= @year %>: '+ Highcharts.numberFormat(this.y, 1);
+         }
+      },
+           series: [{
+         name: 'Population',
+         data: [<% for j in 0...@available_data.length %>
+				 <%= @available_data[j] %>,
+				<% end %>],
+         dataLabels: {
+            enabled: true,
+            rotation: -90,
+            color: Highcharts.theme.dataLabelsColor || '#FFFFFF',
+            align: 'right',
+            x: -3,
+            y: 10,
+            formatter: function() {
+               return this.y;
+            },
+            style: {
+               font: 'normal 13px Verdana, sans-serif'
+            }
+         }         
+      }]
+   });
+   
+   
+});
+</script> 
+<center> <div id="container_bed" style="width: 590px; height: 240px; margin: 0 auto"></div></center>
+</div>
+<div style="position:absolute;left:50%;top:0px;height:240px;width:45%;">
+	<script type="text/javascript" charset="utf-8">
+var chart;
+$(document).ready(function() {
+   chart = new Highcharts.Chart({
+      chart: {
+         renderTo: 'container_doctor',
+         defaultSeriesType: 'column',
+         margin: [ 50, 50, 100, 80]
+      },
+      title: {
+         text: 'Consultation wise revenues'
+      },
+      xAxis: {
+         categories: [
+				<% for j in 0...@label.length %>
+	       			'<%= @label[j] %>',
+				<% end %>
+         ],
+         labels: {
+            rotation: -45,
+            align: 'right',
+            style: {
+                font: 'normal 13px Verdana, sans-serif'
+            }
+         }
+      },
+      yAxis: {
+         min: 0,
+         title: {
+            text: 'Amount (Rs)'
+         }
+      },
+      legend: {
+         enabled: false
+      },
+      tooltip: {
+         formatter: function() {
+            return '<b>'+ this.x +'</b><br/>'+
+                'Revenue in <%= @mon%> <%= @year %>: '+ Highcharts.numberFormat(this.y, 1) +
+                ' /-';
+         }
+      },
+           series: [{
+         name: 'Population',
+         data: [<% for j in 0...@consultation.length %>
+				 <%= @consultation[j] %>,
+				<% end %>],
+         dataLabels: {
+            enabled: true,
+            rotation: -90,
+            color: Highcharts.theme.dataLabelsColor || '#FFFFFF',
+            align: 'right',
+            x: -3,
+            y: 10,
+            formatter: function() {
+               return this.y;
+            },
+            style: {
+               font: 'normal 13px Verdana, sans-serif'
+            }
+         }         
+      }]
+   });
+   
+   
+});
+</script> 
+<body >
+   <center> <div id="container_doctor" style="width: 590px; height: 240px; margin: 0 auto"></div></center>
+</body>
+
+</div>
+<div style="position:absolute;left:0px;top:245px;height:245px;width:45%;">
+	<script type="text/javascript" charset="utf-8">
+var chart;
+$(document).ready(function() {
+   chart = new Highcharts.Chart({
+      chart: {
+         renderTo: 'container',
+         defaultSeriesType: 'column',
+         margin: [ 50, 50, 100, 80]
+      },
+      title: {
+         text: 'Department wise revenues'
+      },
+      xAxis: {
+         categories: [
+				<% for j in 0...@dep_consultant_names.length %>
+	       			'<%= @dep_consultant_names[j] %>',
+				<% end %>
+         ],
+         labels: {
+            rotation: -45,
+            align: 'right',
+            style: {
+                font: 'normal 13px Verdana, sans-serif'
+            }
+         }
+      },
+      yAxis: {
+         min: 0,
+         title: {
+            text: 'Amount (Rs)'
+         }
+      },
+      legend: {
+         enabled: false
+      },
+      tooltip: {
+         formatter: function() {
+            return '<b>'+ this.x +'</b><br/>'+
+                'Revenue in <%= @mon%> <%= @year %>: '+ Highcharts.numberFormat(this.y, 1) +
+                ' /-';
+         }
+      },
+           series: [{
+         name: 'Population',
+         data: [<% for j in 0...@dep_fee.length %>
+				 <%= @dep_fee[j] %>,
+				<% end %>],
+         dataLabels: {
+            enabled: true,
+            rotation: -90,
+            color: Highcharts.theme.dataLabelsColor || '#FFFFFF',
+            align: 'right',
+            x: -3,
+            y: 10,
+            formatter: function() {
+               return this.y;
+            },
+            style: {
+               font: 'normal 13px Verdana, sans-serif'
+            }
+         }         
+      }]
+   });
+   
+   
+});
+</script> 
+<body >
+   <center> <div id="container" style="width: 590px; height: 240px; margin: 0 auto"></div></center>
+</body>
+
+
+</div>
+<div style="position:absolute;left:50%;top:245px;height:245px;width:45%;">
+	<script type="text/javascript" charset="utf-8">
+var chart;
+$(document).ready(function() {
+   chart = new Highcharts.Chart({
+      chart: {
+         renderTo: 'container_visits',
+         defaultSeriesType: 'column',
+         margin: [ 50, 50, 100, 80]
+      },
+      title: {
+         text: 'Patient Visits'
+      },
+      xAxis: {
+         categories: [
+				<% for j in 0...@visit_org.length %>
+	       			'<%= @visit_org[j] %>',
+				<% end %>
+         ],
+         labels: {
+            rotation: -45,
+            align: 'right',
+            style: {
+                font: 'normal 13px Verdana, sans-serif'
+            }
+         }
+      },
+      yAxis: {
+         min: 0,
+         title: {
+            text: 'No.Of Visits'
+         }
+      },
+      legend: {
+         enabled: false
+      },
+      tooltip: {
+         formatter: function() {
+            return '<b>'+ this.x +'</b><br/>'+
+                'No.Of visits <%= @mon%> <%= @year %>: '+ Highcharts.numberFormat(this.y, 1);
+         }
+      },
+           series: [{
+         name: 'Population',
+         data: [<% for j in 0...@patient_visit.length %>
+				 <%= @patient_visit[j] %>,
+				<% end %>],
+         dataLabels: {
+            enabled: true,
+            rotation: -90,
+            color: Highcharts.theme.dataLabelsColor || '#FFFFFF',
+            align: 'right',
+            x: -3,
+            y: 10,
+            formatter: function() {
+               return this.y;
+            },
+            style: {
+               font: 'normal 13px Verdana, sans-serif'
+            }
+         }         
+      }]
+   });
+   
+   
+});
+</script> 
+<body >
+   <center> <div id="container_visits" style="width: 590px; height: 240px; margin: 0 auto"></div></center>
+</body>
+</div>
+

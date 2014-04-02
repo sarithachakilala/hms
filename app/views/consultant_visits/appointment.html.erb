@@ -1,0 +1,96 @@
+
+<script type="text/javascript">
+	function store_values(id)
+	{
+		var table = document.getElementById('displayTable');    
+		var rowCount = table.rows.length;   
+		document.getElementById('displayTable').deleteRow(2)
+		for (var i = 1; i < rowCount - 1; i++) {    
+			table.rows[i].cells[1].childNodes[0].data="hai"
+		}
+
+	}
+
+	function fill_data(doctor_id,time,cons_type,name)
+	{
+		var admn_no='<%= @admn_no %>'
+		var org_code='<%= @org_code %>'
+		req = new Ajax.Request('/consultant_visits/find_doctor_charge/1', {
+				method: 'get',
+				parameters: { org_code: org_code, admn_no:admn_no,consultant:doctor_id  },
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			}); // end ajax req
+		function processReqChange(req) 
+		{
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+
+				var openerWindow = window.opener;
+				openerWindow.document.getElementById("consultant").value=doctor_id+"-"+name;
+				openerWindow.document.getElementById("appt_time").value=time;
+				openerWindow.document.getElementById("cost").value=results;
+				openerWindow.document.getElementById("cons_type").value=cons_type;
+				openerWindow.add_data_to_child();
+				window.close();
+			}
+		}	
+	}
+</script>
+<div>
+<div id="tableContainer" class="tableContainer">
+<table border="0" cellpadding="0" cellspacing="0" width="100%" class="scrollTable" id="displayTable">
+<thead class="fixedHeader">
+<tr>
+	<th><b>Time</b></th>
+		<% for doctor in @doctor %>
+			<% consultant_master=ConsultantMaster.find_by_consultant_id_and_org_code(doctor.empid,doctor.org_code) %>
+			<% if(consultant_master && consultant_master.charge_type!='OP') %>
+				<th><b><%= doctor.name %></b></th>
+			<% end %>	
+		<% end %>
+</tr>
+</thead>
+<% date=@date.to_date %>
+<% to_date=Date.today %>
+<% time=Time.new %>
+<% t=Time.utc(date.year,date.month,date.day, 6, 00)  %>
+<% @val=15 %>
+<% @va=@val*60 %>
+<tbody class="scrollContent">
+<% for i in 0...(24*(60/@val)) %>
+<% if((i % 2)==0) 
+	id="normalRow"
+else
+	id="alternateRow"
+end %>
+<tr class='<%= id %>'>
+	<td><% t+=@va %>
+			<%= t.strftime("%H:%M") %></td>
+		<% for doctor in @doctor %>
+		<% @doctor_schedul=EmployeeMaster.find_by_name(doctor.name) %>
+		<% consultant_master=ConsultantMaster.find_by_consultant_id_and_org_code(doctor.empid,doctor.org_code) %>
+		<% if(consultant_master && consultant_master.charge_type!='OP') %>
+			<td align="center">
+				<% @schedul=ConsultantVisit.find_by_consultant_and_time_of_visit_and_date_of_visit(doctor.empid,t,date) %>
+				<% if(!@schedul) %>
+					<% ti=t.strftime("%H:%M") %>
+					<% if (time.strftime("%H:%M")<ti && date==to_date) %>
+						<center><p><a href="javascript:void(0)" onClick = "fill_data('<%= doctor.empid	%>','<%= ti %>','<%= consultant_master.consultant_type	%>','<%= doctor.name %>')" style="text-decoration: none;"><%= image_tag("book.png") %></a></p></center>
+					<% elsif(date>to_date) %>
+						<center><p><a href="javascript:void(0)" onClick = "fill_data('<%= doctor.consultant_id %>','<%= ti %>','<%= consultant_master.consultant_type	%>','<%= doctor.name %>')" style="text-decoration: none;"><%= image_tag("book.png") %></a></p></center>
+					<% end %>
+				
+			</td>
+			<% else %>
+				<td><p>&nbsp;</p></td>
+			<% end %>
+		<% end %>
+		<% end %>
+	</tr>
+<% end %>
+</tbody>
+</table>
+</div>

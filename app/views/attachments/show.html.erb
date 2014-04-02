@@ -1,0 +1,39 @@
+<html>
+<head>
+<script type="text/javascript">
+		function dicomimageshow(path)
+		{   
+		    document.getElementById('image_viewer').src=path
+		}	
+</script>
+</head>
+<body>
+<div style="position:absolute;left:0px;top:0px;height:500px;width:20%;overflow:auto;">
+	<table>
+		<% for attachments in @attachments %>
+			<% @total_images=attachments.image_path.split(",") %>
+			<% for total_images in @total_images %>
+				<% image=total_images.split(".")
+					names=total_images.split("/")
+				%>
+				<% if(image[3]=="pdf") %>	
+					<tr> 
+						<td><a href="javascript:void(0)" onclick="dicomimageshow('<%= total_images %>')"><img src="/images/attachments_images/pdf.jpg" width="100px" height="100px" /><br><%= names[3] %></a></td>
+					</tr>	
+				<% elsif(image[3]=="mp3" || image[3]=="mp4" || image[3]=="wmv") %>	
+					<tr> 
+						<td><a href="javascript:void(0)" onclick="dicomimageshow('<%= total_images %>')"><img src="/images/attachments_images/vlc.jpg" width="100px" height="100px" /><br><%= names[3] %></a></td>
+					</tr>		
+				<% else %>
+					<tr> 
+						<td><a href="javascript:void(0)" onclick="dicomimageshow('<%= total_images %>')"><img src="<%= total_images %>" width="100px" height="100px" /><br><%= names[3] %></a></td>
+					</tr>	
+				<% end %>
+			<% end %>
+        <% end %>
+	</table>
+</div>
+<iframe id="image_viewer" frame-border="0" ALLOWTRANSPARENCY="true" style="position:absolute;left:20%;top:0px;height:500px;width:80%;">
+</iframe>
+</body>
+</html>

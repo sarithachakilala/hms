@@ -1,0 +1,66 @@
+<%= javascript_include_tag :defaults %>
+<script type="text/javascript">
+	function ajax(id)
+	{
+		var query =document.getElementById(id).value;
+		req = new Ajax.Request('/notice_boards/select_department/1', 
+			{
+				method: 'get',
+				parameters: { query: query },
+				onComplete: function(transport){
+					processReqChange(transport);
+					}
+			}); // end ajax req
+		function processReqChange(req) 
+		{
+			// request is complete
+			
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				var temp=results.split("<division>")
+				document.getElementById('employee').length=0
+				var opt = document.createElement('option');
+				document.getElementById('employee').options.add(opt);
+				opt.text ="Please select"
+				opt.value="Please select"
+				for(j=0;j<temp.length-1;j++)
+				{
+					var opt = document.createElement('option');
+					document.getElementById('employee').options.add(opt);
+					opt.text =temp[j]
+					opt.value=temp[j]
+				}
+			}
+		}
+	}	
+</script>
+<% form_for(@notice_board) do |f| %>
+  <%= f.error_messages %>
+<div align="center">
+<fieldset style="width:98%; height=500px">
+ <legend align=center><b>POST YOUR NOTICE</b></legend>
+<table align="center" width="90%">
+  <tr>
+    <td>Date</td>
+    <td><%= f.text_field :notice_date,:size => 20, :id => "notice_date", :value => Date.today  %><a href="javascript:void(0)" onClick="setYears(2010, 2050);showCalender(this,'notice_date'); "  >
+      <img src="/images/cal.gif"></a></td>
+    <td>Time</td>
+    <td><%= f.time_select :notice_time, :default => Time.new %></td>
+	<td>Department<sup>*<sup></td>
+	<td><%= f.select :department, EmployeeMaster.find(:all, :select => "DISTINCT category").collect{|p|[p.category]},{:prompt => true},{:id => "department", :onchange => "ajax(id)" } %>  </td>
+	<td>Emp.Name</td>
+    <td><%= f.select :employee, '',{:prompt => true},{:id => "employee"} %></td>
+   </tr>
+   <tr>
+    <td><%= f.label :notice %></td>
+    <td colspan="6"><%= f.text_area :notice,:cols=>"80",:rows=>"5" %></td>
+  </tr>
+  <tr>
+    <td colspan="8" align="center"><%= submit_tag "", :value => " Save ", :class => "submit_button", :onClick => "this.disabled=true;this.value='Process..';this.form.submit();" %></td>
+  </tr>
+  </table>
+  </fieldset>
+</div>
+<% end %>
+<%= render :partial => "total_records" %>

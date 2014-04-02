@@ -1,0 +1,26 @@
+<h1>Listing org_master_child_tables</h1>
+
+<table>
+  <tr>
+    <th>Org master</th>
+    <th>Branch code</th>
+    <th>Branch name</th>
+    <th>Branch location</th>
+  </tr>
+
+<% @org_master_child_tables.each do |org_master_child_table| %>
+  <tr>
+    <td><%=h org_master_child_table.org_master_id %></td>
+    <td><%=h org_master_child_table.branch_code %></td>
+    <td><%=h org_master_child_table.branch_name %></td>
+    <td><%=h org_master_child_table.branch_location %></td>
+    <td><%= link_to 'Show', org_master_child_table %></td>
+    <td><%= link_to 'Edit', edit_org_master_child_table_path(org_master_child_table) %></td>
+    <td><%= link_to 'Destroy', org_master_child_table, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New org_master_child_table', new_org_master_child_table_path %>

@@ -1,0 +1,23 @@
+<p>
+  <b>Org master:</b>
+  <%=h @org_master_child_table.org_master_id %>
+</p>
+
+<p>
+  <b>Branch code:</b>
+  <%=h @org_master_child_table.branch_code %>
+</p>
+
+<p>
+  <b>Branch name:</b>
+  <%=h @org_master_child_table.branch_name %>
+</p>
+
+<p>
+  <b>Branch location:</b>
+  <%=h @org_master_child_table.branch_location %>
+</p>
+
+
+<%= link_to 'Edit', edit_org_master_child_table_path(@org_master_child_table) %> |
+<%= link_to 'Back', org_master_child_tables_path %>

@@ -1,0 +1,39 @@
+<div id="name" align="center" width="100%">
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+  <tr>
+    <th>S.No</th>    
+    <th>Date</th>
+    <th>Time</th>
+    <th>Admn.No</th>
+    <th>MR No</th>
+    <th>Exst.Category</th>
+    <th>Trns.Category</th>
+    <th colspan="2">Permissions</th>
+  </tr>
+</thead>
+<tbody>
+<% @i=0 %>
+<% @pakage_transfer.each do |pakage_transfer| %>
+<% if((@i % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+		 end %>
+  <tr class='<%= id %>'>
+	<td><%= @i+=1 %></td>
+    <td><%=h pakage_transfer.today_date %></td>
+    <td><%=h pakage_transfer.present_time %></td>
+    <td><%=h pakage_transfer.admn_no %></td>
+    <td><%=h pakage_transfer.mr_no %></td>
+    <td><%=h pakage_transfer.e_cat %></td>
+    <td><%=h pakage_transfer.trans_cat %></td>
+    <td align="center" class="submit_button"><%= link_to 'show', pakage_transfer %></td>
+	<td align="center"  class="submit_button"><%= link_to 'edit', edit_pakage_transfer_path(pakage_transfer) %></td>   
+   	
+<% end %>
+</tbody>
+</table>
+<br />
+</div>
+</div>

@@ -1,0 +1,121 @@
+<%= stylesheet_link_tag 'domtab' %>
+<%= javascript_include_tag :defaults %>
+<%= stylesheet_link_tag 'ddsmoothmenu.css' %>
+<%= javascript_include_tag 'ddsmoothmenu.js' %>
+<%= javascript_include_tag 'jquery.min.js' %>
+<script type="text/javascript">
+
+	ddsmoothmenu.init({
+		mainmenuid: "smoothmenu1", //menu DIV id
+		orientation: 'h', //Horizontal or vertical menu: Set to "h" or "v"
+		classname: 'ddsmoothmenu', //class added to menu's outer DIV
+		//customtheme: ["#1c5a80", "#18374a"],
+		contentsource: "markup" //"markup" or ["container_id", "path_to_menu_file"]
+	})
+
+	ddsmoothmenu.init({
+		mainmenuid: "smoothmenu2", //Menu DIV id
+		orientation: 'v', //Horizontal or vertical menu: Set to "h" or "v"
+		classname: 'ddsmoothmenu-v', //class added to menu's outer DIV
+		//customtheme: ["#804000", "#482400"],
+		contentsource: "markup" //"markup" or ["container_id", "path_to_menu_file"]
+	})
+</script>
+<script type="text/javascript">
+	function ajaxSearch(id,source) 
+	{
+		document.getElementById("home").src=id;
+		document.getElementById("links").innerHTML="<a href='javascript:void(0)' class='nav' id="+id+" onclick='dispaly_data(id)'>"+source+"</a>";
+	}	
+	function dispaly_data(id)
+	{
+		document.getElementById("home").src=id;
+	}	
+</script>
+<script type="text/javascript">
+	function mrfun(id)
+	{
+		var mrval=document.getElementById(id).value
+		if(mrval.length==9)
+		{
+			query=document.getElementById(id).value
+			document.getElementById("home").src="/emrs/new?mr="+query;
+			document.getElementById(id).value="Enter MR Number"
+			document.getElementById(id).style.color="black;"
+		}
+	}
+	function clear_file(id)
+	{
+		document.getElementById(id).value=""
+		document.getElementById(id).style.color="black"
+	}
+	function print_text(id)
+	{
+		document.getElementById(id).value="Enter MR Number"
+		document.getElementById(id).style.color="black;"
+	}
+</script>
+
+
+<table width="100%" height="640px" border="1" cellpadding="1" cellspacing="0">
+  <tr width="100%" height="50px">
+    <td height="50px" align="center" valign="bottom"><table width="100%" border="1" cellspacing="0" cellpadding="0">
+      <tr>
+        
+        <td align="left" valign="bottom"><table width="100%" border="1" cellspacing="0" cellpadding="0">
+          <tr>
+			<td width="18%" align="left"><a HREF='javascript:void(0);' id="/sessions/Exleaz/1" onclick="ajaxSearch(id,'Exleaz')"><%= image_tag("exleaz.jpg", :size => "173x64") %></a></td>
+			<td width="65%">
+				<table width="100%" ><tr width="100%" >		
+				<td><table class="border1" width="100%"><td align="center" valign="middle" style ="font-size:16px; color :white; face:Calibri;" ><table><tr><td><b>Welcome &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= @people.display_name %></b></td><td><%= image_tag("user.png", :size=>"27x30") %></td></tr></table></td>
+				
+				<td valign="middle" style = "font-size:16px; color :white; face:Calibri;"><b><a href="javascript:void(0)" id="/people/change_password/" onclick="ajaxSearch(id,'Change password')">Change Password</a></b></td>
+				<td valign="middle" style = "font-size:16px; color :white; face:Calibri;"><b><a href="javascript:void(0)" id="/people/registration/1" onclick="ajaxSearch(id,'Registration')">Registration</a></b></td>
+				<td valign="middle" style = "font-size:16px; color :white; face:Calibri;"><b><a href="/sessions/destroy/<%= @session_id %>">Logout</a></b></font></td>
+				</table></td></tr>
+				<tr>
+					<td colspan="3" align="center" valign="middle" style = "font-size:18px; color :white;"><b><%= @people.client_name.upcase %></b></td>
+				</tr>
+				</table>
+			</td>
+			<td width="17%" align="right"><a HREF='javascript:void(0);' id="/home/Main" onclick="ajaxSearch(id,'','/home/Main','   Home')"><%= image_tag("medieaznew-1.png", :size => "179x50") %></a></td>
+			<td width="1%">&nbsp;</td>
+          </tr>
+		  </table></td>
+      </tr>
+    </table>
+	</td>
+  </tr>
+  <tr height="20px" width="100%">
+    <td valign="top" class="bgbody" height="20px">
+	<div id="smoothmenu1" class="ddsmoothmenu">
+	<ul>
+		<li><a href='javascript:void(0);' id="/org_masters" onclick="ajaxSearch(id,'Org.Master')">Organization Master</a></li>
+		<li><a href='javascript:void(0);' id="/client_lists" onclick="ajaxSearch(id,'Client History')">Client master</a></li>
+		<li><a href='javascript:void(0);' id="/people" onclick="ajaxSearch(id,'Users')">Users</a></li>
+		<li><a href='javascript:void(0);' id="/people/login_history/1" onclick="ajaxSearch(id,'Login-history')">Login-history</a></li>
+		<li><a href='javascript:void(0);' id="/modules_lists/new" onclick="ajaxSearch(id,'Modules List')">Modules List</a></li>
+		<li><a href='javascript:void(0);' id="/number_masters/new" onclick="ajaxSearch(id,'Modules List')">Number Format</a></li>
+	</ul>
+	<br style="clear: left" />
+	</div>
+    </td>
+	</tr>
+	<tr width="100%" height="5px">
+		<td bgcolor="white"><b><i><font size="3px"><div id="content" style="width:100%;">
+				<div id="links" style="width:50%; display:inline-block; float:left;"><a HREF='javascript:void(0);' id="/home/Main" onclick="ajaxSearch(id,'','/home/Main','Home')" class="nav">&nbsp;&nbsp;Home</a></div>
+				<div id="report_title" style="width:40%; display:inline-block; float:left;">&nbsp;</div>
+				<div style="width:10%;display:inline-block;float:right;"><%= format_date(:short, Date.today ) %></div></div></font></i></b></td>
+		
+	</tr>
+	<tr width="100%" height="555px" backgound="#ecf3f7">
+       <td width="100%" height="100%">
+			<iframe src="" width="100%" height="537px" id="home" style="background-color:#ecf3f7;" border="1" ALLOWTRANSPARENCY="true"></iframe>
+        </td>
+    </tr>
+    <tr width="100%" height="10px">
+		<td height="10px"  align="center" valign="middle"class="bgbody"><p style="font-face:calibri;color:white;font-size:13px;"><b>All Copyrights&copy; Reserved to Exleaz Solutions Limited</b> </p></td>
+    </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<h1>Listing issue_op_children</h1>
+
+<table>
+  <tr>
+    <th>Issues to op</th>
+	<th>Mr No</th>
+    <th>Item name</th>
+    <th>Item code</th>
+    <th>Batch no</th>
+    <th>Expiry date</th>
+    <th>Quantity</th>
+    <th>Sale rate</th>
+    <th>Purchase rate</th>
+    <th>Discount</th>
+    <th>Total</th>
+    <th>Sum tot</th>
+  </tr>
+
+<% @issue_op_children.each do |issue_op_child| %>
+  <tr>
+    <td><%=h issue_op_child.issues_to_op_id %></td>
+	 <td><%=h issue_op_child.mr_no %></td>
+    <td><%=h issue_op_child.item_name %></td>
+    <td><%=h issue_op_child.item_code %></td>
+    <td><%=h issue_op_child.batch_no %></td>
+    <td><%=h issue_op_child.expiry_date %></td>
+    <td><%=h issue_op_child.quantity %></td>
+    <td><%=h issue_op_child.sale_rate %></td>
+    <td><%=h issue_op_child.purchase_rate %></td>
+    <td><%=h issue_op_child.discount %></td>
+    <td><%=h issue_op_child.total %></td>
+    <td><%=h issue_op_child.sum_tot %></td>
+    <td><%= link_to 'Show', issue_op_child %></td>
+    <td><%= link_to 'Edit', edit_issue_op_child_path(issue_op_child) %></td>
+    <td><%= link_to 'Destroy', issue_op_child, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New issue_op_child', new_issue_op_child_path %>

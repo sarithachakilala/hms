@@ -1,0 +1,57 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">General Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/room_masters?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Room Masters</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div  width="100%">
+ <table align="center" width="70%" border="0" cellspacing="2" cellpadding="4">
+		<tr>
+			<td class="button" colspan="9"><center><h3><b>Details of Room</b></h3></center></td> 
+		</tr>
+	<tr>
+		<td class='<%= id %>'><b>Ward Master</td> 
+		<td class='<%= id %>'>:</td>
+		<td class='<%= id1 %>'><%=h @room_master.ward_master_id %></td>
+		<td class='<%= id %>'>  <b>Name</td> 
+		<td class='<%= id %>'>:</td>
+		<td class='<%= id1 %>'><%=h @room_master.name %></td>
+	</tr>
+<tr>
+		<td class='<%= id %>'>  <b>Code</td> 
+		<td class='<%= id %>'>:</td>
+		<td class='<%= id1 %>'><%=h @room_master.code %></td>
+		<td class='<%= id %>'>  <b>Floor</td> 
+		<td class='<%= id %>'>:</td>
+		<td class='<%= id1 %>'>  <%=h @room_master.floor %></td>
+</tr>
+<tr>
+	<td class='<%= id %>'>  <b>No of Beds</td> 
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'> <%=h @room_master.no_of_beds %></td>
+	<td class='<%= id %>'>  <b>Extension No</td> 
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @room_master.extension_no %></td>
+  </tr>
+  <tr>
+	<td class='<%= id %>'>  <b>Status</td> 
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1%>'><%=h @room_master.status %></td>
+	<td class='<%= id %>'>  <b>Org Code</td> 
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'>  <%=h @room_master.org_code %></td>
+</tr>
+<tr>
+	<td class='<%= id %>'>  <b>Org Location</td> 
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @room_master.org_location %></td>
+  </tr>
+</table>
+ </div>
+<br/><center>
+<td valign="middle"><%= link_to "back",  room_masters_path, :class=>"new1" %></td>
+

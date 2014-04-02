@@ -1,0 +1,40 @@
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+  <thead>
+  <tr>
+    <th>S.No</th>    
+    <th>MR No</th>
+    <th>Patient Name</th>
+    <th>Patient Type</th>
+    <th>Lab No </th>
+    <th>Reffered By</th>
+    
+  </tr>
+</thead>
+<tbody>
+<% @i=0 %>
+<% if @test_bookings %>
+<% @i=@test_bookings.length %>
+<% @test_bookings.each do |admission| %>
+<% registration=Registration.find_by_mr_no_and_org_code(admission.mr_no,admission.org_code) %>
+<% if((@i % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+		 end %>
+<tr class='<%= id %>'>
+<td><%= @i+=1 %></td>
+<% if(admission.mr_no!="") %>
+	<td><%=h admission.mr_no %></td>
+<% else %>
+<td><%=h admission.patient_name %></td>
+<% end %>
+<td><%=h admission.patient_name %></td>
+<td><%=h admission.patient_type %></td>
+<td><%=h admission.lab_no %></td>
+<td><%=h admission.refferal_doctor %></td>  
+ </tr>
+ </tr>
+<% end %>
+<% end %>
+</tbody>
+</table>

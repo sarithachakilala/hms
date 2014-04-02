@@ -1,0 +1,118 @@
+<script type="text/javascript">
+
+	function check_hospital_name(id)
+	{
+		var hospital_name=document.getElementById(id).value
+		
+		req = new Ajax.Request('/client_lists/check_hospital/1', {
+			method: 'get',
+			parameters: { hospital_name:hospital_name, id1:id },
+			onComplete: function(transport) {
+			processReqChange(transport);
+			}
+
+		}); // end ajax req
+							
+		function processReqChange(req) 
+		{   
+			if (req.readyState == 4) 
+			{
+				var codes=req.responseText.split(",")
+				if(id=="hospital_name")
+				{
+					document.getElementById('branch_code').length=0
+					var opt = document.createElement("option");
+					document.getElementById("branch_code").options.add(opt);
+					opt.text = ""
+					opt.value=""
+					for(i=0;i<codes.length-1;i++)
+					{
+						var opt = document.createElement("option");
+						document.getElementById("branch_code").options.add(opt);
+						opt.text = codes[i]
+						opt.value=codes[i]
+					}
+					document.getElementById('port_number').value=codes[codes.length-1]
+				}
+				else
+				{
+					document.getElementById('branch_name').value=codes
+				}
+			}
+		}
+	}
+</script>
+
+<% form_for(@client_list) do |f| %>
+  <%= f.error_messages %>
+<table align="center">
+  <tr>
+    <td>Hospital Name</td>
+    <td><%= f.select :hospital_name,OrgMaster.find(:all).collect{|p| [p.hospital_name]},{:prompt => true},:id => "hospital_name", :required =>true,:onchange => "check_hospital_name(id)" %></td>
+  </tr>
+  <tr>
+    <td>Branch Code</td>
+    <td><%= f.select :branch_code,"", {:include_blank => true},{:id => "branch_code",:onchange => "check_hospital_name(id)"} %></td>
+  </tr>
+  <tr>
+    <td>Branch Name</td>
+    <td><%= f.text_field :branch_name,:required =>true, :size => 20, :id => "branch_name" , :readOnly => true%></td>
+  </tr>
+  <tr>
+    <td>No.of Users</td>
+    <td><%= f.text_field :no_of_users,:required =>true, :size => 20 %></td>
+  </tr>
+  <tr>
+    <td>Port Number</td>
+    <td><%= f.text_field :port_number,:required =>true, :size => 20, :id => "port_number", :readOnly => true %></td>
+  </tr>
+  <tr>
+    <td>Display Name</td>
+    <td><%= f.text_field :display_name,:required =>true, :size => 20 %></td>
+  </tr>
+  <tr>
+    <td>Expiry Date</td>
+    <td><%= f.text_field :expiry_date, :id => "expiry_date", :size => 20  %><a href="javascript:void(0)" onClick="setYears(2012, 2050);showCalender(this,'expiry_date');" >
+      <img src="/images/cal.gif" ></a></td>
+  </tr>
+  <tr>
+  <td colspan="2"><%= submit_tag "", :value => " Save ", :class => "submit_button" %>
+    <%= link_to "Back",  client_lists_path, :class=>"new1" %></td> 
+  </tr>
+<% end %>
+</table>
+<table id="calenderTable">
+        <tbody id="calenderTableHead">
+          <tr>
+            <td colspan="4" align="center">
+	          <select onChange="showCalenderBody(createCalender(document.getElementById('selectYear').value,
+	           this.selectedIndex, false));" id="selectMonth">
+	              <option value="0">Jan</option>
+	              <option value="1">Feb</option>
+	              <option value="2">Mar</option>
+	              <option value="3">Apr</option>
+	              <option value="4">May</option>
+	              <option value="5">Jun</option>
+	              <option value="6">Jul</option>
+	              <option value="7">Aug</option>
+	              <option value="8">Sep</option>
+	              <option value="9">Oct</option>
+	              <option value="10">Nov</option>
+	              <option value="11">Dec</option>
+	          </select>
+            </td>
+            <td colspan="2" align="center">
+			    <select onChange="showCalenderBody(createCalender(this.value, 
+				document.getElementById('selectMonth').selectedIndex, false));" id="selectYear">
+				</select>
+			</td>
+            
+		  </tr>
+       </tbody>
+       <tbody id="calenderTableDays">
+         <tr style="">
+           <td>Sun</td><td>Mon</td><td>Tue</td><td>Wed</td><td>Thu</td><td>Fri</td><td>Sat</td>
+         </tr>
+       </tbody>
+       <tbody id="calender"></tbody>
+    </table>

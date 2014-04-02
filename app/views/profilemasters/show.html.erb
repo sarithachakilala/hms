@@ -1,0 +1,58 @@
+<p>
+  <font size="5px" color="#015a84"><b>Profile Name  :  </b>
+  <%=h @profilemaster.profile_name %></font>
+</p>
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div align="center" width="100%">
+ <table width="50%" cellpadding="2" cellspacing="2">
+  <tr bgcolor =" #378bf8" style="color:white">
+		<th>Forms</th>
+		<th>New</th>
+		<th>Show</th>
+		<th>Edit</th>
+		<th>Destroy</th>
+	</tr>
+<% for childmaster in @profilemaster.childmaster %>
+<% if((childmaster.id % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+end %>
+ <tr class='<%= id %>'>
+  <td><%=h childmaster.forms %></td>
+  <td align="center">
+	<% @n=childmaster.new %>
+	<% if @n=="1" %>
+		<%= image_tag ('toggle_check.png', :border=>0) %>
+	<% else %>
+		<%= image_tag ('Cancel4.png', :border=>0) %>
+	<% end %>
+  </td>
+  <td align="center"><% @v=childmaster.view %>
+	<% if @v=="1" %>
+		<%= image_tag ('toggle_check.png', :border=>0) %>
+	<% else %>
+		<%= image_tag ('Cancel4.png', :border=>0) %>
+	<% end %>
+  </td>
+  <td align="center"><% @e=childmaster.edit %>
+	<% if @e=="1" %>
+		<%= image_tag ('toggle_check.png', :border=>0) %>
+	<% else %>
+		<%= image_tag ('Cancel4.png', :border=>0) %>
+	<% end %>
+  </td>
+  <td align="center"><% @r=childmaster.remove %>
+	<% if @r=="1" %>
+		<%= image_tag ('toggle_check.png', :border=>0) %>
+	<% else %>
+		<%= image_tag ('Cancel4.png', :border=>0) %>
+	<% end %>
+  </td>
+ </tr>
+<% end %>
+</table>
+</div>
+<center><td valign="middle"><%= link_to "Back",  profilemasters_path, :class=>"new1" %></td></center>
+

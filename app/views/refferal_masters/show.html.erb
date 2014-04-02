@@ -1,0 +1,46 @@
+<script type="text/javascript">
+	var opt = opener.window.document.createElement('option');
+	opener.window.document.getElementById('refferal_name').options.add(opt);
+	opt.text ='<%=@refferal_master.refferal_name%>'
+	opt.value='<%=@refferal_master.refferal_name%>'
+window.close()
+</script>
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Employee Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/refferal_masters' class="nav" style="text-decoration:none;">Refferal Master</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+
+<div align="center">
+<table width="50%">
+<tr>
+	<td class='<%= id %>'><b>Org.Code</b></td>
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id %>'> <%=h @refferal_master.org_code %></td>
+	<td class='<%= id %>'><b>Org.Location:</b></td>
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id %>'><%=h @refferal_master.org_location %></td>
+  </tr>
+<tr>
+	<td class='<%= id %>'><b>Refferal Name</b></td>
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id %>'><%=h @refferal_master.refferal_name %>
+	<td class='<%= id %>'><b>Email</b></td>
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id %>'><%=h @refferal_master.email %>
+</tr>
+<tr>
+	<td class='<%= id %>'><b>Ph.No</b></td>
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id %>'> <%=h @refferal_master.ph_no %>	
+</tr>
+</table>
+</table>
+ </div>
+<br/>
+<center>
+<td valign="middle"><%= link_to "back",  refferal_masters_path, :class=>"new1" %></td>
+</center>

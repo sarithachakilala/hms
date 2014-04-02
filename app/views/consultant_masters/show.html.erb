@@ -1,0 +1,75 @@
+
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div  width="100%">
+ <table align="center" width="70%" border="0" cellspacing="2" cellpadding="4">
+		<tr>
+			<td class="button" colspan="9"><center><b>Details of Consultant</b></center></td> 
+			
+		</tr>
+<tr>
+  <td class='<%= id %>'>  <b>Org.Code</b></td>
+  <td class='<%= id %>'>:</td>  
+  <td class='<%= id1 %>'><%=h @consultant_master.org_code %></td>
+  <td class='<%= id %>'>  <b>Org.location</b></td>
+  <td class='<%= id %>'>:</td>  
+  <td class='<%= id1 %>'><%=h @consultant_master.org_location %></td>
+</tr>
+<tr>
+  <td class='<%= id %>'>  <b>Type</b></td>
+  <td class='<%= id %>'>:</td>  
+  <td class='<%= id1 %>'><%=h @consultant_master.consultant_type %></td>
+  <td class='<%= id %>'>  <b>Consultant</b></td>
+  <td class='<%= id %>'>:</td>  
+  <td class='<%= id1 %>'><%=h @consultant_master.consultant_id %></td>
+</tr>
+<tr>
+  <td class='<%= id %>'>  <b>PaymentType</b></td>
+  <td class='<%= id %>'>:</td>  
+  <td class='<%= id1 %>'><%=h @consultant_master.payment_type %></td>
+  <td class='<%= id %>'>  <b>Salary</b></td>
+  <td class='<%= id %>'>:</td>  
+  <td class='<%= id1 %>'><%=h @consultant_master.salary %></td>
+</tr>
+<tr>
+  <td class='<%= id %>'>  <b>SalaryType</b></td>
+  <td class='<%= id %>'>:</td>  
+  <td class='<%= id1 %>'><%=h @consultant_master.salary_type %></td>
+  <td class='<%= id %>'>  <b>Percentage</b></td>
+  <td class='<%= id %>'>:</td>  
+  <td class='<%= id1 %>'><%=h @consultant_master.percentage %></td>
+</tr>
+<tr>
+  <td class='<%= id %>'>  <b>ConsultingRoom</b></td>
+  <td class='<%= id %>'>:</td>  
+  <td class='<%= id1 %>'><%=h @consultant_master.consulting_room %></td>
+  <td class='<%= id %>'>  <b>ExtensionNo</b></td>
+  <td class='<%= id %>'>:</td>  
+  <td class='<%= id1 %>'><%=h @consultant_master.extension_no %></td>
+</tr>
+<tr>
+  <td class='<%= id %>'>  <b>ChargEType</b></td>
+  <td class='<%= id %>'>:</td>  
+  <td class='<%= id1 %>'><%=h @consultant_master.charge_type %></td>
+  <td class='<%= id %>'>  <b>Charge</b></td>
+  <td class='<%= id %>'>:</td>  
+  <td class='<%= id1 %>'><%=h @consultant_master.charge %></td>
+</tr>
+<tr>
+  <td class='<%= id %>'>  <b>GeneralCharge</b></td>
+  <td class='<%= id %>'>:</td>  
+  <td class='<%= id1 %>'><%=h @consultant_master.general_charge %></td>
+  <td class='<%= id %>'>  <b>NightDutyCharge</b></td>
+  <td class='<%= id %>'>:</td>  
+  <td class='<%= id1 %>'><%=h @consultant_master.night_duty_charge %></td>
+</tr>
+<tr>
+  <td class='<%= id %>'>  <b>EmergencyCharge</b></td>
+  <td class='<%= id %>'>:</td>  
+  <td class='<%= id1 %>'><%=h @consultant_master.emergency_charge %></td>
+</tr>
+ </table>
+<center>
+<td valign="middle"><%= link_to "back",  consultant_masters_path, :class=>"new1" %></td>
+</div>
+

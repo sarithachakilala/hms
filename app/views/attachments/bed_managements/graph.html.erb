@@ -1,0 +1,37 @@
+<%= stylesheet_link_tag 'css' %>
+<%= javascript_include_tag :defaults %>
+<%= javascript_include_tag 'ezcalendar.js' %>
+<script type="text/javascript"> 
+	
+	var query1=""
+	var selectid;
+	function clear_function()
+	{
+		document.getElementById('ward').value=""
+	}
+	function check()
+	{
+		var selObj = document.getElementById('ward');
+		var status= selObj.options[selObj.selectedIndex].value
+		document.getElementById("frame").src="/bed_managements/bed_util1/1?ward="+status
+	}
+</script> 
+<body>
+<font size="3" face="Calibri">
+<br/>
+<fieldset>
+<legend><div class="font"><b>Search</b></div></legend> 
+<% form_for(@bed_management) do |f| %>
+  <%= f.error_messages %>
+  <table align="center"> 
+	<tr><td><%= f.label :ward %></td>
+    <td><%= f.select :ward, @beds,{:include_blank => false}, {:id => "ward", :onchange => "Select_Ward(id)" }  %></td>
+    <td class="button"><a href="javascript:void(0)" onclick = "check()" %><%= image_tag("Button_Images/search.png", :border=>0, :class=>"info") %></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= link_to image_tag("Button_Images/clear.png", :border =>"0", :class=>"info"), "javascript: clear_function()" %></td>
+</tr>    
+<% end %>
+</table>
+</fieldset>
+<br/>
+ <center>
+   <iframe src="/bed_managements/bed_util1/1" id="frame" width="100%" height="700px" align="center" style="border:none"/>
+</center>

@@ -1,0 +1,28 @@
+<p>
+  <b>Department:</b>
+  <%=h @consultant_visit_child.department %>
+</p>
+
+<p>
+  <b>Cons name:</b>
+  <%=h @consultant_visit_child.cons_name %>
+</p>
+
+<p>
+  <b>Date and time:</b>
+  <%=h @consultant_visit_child.date_and_time %>
+</p>
+
+<p>
+  <b>Cons type:</b>
+  <%=h @consultant_visit_child.cons_type %>
+</p>
+
+<p>
+  <b>Charge:</b>
+  <%=h @consultant_visit_child.charge %>
+</p>
+
+
+<%= link_to 'Edit', edit_consultant_visit_child_path(@consultant_visit_child) %> |
+<%= link_to 'Back', consultant_visit_children_path %>

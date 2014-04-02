@@ -1,0 +1,199 @@
+<script type="text/javascript">
+	var query
+	var conditionval=1;
+	var type
+	var units
+	
+	function ajax_search_page(id)
+	{
+			query = document.getElementById('product_name').value;
+		type="item_names"
+		if(query=="")
+			alert("Invalid Data")
+		else
+			ajax()
+	
+	
+	}
+	function ajaxSearch() 
+	{
+		units = document.getElementById('units').value;
+		query = document.getElementById('product_name').value;
+		type="units"
+		if(query=="")
+		{
+			alert("Please enter product name");
+			document.getElementById('units').value="";
+		}	
+		else
+			ajax()
+	}
+	function ajax()
+	{
+		req = new Ajax.Request('/itemmasters/verify_name/1', 
+			{
+				method: 'get',
+				parameters: { name: query, type : type, units: units },
+				onComplete: function(transport){
+					processReqChange(transport);
+					}
+			}); // end ajax req
+		function processReqChange(req) 
+		{
+			// request is complete
+			
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				var data=new Array;
+				if(type=="item_names")
+				{
+						if(results=="No Records")
+						{
+						document.getElementById("table").style.color='red'
+						document.getElementById("table").innerHTML=req.responseText
+						}else
+						document.getElementById("table").innerHTML=req.responseText
+				
+				}
+				else
+				{
+					if(results=="0")
+				{
+					alert("Already Exit");
+					document.getElementById("product_name").value="";
+					document.getElementById("units").value="1";
+					document.getElementById("product_name").focus();
+					conditionval=1;
+				}
+				}
+			} // end if req == 4
+		}
+	}
+	function select_packing(id)
+	{
+		document.getElementById('packing').value=document.getElementById('units').value+""+document.getElementById('uom_of_units').value+" - "+document.getElementById('volume').value+""+document.getElementById('uom_of_valume').value
+		if(id=="units")
+			ajaxSearch();
+	}
+
+
+function select_drug_formula(drug_formula)
+	{
+		if(document.getElementById("drug_formula").value!="")
+			document.getElementById("drug_formula").value=document.getElementById("drug_formula").value+"\n"+drug_formula;
+		else
+			document.getElementById("drug_formula").value=drug_formula;
+	}
+	</script>
+
+<% form_for(@itemmaster) do |f| %>
+ <div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Pharmacy Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/itemmasters?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Product Masters</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<div  width="100%">
+	<%= hidden_field('call_from','', :value => @call_from) %>
+	<fieldset>
+			<legend><div class="font"><b>Item Master</b></div></legend>
+	
+
+<%= f.hidden_field :org_code, :class =>"text_field", :id => "org_code", :value =>@org_code, :readonly =>true %>
+<%= f.hidden_field :org_location, :class =>"text_field", :id => "org_location", :value =>@org_location %></td>
+<table align="center"  width="100%">
+	<tr>
+	<td>Type</td>
+       <td><%= f.radio_button :is_medical_item, "medical", :checked =>true, :id => "button1" %>Medical &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+           <%= f.radio_button :is_medical_item, "non-medical", :id => "button2" %>Non-Medical </td>
+	</tr>
+	<tr>
+	 <td>Product Name<sup>*</sup></td>
+        <td><%= f.text_field :product_name, :size =>"20", :id => "product_name", :onkeyup => "ajax_search_page(id)"%></td>
+        <td>Product Code</td>
+	<td><%= f.text_field :product_code, :size =>"20" %></td>
+   	 <td>Category<sup>*</sup></td>
+	<td><%= f.select :drug_type,[['TABS'],['WIPES'],['SOLUTION'],['SYP'],['CAPS'],['ONITMENT-EYE'],['CREAM'],['GEL'],['POWDER'],['LIQUIDE'],['BOLUS'],['AERO SOL'],['SPRAY'],['SOLUTION-EAR'],['INJECTION'],['SOFTULES'],['GRANULES'],['MOUTH WASH'],['EYE DROPS'],['SUPPOSITORY'],['SUSPENSION'],['PASTE'],['CAPSULE'],['SACHETS'],['OINT'],['LOTION'],['DROPS'],['INHALER'],['Neddle'],['Soap'],['Surgical'],['Safety'],['Test Kit'],['Deodorant'],['saline']],{:prompt=>true} %></td>
+	 <td>Packing</td>
+       <td><%= f.text_field :packing, :size =>"20", :id=>"packing" %></td>
+	
+ </tr>
+ <tr>
+	<td>Units<sup>*</sup></td>
+       <td><%= f.text_field :units, :size =>"20" , :id=>"units", :onkeypress => "return noNumbers(event)", :onkeyup => "select_packing(id)" %></td>
+	 <td>Schedule</td>
+	<td><%= f.select :schedule,[['H'],['X'],['C']],{:prompt=>true} %></td>
+	<td>Company Name</td>
+	 <td><%= f.text_field :manufacturer, :id => "manufacturer",:size => 20 %></td>
+	<td>Supplier</td>
+	 <td><%= f.text_field :supplier, :id => "supplier",:size => 20 %></td>
+	</tr>
+<tr>
+	<td>Min.Qty</td>
+	 <td><%= f.text_field :min_qty, :id => "min_qty",:size => 20 %></td>
+	<td>Max.Qty</td>
+	 <td><%= f.text_field :max_qty, :id => "max_qty",:size => 20 %></td>
+	<td>Ord.Level<sup>*</sup></td>
+     	<td><%= f.text_field :ord_level, :id => "ord_level",:size => 20 %></td>
+</tr>
+<tr>
+						<td>Drug Formula</td>
+				 		<td><div><%= select ('drug_formula','',DrugFormula.find(:all).collect{|p| [p.content]},{:prompt => true}, {:id => "drug_formula_temp", :class=>"text-input-bg-select",:onChange => "if(this.value) select_drug_formula(this.value);"}) %>&nbsp;&nbsp;
+						<a href="javascript:void(0)" onClick="window.open('/drug_formulas/new?call_from=masters','open_window','dependent, width=850, height=500,top=50,left=200');",title="If you add new Drug Formula click here"><font color="blue">New</font></div></a>						
+						</td>
+</tr>	
+<tr>
+	<td>Drug Formula</td>
+	<td class="loginboxdiv"><%= f.text_area :drug_formula, :class=>"loginbox", :id => "drug_formula" %></td>
+  </tr>
+</table>
+</fieldset>
+<fieldset>		
+<legend><div class="font"><b>Pricing</b></div></legend>			
+	<table width="100%" >
+	<tr>
+			<td>Pur.Price</td>
+			<td><%= f.text_field :pur_price, :id => "pur_price", :class=>"text_field" %></td>
+
+			<td>Cost Price</td>
+			<td><%= f.text_field :cost_price, :id => "cost_price", :class=>"text_field" %></td>
+
+			<td>Margin(%)</td>
+			<td><%= f.text_field :margin, :id => "margin1", :class=>"text_field" %></td>
+	
+			<td>VAT%</td>
+			<td><%= f.text_field :vat, :id => "vat", :class=>"text_field" %></td>
+		</tr>
+		<tr>
+			<td>Sale Price</td>
+			<td><%= f.text_field :sale_price, :id => "sale_price", :class=>"text_field" %></td>
+	
+			<td>MRP</td>
+			<td><%= f.text_field :mrp, :id => "mrp", :class=>"text_field" %></td>
+	
+			<td>Margin(%)</td>
+			<td><%= f.text_field :margin2, :id => "margin2", :class=>"text_field" %></td>
+	
+			<td>VAT%</td>
+			<td><%= f.text_field :vat2, :id => "vat2", :class=>"text_field" %></td>
+		</tr>
+		<tr>
+<td>MRP Inclusive</td>
+	<td><%= f.check_box :inclusive, :id => "inclusive", :id=>"visible", :class => "nbb" %></TD>
+	</td>
+</tr>
+	</table>
+
+</fieldset>
+
+  <table align ="center">
+  <tr>
+  	
+					<td><%= submit_tag "", :value => " Update ", :class => "submit_button" %></td>
+				<td valign="middle"><%= link_to "back",  itemmasters_path, :class=>"new1" %></td>
+  </tr>
+</table>
+<% end %>

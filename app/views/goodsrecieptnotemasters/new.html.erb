@@ -1,0 +1,468 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Pharmacy >>&nbsp;&nbsp;&nbsp;<a HREF='/goodsrecieptnotemasters' class="nav" style="text-decoration:none;">Purchase Invoice</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<div id="form_data">
+ 
+<%= stylesheet_link_tag 'look_up_search/jquery-ui' %>
+<%= javascript_include_tag 'jquery.min.js' %>
+<%= javascript_include_tag 'jquery-ui.min.js' %>  
+  
+  <script>
+	$(document).ready(function() {
+		$("p").click(function(){
+			var item_names_store=document.getElementById('item_names_store').value
+			var item_names_store_arry=item_names_store.split(",");
+			$("input#itmem_name").autocomplete({
+				source: item_names_store_arry
+			});
+		});
+	});
+  </script>
+  <script language="javascript" type="text/javascript">
+	function stopRKey(evt) {
+		
+		var evt  = (evt) ? evt : ((event) ? event : null);
+		var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+		if ((evt.keyCode == 13) && (node.type=="text")) { return false; }
+	}
+	document.onkeypress = stopRKey;
+</script>
+
+<script type="text/javascript">
+function getdlno(id)
+{
+	var agency=document.getElementById(id).value
+	
+		if(agency!="" && agency)
+			{
+				req = new Ajax.Request('/goodsrecieptnotemasters/ajax/1', 
+					{
+						method: 'get',
+						parameters: { agency: agency },
+						onComplete: function(transport){
+							processReqChange(transport);
+							}
+					}); // end ajax req
+			}
+			else
+			{
+				alert("Please Select Agency Name")
+				
+					document.getElementById(id).style.background='white'
+					document.getElementById(id).readOnly=false
+					document.getElementById(id).value=""
+				
+			}
+}
+
+</script>
+<script type="text/javascript">
+var medicine_name
+function medicine_search_ind(id,event)
+	{
+		if(event.keyCode!=13)
+			return false;
+		query2=document.getElementById(id).value
+		medicine_name=query2.split(" --> ")[0]
+			if(query2!="" && query2)
+			{
+				selectedid=id
+				ajax1()
+			}
+			document.getElementById(id).value=""
+	}
+	function ajax1()
+	{
+	req = new Ajax.Request('/goodsrecieptnotemasters/ajax1/1', 
+			{
+				method: 'get',
+				parameters: { query2: query2},
+				onComplete: function(transport){
+					processReqChange(transport);
+					}
+			}); // end ajax req
+	function processReqChange(req) 
+		{
+			// request is complete
+			
+			if (req.readyState == 4) 
+			{
+
+			
+				var results = req.responseText;
+				var temp_medicine = new Array
+				var temp_medicine1 = new Array
+				temp_medicine1=results.split(",");
+				temp_medicine=temp_medicine1[0].split("<code>");
+
+						var store=new Array();
+						var add_amount_fields="net_invoice_amount, net_amount";
+						store[0]=temp_medicine[0]
+						store[1]=temp_medicine[1]
+						store[4]=temp_medicine[2]
+						store[9]=temp_medicine[3]
+						window.open('/goodsrecieptnotemasters/product_info/1?product_name='+medicine_name);
+						add_row('r',13,'displayTable',store,add_amount_fields,9)
+
+	
+						
+					}
+		}
+	}
+
+	function cal_total(id,id_value)
+	{
+		if(document.getElementById(id).value!="" && document.getElementById(id).value)
+		{
+		var pur_rate=parseFloat(document.getElementById(id).value)
+		var mrp=parseFloat(document.getElementById("r"+id_value+"c8").value)
+		if(pur_rate!="" && mrp!="")
+		{
+			margin=parseFloat(mrp-pur_rate)/100
+			document.getElementById("r"+id_value+"c13").value=parseFloat(margin)
+		}
+
+		var quantity=parseInt(document.getElementById("r"+id_value+"c4").value)
+		if(document.getElementById("r"+id_value+"c4").value!="" && document.getElementById("r"+id_value+"c4").value && document.getElementById("r"+id_value+"c11").value!="" && document.getElementById("r"+id_value+"c11").value)
+				document.getElementById("r"+id_value+"c10").value=(pur_rate*quantity).toFixed(2);
+			else
+			{
+				alert("please enter quantity");
+				document.getElementById("r"+id_value+"c4").focus();
+			}
+			select_amount(id_value)
+		}
+	
+	}
+	function cal_discount()
+	{
+		var table = document.getElementById("displayTable");
+		var j=0;
+		for(i=0;i<table.rows.length;i++)
+		{
+			if(document.getElementById("r"+(i)+"c1").value!="" && document.getElementById("r"+(i)+"c1").value)
+			{
+				j=i+1;
+			}
+			else
+				break;
+		}
+		select_amount(j);
+	}
+</script>
+<script type="text/javascript">
+  
+function select_amount(s_no1)
+{
+
+	var amount=0
+	var discount=0
+	var mrp_rate=0
+	var vat_per=0	
+	document.getElementById("fourt_value").value=0
+	document.getElementById("fourt_vat").value=0
+	document.getElementById("total_vat").value=0
+	document.getElementById("five_value").value=0
+	document.getElementById("five_vat").value=0	
+	document.getElementById("zero_pre").value=0
+	for(i=0;i<=parseInt(s_no1);i++)
+	{
+		if(parseFloat(document.getElementById("r"+i+"c11").value)==5)
+		{
+			document.getElementById("five_value").value=(parseFloat(document.getElementById("five_value").value)+(parseFloat(document.getElementById("r"+i+"c10").value))).toFixed(2);
+			if(document.getElementById("five_discount_per").value!="")
+			{	
+				document.getElementById("after_five_dic").value=(parseFloat(document.getElementById("five_value").value)-parseFloat(document.getElementById("five_discount_per").value)).toFixed(2);
+				document.getElementById("five_vat").value=(parseFloat(document.getElementById("after_five_dic").value)*parseFloat(5/100)).toFixed(2);
+				document.getElementById("total_vat").value=(parseFloat(document.getElementById("five_vat").value)+parseFloat(document.getElementById("fourt_vat").value)).toFixed(2);
+			}	
+		}			
+		else if(parseFloat(document.getElementById("r"+i+"c11").value)==14.5)
+		{
+			document.getElementById("fourt_value").value=(parseFloat(document.getElementById("fourt_value").value)+(parseFloat(document.getElementById("r"+i+"c10").value))).toFixed(2);
+			if(document.getElementById("fourt_dic_per").value!="")
+			{	
+				document.getElementById("after_fourt_dic").value=(parseFloat(document.getElementById("fourt_value").value)-parseFloat(document.getElementById("fourt_dic_per").value)).toFixed(2);
+				document.getElementById("fourt_vat").value=(parseFloat(document.getElementById("after_fourt_dic").value)*parseFloat(14.5/100)).toFixed(2);
+				document.getElementById("total_vat").value=(parseFloat(document.getElementById("five_vat").value)+parseFloat(document.getElementById("fourt_vat").value)).toFixed(2);
+			}	
+		}
+		else if(parseFloat(document.getElementById("r"+i+"c11").value)==0)
+		{
+			document.getElementById("zero_pre").value=(parseFloat(document.getElementById("zero_pre").value)+(parseFloat(document.getElementById("r"+i+"c10").value))).toFixed(2);
+			if(document.getElementById("zero_pre_dic").value!="")
+			{	
+				document.getElementById("after_zero_dic").value=(parseFloat(document.getElementById("zero_pre").value)-parseFloat(document.getElementById("zero_pre_dic").value)).toFixed(2);
+			}	
+		}		
+	}
+	var sub_total1=(parseFloat(document.getElementById("after_fourt_dic").value)+parseFloat(document.getElementById("after_five_dic").value)+parseFloat(document.getElementById("after_zero_dic").value)).toFixed(2);
+	document.getElementById("sub_total").value=(parseFloat(sub_total1)+parseFloat(document.getElementById("total_vat").value)).toFixed(2);
+	document.getElementById("net_invoice_amount").value=(parseFloat(sub_total1)+parseFloat(document.getElementById("total_vat").value)).toFixed(2);
+	document.getElementById("net_amount").value=(parseFloat(sub_total1)+parseFloat(document.getElementById("total_vat").value)).toFixed(2);
+
+	
+}
+	function change_date_format(id)
+	{
+		if(document.getElementById(id).value!="" && document.getElementById(id).value)
+		{
+			var date_temp=document.getElementById(id).value.split("/");
+			if(date_temp[1].length==2)
+				var year=2000+parseInt(date_temp[1])
+			else
+				var year=date_temp[1]
+			document.getElementById(id+"c12").value=year+"-"+date_temp[0]+"-01";
+		}
+	}	
+
+
+function discount_calculation()
+	{
+		var discount1=0;
+		var sub_total=parseFloat(document.getElementById('sub_total').value).toFixed(2);
+		if(document.getElementById('discount').value!="")
+		{
+			discount=parseFloat(document.getElementById('discount').value);
+			document.getElementById('discount_amount').value=((sub_total*discount)/100).toFixed(2);
+		}
+		else
+			document.getElementById('discount_amount').value=0;
+		amount_calculation('find_net_amount');
+	}
+
+
+function amount_calculation(amount_type)
+	{ 
+		var sub_total=0,discount_amount=0,cr_note=0,dr_note=0,adjust=0;
+		if(document.getElementById('sub_total').value!="")
+			sub_total=parseFloat(document.getElementById('sub_total').value).toFixed(2);
+		if(document.getElementById('discount_amount').value!="")
+			discount_amount=parseFloat(document.getElementById('discount_amount').value).toFixed(2);
+		if(document.getElementById('cr_note').value!="")
+			cr_note=document.getElementById('cr_note').value;
+		if(document.getElementById('dr_note').value!="")
+			dr_note=document.getElementById('dr_note').value;
+		if(document.getElementById('adjust').value!="")
+			adjust=document.getElementById('adjust').value;
+		document.getElementById('net_invoice_amount').value=(sub_total-discount_amount).toFixed(2);
+		var amount=(sub_total-discount_amount).toFixed(2);
+		if(amount_type=="find_round_amount")
+		{
+			if(document.getElementById('net_amount').value!="")
+			{
+				document.getElementById('round').value=(((parseFloat(amount)+parseFloat(cr_note)+parseFloat(adjust))-parseFloat(dr_note))-parseFloat(document.getElementById('net_amount').value)).toFixed(2);
+			}
+			else
+			{
+				document.getElementById('round').value=((parseFloat(amount)+parseFloat(cr_note)+parseFloat(adjust))-parseFloat(dr_note)).toFixed(2);	
+			}	
+		}
+		else
+		{
+			document.getElementById('net_amount').value=((parseFloat(amount)+parseFloat(cr_note)+parseFloat(adjust))-parseFloat(dr_note)).toFixed(2);
+			document.getElementById('round').value=0;
+		}
+	}
+
+
+</script>
+
+<body onLoad="document.getElementById('item_names_store').click();">
+<% form_for(@goodsrecieptnotemaster) do |f| %>
+
+<%= hidden_field :user_id, :value => @person.id %>
+<% @date=format_date(:sort, Date.today ) %>
+<div align="center">
+	<fieldset><legend><div class="font"><b>Purchase Invoice Details</b></div></legend>
+	<table   width="100%" >
+	<tr>	
+		<%= f.hidden_field :org_code, :value => @org_code, :size => 20, :id => "org_code", :readonly => true %>
+		<%= f.hidden_field :org_location, :value => @org_location, :size => 20, :id => "org_location", :readonly => true %>
+	  <td>Supplier</td>
+        <td><%= f.select :agency_name, AgencyMaster.find(:all).collect{|p| [p.agency_name]},{:prompt =>true},{:id =>"agency_name", :onChange => "getdlno(id)" } %></td>
+		<td>Address</td>
+        <td><%= f.text_field :address, :id => "address", :size =>20 %></td>
+	<td>Type<sup>*</sup></td>
+       <td><%= f.select :type_pay,[['Cash'],['Credit']],{:prompt=>true} %></td>
+    </tr>
+    <tr>
+		<td>Sup.Inv.No<sup>*</sup></td>
+        <td><%= f.text_field :invoice_number,:size =>"20" %></td>
+        <td>Inv.Dt<sup>*</sup></td>
+     	<td><%= f.text_field :invoice_date, :size =>20, :id => "dob" %>
+			<a href="javascript:void(0)" onClick="setYears(2000, 2050);showCalender(this,'dob'); "  >
+			<img src="/images/cal.gif" ></a></td>
+<td>Entry NO</td>
+<td><%= f.text_field :entry_no, :size =>20, :id => "entry_no" %></td>
+</tr>
+<tr>
+<td>Entry.Dt</td>
+<td><%= f.text_field :entry_date, :size =>20, :id => "entry_date" %>
+			<a href="javascript:void(0)" onClick="setYears(2000, 2050);showCalender(this,'entry_date'); "  >
+			<img src="/images/cal.gif" ></a></td>
+<td> Pur.Type</td>
+<td><%= f.select :pur_type,[['VAT'],['TOT'],['NON TAT'],['OTHER']],{:prompt=>true} %></td>
+	    <%= f.hidden_field :status, :value=>"Received" %>
+</tr>
+</table>
+<table> 
+        <tr>            
+			<td>Product Name</td>
+            <td><%= f.text_field :item_name, :id => "itmem_name", :onKeyUp => "medicine_search_ind(id,event)", :style=>"width:850px;" %> </td>
+			<td><a href="javascript:void(0)" onClick="window.open('/itemmasters/new?call_from=goods','open','width=900px,height=500px')">Add New Item</a></td>
+		</tr>
+	</table>
+	</fieldset>
+
+	</tr>
+	</table>
+	
+<table width="100%">
+  <tr>
+	<td colspan="14">
+	<div id="info">
+    <table class="tableone">
+   <caption style="background: url(/images/vertical1_04.jpg) repeat-x top left;text-align:center;" ><font color="#F0FFFF" face="Cambria" ><b>Purchase Invoice</b></font></caption>
+     <thead>
+         <tr>
+			<th width="50px" style="color:black;">S.No</th>
+			<th width="125px" style="color:black;">Product Name</th>
+		    <th width="100px" style="color:black;">Drug Type</th>
+					<th width="100px" style="color:black;">Rec.Qty</th>
+			<th width="100px" style="color:black;">Free</th>
+			<th width="100px" style="color:black;">Packing</th>
+			<th width="100px" style="color:black;">Batch No</th>
+			<th width="100px" style="color:black;">Exp.Dt</th>
+			<th width="100px" style="color:black;">MRP</th>
+			<th width="100px" style="color:black;">Pur.Rate</th>
+			<th width="100px" style="color:black;">Margin(%)</th>
+			<th width="100px" style="color:black;">Amt</th>
+			<th width="100px" style="color:black;">Vat(%)</th>
+			<th width="48px" style="color:black;">Del</th>
+		</tr>
+    </thead>
+     <tbody>
+		<tr><td colspan="14">
+			<div class="innerb">
+			<table class="tabletwo" id="displayTable">
+			<% i=0 %>
+			<% f.fields_for :store_child do |a| %>
+				<% if (i%2==0) %>
+					<tr>
+				<% else%>
+					<tr class="dk">
+				<% end %>	
+
+					<td width="50px"><%= text_field_tag('s_no','', :style=>"width:100%", :id => "r#{i}c1", :class => "nbb") %></td> 
+					<td width="125px"><%= a.text_field :item_name, :style=>"width:100%", :id => "r#{i}c2", :class => "nbb",:readOnly => true %></td> 
+					<td width="180px"><%= a.text_field :drug_type, :style=>"width:100%", :id => "r#{i}c3", :class => "nbb" %></td> 
+					<td width="185px"><%= a.text_field :sheets, :style=>"width:100%", :id => "r#{i}c4", :class => "nbb", :onKeyUp=>"cal_total_amount_with_vat('#{i}')" %></td> 
+					<td width="180px"><%= a.text_field :free, :style=>"width:100%", :id => "r#{i}c5", :class => "nbb" %></td> 
+					<td width="180px"><%= a.text_field :packing, :style=>"width:100%", :id => "r#{i}c6", :class => "nbb"%></td> 
+					<td width="150px"><%= a.text_field :batch_no, :style=>"width:100%", :id => "r#{i}c7", :class => "nbb" %></td> 
+					<td width="150px"><%= text_field_tag('expiry_date_test', '',:style=>"width:100%", :id => "r#{i}", :class => "nbb", :onFocusOut=>"change_date_format(id)", :placeholder => "mm/yyyy") %></td> 
+					<%= a.hidden_field :expiry_date, :style=>"width:100%", :id => "r#{i}c12", :class => "nbb"%>
+					<td width="180px"><%= a.text_field :mrp, :style=>"width:100%", :id => "r#{i}c8", :class => "nbb" %></td> 
+					<td width="180px"><%= a.text_field :purchase_rate, :style=>"width:100%", :id => "r#{i}c9", :class => "nbb", :onkeyup=>"cal_total(id,'#{i}')" %></td> 
+					<td width="180px"><%= a.text_field :margin, :style=>"width:100%", :id => "r#{i}c13", :class => "nbb",:readOnly => true %></td> 
+					<td width="180px"><%= a.text_field :amount, :style=>"width:100%", :id => "r#{i}c10", :class => "nbb",:readOnly => true %></td> 
+					<td width="100px"><%= a.text_field :vat, :style=>"width:100%", :id => "r#{i}c11", :class => "nbb",:readOnly => true %></td> 
+					<td width="80px"></td>			
+	</tr>
+				<% i+=1 %>
+				
+				
+			<% end %>
+			</table>
+			</div>
+		</td>
+		</tr>
+	</tbody>
+     </table>
+   </div>
+	</td>
+  </tr>
+ </table>
+ 
+
+ 
+ </fieldset>
+
+	<table width="100%">
+	<tr>
+			 <td>0% Value </td> 
+             <td><%= f.text_field :zero_pre, :size =>"20", :id => "zero_pre", :readOnly => true %>
+             <td>Discount</td>
+             <td><%= f.text_field :zero_pre_dic,:size =>"20", :id => "zero_pre_dic", :onKeyUp => "cal_discount()" %>
+			 <td>After.Dis</td> 
+             <td><%= f.text_field :after_zero_dic, :size =>"20", :id => "after_zero_dic", :readOnly => true %>
+	</tr>
+	<tr>
+			 <td>5% Value </td> 
+             <td><%= f.text_field :five_value, :size =>"20", :id => "five_value", :readOnly => true %>
+             <td>Discount</td>
+             <td><%= f.text_field :five_discount_per,:size =>"20", :id => "five_discount_per", :onKeyUp => "cal_discount()" %>
+			 <td>After.Dis</td> 
+             <td><%= f.text_field :after_five_dic, :size =>"20", :id => "after_five_dic", :readOnly => true %>
+             <td>5% Vat</td>
+             <td><%= f.text_field :five_vat,:size =>"20", :id => "five_vat",  :readOnly => true %>
+	</tr>
+	<tr>
+			 <td>14.5% value</td>
+             <td><%= f.text_field :fourt_value,:id => "fourt_value",:readOnly => true, :size =>"20" %></td>
+             <td>Discount</td>
+             <td><%= f.text_field :fourt_dic_per,:id =>"fourt_dic_per", :size =>"20", :onKeyUp => "cal_discount()" %></td>
+			 <td>After.Dis</td>
+             <td><%= f.text_field :after_fourt_dic,:id => "after_fourt_dic",:readOnly => true, :size =>"20" %></td>
+             <td>14.5% Vat</td>
+             <td><%= f.text_field :fourt_vat,:id =>"fourt_vat", :readOnly => true, :size =>"20" %></td>
+	</tr>
+	<tr>
+			 <td>Total Vat Value</td>
+             <td><%= f.text_field :total_vat, :id =>"total_vat", :readOnly => true, :size =>"20" %></td>
+			 <td>Sub Total</td>
+             <td><%= f.text_field :sub_total,:id =>"sub_total", :readOnly => true, :size =>"20" %></td>
+            <td>Dis(%)</td>
+             <td><%= f.text_field :dis_per,:id =>"discount", :size =>"20", :onKeyup => "discount_calculation()" %></td>
+       		 <td>Dis.Amount</td> 
+             <td><%= f.text_field :dis_amount, :size =>"20", :id => "discount_amount", :readOnly => true %>
+           
+	</tr>
+	<tr>
+
+			  <td>Amount</td>
+             <td><%= f.text_field :net_invoice_amount, :id => "net_invoice_amount", :size =>"20" %></td>
+			<td>Cr.Note</td>
+			  <td><%= f.text_field :cr_note, :id => "cr_note", :size =>"20" %></td>
+             
+			<td>Dr.Note</td>
+            <td><%= f.text_field :dr_note, :id => "dr_note", :size =>"20"  %></td>
+			<td>Adjust</td>
+            <td><%= f.text_field :adjust, :id => "adjust", :size =>"20", :onKeyup => "amount_calculation('find_net_amount')"%></td>
+		
+
+</tr>
+<tr>
+	<td>Round</td>
+            <td><%= f.text_field :round, :id => "round", :size =>"20", :onKeyup => "amount_calculation('find_net_amount')"%></td>
+<td>Net Amount</td>
+            <td><%= f.text_field :net_amount, :id => "net_amount", :size =>"20", :onKeyup => "amount_calculation('find_round_amount')" %></td>
+	</tr>
+</table>
+<table align="center">
+<tr>
+	<td><%= submit_tag "", :value => " Save ", :class => "submit_button", :onClick => "this.disabled=true;this.value='Process..';this.form.submit();" %></td>
+	<td><%= submit_tag "", :value => " Reset ", :type => "reset",  :class => "submit_button" %></td>
+	<td valign="middle"><%= link_to "Back",  goodsrecieptnotemasters_path, :class=>"new1" %></td>
+</tr>
+</table>	
+<% end %>
+</div>
+<p id="btnSearch"><input type="hidden" id="item_names_store" value='<%= @item_names_store_arry %>'></p>
+</body>

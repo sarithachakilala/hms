@@ -1,0 +1,147 @@
+
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">IP Patients >>&nbsp;&nbsp;&nbsp;<a HREF='/registrations?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Registrations</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div  width="100%">
+<table align="center" width="70%" border="0" cellspacing="2" cellpadding="4">
+		<tr>
+			<td class="button" colspan="8"><center><b><%=h @registration.patient_name %> Information</b></center></td> 
+		</tr>
+<tr></tr>
+<tr>
+  <td class='<%= id %>'><b>Org code</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @registration.org_code %></td>
+  <td class='<%= id %>'><b>Org location</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @registration.org_location %></td>
+  <td rowspan="5"><%= image_tag("#{@registration.image_path}", :alt => "No Image Uploaded", :width=>"150px",:height=>"150px", :border=>"1" ) %></td>
+</tr>
+
+<tr>
+  <td class='<%= id %>'><b>Mr no</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @registration.mr_no %></td>
+  <td class='<%= id %>'><b>Reg no</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @registration.reg_no %></td>
+</tr>
+
+<tr>
+  <td class='<%= id %>'><b>Reg date</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @registration.reg_date %></td>
+  <td class='<%= id %>'><b>Patient name</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @registration.patient_name %></td>
+</tr>
+
+<tr>
+  <td class='<%= id %>'><b>Age</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @registration.age %></td>
+  <td class='<%= id %>'><b>Gender</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @registration.gender %></td>
+</tr>
+
+<tr>
+  <td class='<%= id %>'><b>Martial status</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @registration.martial_status %></td>
+  <td class='<%= id %>'><b>Father name</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @registration.father_name %></td>
+</tr>
+
+<tr>
+  <td class='<%= id %>'><b>City</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @registration.city %></td>
+  <td class='<%= id %>'><b>State</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @registration.state %></td>
+</tr>
+
+<tr>
+  <td class='<%= id %>'><b>Country</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @registration.country %></td>
+  <td class='<%= id %>'><b>Address</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @registration.address %></td>
+</tr>
+
+<tr>
+  <td class='<%= id %>'><b>Mobile no</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @registration.mobile_no %></td>
+  <td class='<%= id %>'><b>Ph no</b></td>
+  <td class='<%= id %>'>:</td> 
+ <td class='<%= id1 %>'><%=h @registration.ph_no %></td>
+</tr>
+
+<tr>
+  <td class='<%= id %>'><b>Reg type</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @registration.reg_type %></td>
+  <td class='<%= id %>'><b>Referral</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @registration.referral %></td>
+</tr>
+
+<tr>
+  <td class='<%= id %>'><b>Referral name</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @registration.referral_name %></td>
+  <td class='<%= id %>'><b>Referral contact no</b></td>
+  <td class='<%= id %>'>:</td> 
+  <%=h @registration.referral_contact_no %>
+</tr>
+
+<tr>
+  <td class='<%= id %>'><b>Name</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @registration.name %></td>
+  <td class='<%= id %>'><b>Ph no</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @registration.ph_no %></td>
+</tr>
+
+<tr>
+  <td class='<%= id %>'><b>Ins company name</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @registration.ins_company_name %></td>
+  <td class='<%= id %>'><b>Policy no</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @registration.policy_no %></td>
+</tr>
+
+<tr>
+  <td class='<%= id %>'><b>Relation to insurence</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @registration.relation_to_insurence %></td>
+  <td class='<%= id %>'><b>Plan name</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @registration.plan_name %></td>
+</tr>
+
+<tr>
+  <td class='<%= id %>'><b>Arogyasree card no</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @registration.arogyasree_card_no %></td>
+  <td class='<%= id %>'><b>Userid</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @registration.userid %></td>
+</tr>
+</table>
+</div>
+<br/>
+<center><%= link_to "Back",  registrations_path, :class=>"new1" %></td></center>

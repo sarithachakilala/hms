@@ -1,0 +1,30 @@
+<h1>Listing charge_master_children</h1>
+
+<table>
+  <tr>
+    <th>Charge master</th>
+    <th>Reg type</th>
+    <th>Name</th>
+    <th>Discount price</th>
+    <th>Discount persentage</th>
+    <th>Amount</th>
+  </tr>
+
+<% @charge_master_children.each do |charge_master_child| %>
+  <tr>
+    <td><%=h charge_master_child.charge_master_id %></td>
+    <td><%=h charge_master_child.reg_type %></td>
+    <td><%=h charge_master_child.name %></td>
+    <td><%=h charge_master_child.discount_price %></td>
+    <td><%=h charge_master_child.discount_persentage %></td>
+    <td><%=h charge_master_child.amount %></td>
+    <td><%= link_to 'Show', charge_master_child %></td>
+    <td><%= link_to 'Edit', edit_charge_master_child_path(charge_master_child) %></td>
+    <td><%= link_to 'Destroy', charge_master_child, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New charge_master_child', new_charge_master_child_path %>

@@ -1,0 +1,306 @@
+
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%"> Doctor Workbench  >>&nbsp;&nbsp;&nbsp;<a HREF='/treatment_plans/new' class="nav" style="text-decoration:none;">Treatment Plan</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<div id="form_data">
+<%= stylesheet_link_tag 'jquery-ui' %>
+<%= javascript_include_tag 'jquery.min.js' %>
+<%= javascript_include_tag 'jquery-ui.min.js' %>  
+  <script>
+  $(document).ready(function() {
+    $("input#item_name").autocomplete({
+    source: [
+			<% for i in 0...@item_masters.length %>
+				'<%= @item_master[i] %>',
+			<% end %>
+		]
+	});
+  });
+  </script>	
+<script language="javascript" type="text/javascript">
+	function stopRKey(evt) {
+		
+		var evt  = (evt) ? evt : ((event) ? event : null);
+		var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+		if ((evt.keyCode == 13) && (node.type=="text")) { return false; }
+	}
+	document.onkeypress = stopRKey;
+</script>
+<script>
+	function Search_medicine(id,event)
+	{
+		if(event.keyCode!=13)
+			return false;
+		query2=document.getElementById(id).value
+		document.getElementById(id).value=""
+		if(query2!="" && query2)
+		{
+			selectedid=id
+			ajax()
+		}
+	}
+
+	function ajax()
+	{
+		org_code=document.getElementById('org_code').value
+		req = new Ajax.Request('/treatment_plans/ajax_function/1', {
+				method: 'get',
+				parameters: {q: query2, res: selectedid, org_code: org_code },
+				onComplete: function(transport) {
+				processReqChange(transport);
+			}
+		});
+		function processReqChange(req) 
+		{
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				var add_amount_fields="paid_amount";
+				var store=new Array();
+				store[0]=results;
+				store[1]=results
+				add_row('r',8,'displayTable',store,add_amount_fields,0)
+			} // end if req
+		}
+	}
+		
+	function mrfun(id)
+	{
+		var field_names=new Array("org_code","org_location","mr_no","admn_no","patient_name","age","consultant_id","registration_id");
+		var patient_type=document.getElementById("patient_type").value
+		req = new Ajax.Request('/treatment_plans/mr_no_search/1', 
+				{
+					method: 'get',
+					parameters: { record_id: id,patient_type:patient_type},
+					onComplete: function(transport){
+					processReqChange(transport);
+				}
+			}); // end ajax req
+		function processReqChange(req) 
+		{
+				// request is complete
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				alert(results)
+				var temp=results.split("<division>");
+				for(i=0;i<field_names.length;i++)
+				{
+					document.getElementById(field_names[i]).value=temp[i]
+					document.getElementById(field_names[i]).style.background="#FEF5CA"
+					document.getElementById(field_names[i]).readOnly=true
+				}
+				var temp_medicine=temp[temp.length-1].split("<main_division>");
+				empty_table('displayTable','r',8)
+				for(i=0;i<temp_medicine.length-1;i++)
+				{
+					var store=new Array();
+					var temp_med=temp_medicine[i].split("<sub_division>");
+					store[0]=temp_med[0];
+					store[1]=temp_med[1];
+					store[4]=temp_med[2];
+					var add_amount_fields="paid_amount";
+					add_row('r',8,'displayTable',store,add_amount_fields,0)
+				}
+			} // end if req == 4
+		}
+	}
+	
+	function select_patient_type(id)
+	{
+		document.getElementById('ip1').style.display='none'
+		document.getElementById('op1').style.display='none'
+		if(document.getElementById(id).value=="OP")
+			document.getElementById('op1').style.display='block'
+		else
+			document.getElementById('ip1').style.display='block'
+	}
+</script>	
+	
+<% form_for(@treatment_plan) do |f| %>
+<div id="form_data">
+<div  class="right">
+<table width="100%" >
+<%= f.hidden_field :org_code, :value => @org_code, :class => "text_field", :id => "org_code", :readonly => true %>
+<%= f.hidden_field :org_location, :value => @org_location, :class => "text_field", :id => "org_location", :readonly => true %>
+	<tr>
+		
+		<td>Patient Type<sup>*</sup></td>
+		<td><%= f.select :patient_type, [['IP'],['OP']], {:prompt => false},{:id => "patient_type",:onChange => "select_patient_type(id)"} %>  </td>	
+		<td>Admn.No<sup>*</sup></td>
+		<td><%= f.text_field :admn_no, :class=>"text_field", :id => "admn_no", :placeholder =>"Select in Right Pannel", :onblur=>"return calling(id)", :title=>"Select From Right Pannel" %>  </td>
+		<td>Registration Id</sup></td>
+		<td><%= f.text_field :registration_id, :class=>"text_field", :id => "registration_id" %>  </td>
+	</tr>
+	<tr>		
+		<td>MR No</td>
+		<td><%= f.text_field :mr_no, :class=>"text_field", :id => "mr_no",:placeholder =>"Select in Right Pannel" %>  </td>
+		<td>Patient Name</td>
+		<td><%= text_field_tag('Patientname','', :class =>"text_field", :id=>"patient_name") %></td>
+		<td>Age</td>
+		<td><%= text_field_tag('age','', :class =>"text_field") %></td>
+		<% @date=Date.today %>
+	</tr>
+	<tr>	
+		<td>Treatment Date<sup>*</sup></td>
+		<td><%= f.text_field :treatment_date, :class=>"text_field", :value=> @date, :readonly=>true %>  </td>
+		<td>Treatment Time</td>
+		<td><%= f.time_select :treatment_time, :class=>"text_field", :default=>Time.now %></td>
+		<td>Consultant Id</td>
+		<% f.select :consultant_id, :class=>"text_field" %>
+		<td><%= f.text_field :consultant_id, :id => "consultant_id", :class=>"text_field", :readonly=>true %></td>
+		<%= f.hidden_field :user_id, :size=>20, :value=>@people.id %>	
+		
+	</tr>
+</table>
+<table width="40%">
+	<tr>	
+		<td width="10px">Medicines</td>
+		<td><%= text_field_tag('medicines','', :id => "item_name", :onKeyUp => "Search_medicine(id,event)", :style=>"width:350px;") %> </td>
+		<td align="left"><%= link_to image_tag ("buttons/new.png", :border=>0), "javascript:var store=new Array();add_row('r',8,'displayTable',store)"%></td>
+	</tr>
+</table>
+	<table align="right">
+		<tr>
+			<td colspan="9">
+			<div id="info">
+			<table class="tableone">
+			   <caption style="background: url(/images/vertical1_04.jpg) repeat-x top left;text-align:center;" ><font color="#F0FFFF" face="Cambria" ><b>Prescribed Medicines</b></font></caption>
+		   
+			  <thead>
+				<tr>
+					  <th width="120px"   style="color:black;">S.No</th> 
+					  <th width="320px"  style="color:black;">Medicine Name</th> 
+					  <th width="180px"  style="color:black;">Route</th> 
+					  <th width="180px"  style="color:black;">Frequency</th> 
+					  <th width="190px"  style="color:black;">Quantity</th> 
+					  <th width="190px"  style="color:black;">Days</th>
+					  <th width="180px"  style="color:black;" align="center">Timings</th>
+					  <th width="320px"  style="color:black;">Comments</th>
+					  <th width="100px"  style="color:black;">Remove</th>
+				</tr>
+			  </thead>
+			 <tbody>
+				<tr><td colspan="9">
+					<div class="innerb">
+					<table class="tabletwo" id="displayTable">
+					<% i=0 %>
+					<% f.fields_for :medicine_list do |a| %>
+						<% if (i%2==0) %>
+							<tr>
+						<% else%>
+							<tr class="dk">
+						<% end %>
+							<td width="120px"><%= a.text_field :s_no, :style=>"width:100%", :id => "r#{i}c1", :class => "nbb" %></td> 
+							<td width="320px"><%= a.text_field :name, :style=>"width:100%", :id => "r#{i}c2", :class => "nbb" %></td> 
+							<td width="180px"><%= a.text_field :root, :style=>"width:100%", :id => "r#{i}c3", :class => "nbb" %></td> 
+							<td width="180px"><%= a.text_field :frequency, :style=>"width:100%", :id => "r#{i}c4", :class => "nbb" %></td> 
+							<td width="190px"><%= a.text_field :quantity, :style=>"width:100%", :id => "r#{i}c5", :class => "nbb" %></td> 
+							<td width="190px"><%= a.text_field :days, :style=>"width:100%", :id => "r#{i}c6", :class => "nbb" %></td> 
+							<td width="180px" align="center"><%= a.check_box :morning, :id => "r#{i}c7", :id=>"m", :class => "nbb" %>
+							<%= a.check_box :afternoon, :id=>"e", :id => "r#{i}c8", :class => "nbb"%>
+							<%= a.check_box :night, :id=>"a", :id => "r#{i}c9", :class => "nbb"%></td>
+							<td width="220px"><%= a.select :comments,[['After 9:00 A.M'],['Before 9:00 P.M']], :style=>"width:100%", :id => "r#{i}c10", :class => "nbb" %></td> 
+							<td width="100px" id="r<%= i %>c11"></td>
+						</tr>
+						<% i+=1 %>
+					<% end %>
+					</table>
+					</div>
+				</td>
+				</tr>
+			</tbody>
+			 </table>
+		   </div>
+		</td>
+	</tr>
+	</table>
+	<table>
+	<tr>   
+		<td><%= f.label :advice %></td>
+		<td colspan="7"><%= f.text_area :advice,:rows=>3, :cols=>80, :id =>"advice"%></td>
+	</tr>
+	<tr>
+		<td>Next Visit</td>
+		<td><%= f.text_field :next_visit, :id=>"next_visit", :size=>"20" %><a href="javascript:void(0)" onClick="setYears(2010, 2050);showCalender(this,'next_visit');">
+		<img src="/images/cal.gif" ></a></td>
+	</tr>
+ <table align="center">
+ 	<td><%= submit_tag "", :value => " Save ", :class => "submit_button" %></td>
+	<td><%= submit_tag "", :value => " Reset ", :type => "reset",  :class => "submit_button" %></td>
+	<td valign="middle"><%= link_to "back",  treatment_plans_path, :class=>"new1" %></td>
+</table>
+</div>
+</div>
+<% end %>
+<div class="left">
+	<div id="ip1">
+		<table border=1 cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td id="side_panel"><input type="text" style="width:96%;" id="admn_no_search" placeholder="Search By Mr.No" onkeyUp="search_field_mr_no(id,'treatment_plans','admn_no')"></td>
+				<td id="side_pane2"><input type="text" style="width:96%;" id="name_search" placeholder="Search By Name" onkeyUp="search_field_mr_no(id,'admissions','admn_no')"></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<div  id="field_search_div">
+					<table border=1 cellspacing="0" cellpadding="0" width="100%">
+					<tr>
+						<th id="side_panel">Admn.NO</th>
+						<th id="side_pane2">Name</th>
+					</tr>
+					<% for admissions in @admissions %>
+						<% registration=Registration.find_by_mr_no_and_org_code(admissions.mr_no,admissions.org_code) %>
+						<tr>
+							<% if(registration.reg_type=="Arogyasree") %>
+								<td class="cursor_point" onclick="mrfun('<%= admissions.id %>')" bgcolor="blue" style="color:white;"><%=  admissions.admn_no %></td>
+								<td class="cursor_point" onclick="mrfun('<%= admissions.id %>')" bgcolor="blue" style="color:white;"><%= registration.patient_name %></td>
+							<% else %>
+								<td class="cursor_point" onclick="mrfun('<%= admissions.id %>')"><%=  admissions.admn_no %></td>
+								<td class="cursor_point" onclick="mrfun('<%= admissions.id %>')"><%= registration.patient_name %></td>
+							<% end %>
+						</tr>
+					<% end %>
+					</table>
+					</div>
+				</td>
+			</tr>		
+		</table>
+	</div>
+
+	<div id="op1" style="display:none">
+		<table border=1 cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td id="side_panel"><input type="text" style="width:96%;" id="admn_no_search" placeholder="Search MR No" onkeyUp="search_field_mr_no(id,'treatment_plans','admn_no')" ></td>
+				<td id="side_pane2"><input type="text" style="width:96%;" id="name_search" placeholder="Search By Name"  onkeyUp="search_field_mr_no(id,'treatment_plans','admn_no')"  ></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<div  id="field_search_div">
+					<table border=1 cellspacing="0" cellpadding="0" width="100%">
+					<tr>
+						<th id="side_panel">MR NO</th>
+						<th  id="side_pane2">Name</th>
+					</tr>
+					<% for appt_payment in @appt_payment %>
+						<% treatment_plan = TreatmentPlan.last(:conditions => " mr_no ='#{appt_payment.mr_no}' and org_code ='#{appt_payment.org_code}'")%>
+						<% if (!treatment_plan) %>
+						<% registration=Registration.find_by_mr_no_and_org_code(appt_payment.mr_no,appt_payment.org_code) %>
+						<tr>
+							<td class="cursor_point" onclick="mrfun('<%= appt_payment.id %>')"><%=  appt_payment.mr_no %></td>
+							<td class="cursor_point" onclick="mrfun('<%= appt_payment.id %>')"><%= registration.patient_name %></td>
+						</tr>
+						<% end %>
+					<% end %>
+					</table>
+					</div>
+				</td>
+			</tr>		
+		</table>	
+	</div>
+</div>
+</div>

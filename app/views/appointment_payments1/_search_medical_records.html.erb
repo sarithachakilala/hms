@@ -1,0 +1,37 @@
+<div id="name">
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+  <tr>
+    <th>S.Novcxv</th>
+	<th>Appt.Date</th>
+    <th>OP No</th>
+    <th>MR No</th>
+    <th>Department</th>
+    <th>Consultant</th>
+	<th colspan="3" align="center">Permissions</th>
+  </tr>
+</thead>
+<tbody>
+<% @i=0 %>
+<% @appointment_payments.each do |appointment_payment| %>
+<% if((@i % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+  end %>
+ <tr class='<%= id %>' style="height:30px">
+	<td><%= @i+=1 %></td>
+	<td><%=h appointment_payment.appt_date %></td>
+    <td><%=h appointment_payment.op_number %></td>
+    <td><%=h appointment_payment.mr_no %></td>
+    <td><%=h appointment_payment.department %></td>
+    <td><%=h appointment_payment.consultant_name %></td>
+
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Edit&nbsp;&nbsp;&nbsp;', edit_appointment_payment_path(appointment_payment), :class=>"submit_button" %></td>   
+
+	<td  align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Print&nbsp;&nbsp;&nbsp;', {:action => 'report', :id => appointment_payment.id, :format => "pdf", :print_type=>"duplicate"}, :class=>"submit_button" %></td>  
+	<td  align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Later Head Print&nbsp;&nbsp;&nbsp;', {:action => 'appointment_report1', :id => appointment_payment.id}, :class=>"submit_button" %></td>  
+  </tr>
+
+<% end %>
+</table>

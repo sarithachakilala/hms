@@ -1,0 +1,27 @@
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+    <th>S.No</th>
+    <th>Name</th>
+    <th>Code</th>
+	<th colspan="3">Permissions</th>
+  </tr>
+</thead>
+<tbody>
+<% @id=0 %>
+<% @country_masters.each do |country_master| %>
+<% if((@id % 2)==0)
+		 id="datacellone"
+else
+		id="datacelltwo" 
+	
+ end %>
+  <tr class='<%= id %>'>
+    <td><%= @id=@id+1 %></td>
+    <td><%=h country_master.name %></td>
+    <td><%=h country_master.code %></td>
+    <td  align="center"><%= link_to image_tag("buttons/display1.png", :class => "info", :border =>"0"), country_master %></td>
+    <td align="center"><%= link_to image_tag("buttons/modify.png", :class => "info", :border =>"0"), edit_country_master_path(country_master) %></td>
+	<td align="center"><%= link_to image_tag("buttons/delete.png", :class => "info", :border =>"0"), country_master,:confirm => 'Are you sure?', :method => :delete %>
+  </tr>
+<% end %>
+</table>

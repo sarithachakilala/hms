@@ -1,0 +1,49 @@
+<script type="text/javascript">
+	function select_org_code(id)
+	{
+		var org_code=document.getElementById(id).value
+		if(org_code)
+		{
+			req = new Ajax.Request('/dashboards/select_org_code/1', {
+				method: 'get',
+				parameters: { org_code: org_code },
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			}); 
+			function processReqChange(req) 
+			{
+				// request is complete
+				if (req.readyState == 4) 
+				{
+					document.getElementById('org_location').value=req.responseText;
+					
+				}
+			}
+		}
+		else
+			document.getElementById('org_location').value=""
+	}
+	function set_src()
+	{
+		var org_code=document.getElementById("org_code").value
+		document.getElementById('result').src="/dashboards/financial_chart_representation/1?org_code="+org_code
+	}
+</script>
+<body onLoad="set_src()">
+<div style="height:40px;background-color:#aebdd1;">
+	<table align="center" width="50%">
+		<tr>
+			<td>Org.Code</td>
+			<td><%= select :org_code,'',Person.find(:all, :conditions => "profile = 'admin'").collect{|p| [p.org_code]},{:prompt => "All"},{:id => "org_code" , :onChange => "select_org_code(id)"} %></td>
+			<td>Org.Location</td>
+			<td><%= text_field_tag :org_location,'',:size => 20, :id => "org_location", :readOnly =>true %></td>
+			<td><a href="javascript:void(0);" class="new1" onClick ="set_src()">Search</a>
+			
+		</tr>
+	</table>
+</div>
+<div style="height:200px; width="100%"background-color:blue;">
+	<iframe src="" id="result" width="99%" height="490px" frameborder=0></iframe>
+</div>
+</body>

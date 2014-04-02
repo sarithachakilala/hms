@@ -1,0 +1,37 @@
+<br/>
+
+<% form_for(@drug_formula) do |f| %>
+ <div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Pharmacy Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/drug_formulas' class="nav" style="text-decoration:none;">Drug Formula Master</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<div align="center">
+  <table>
+ <tr>
+  <td>
+    <%= f.label :code %></td><td>
+    <td><%= f.text_field :code %></td>
+  </tr>
+  <tr>
+    <td><%= f.label :content %></td><td>
+    <td><%= f.text_field :content %></td>
+  </tr>
+  <tr>
+   <td> <%= f.label :details %></td><td>
+    <td><%= f.text_field :details %></td>
+  </tr>
+ <% end %>
+
+  <table>
+	<tr>
+<td><%= submit_tag "", :value => " Save ", :class => "submit_button" %></td>
+<td><%= submit_tag "", :value => " Reset ", :type => "reset",  :class => "submit_button" %></td>
+<td valign="middle"><%= link_to "Back",  drug_formulas_path, :class=>"new1" %></td>
+	</tr>
+	</table>
+</div>
+

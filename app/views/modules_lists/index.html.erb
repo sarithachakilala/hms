@@ -1,0 +1,100 @@
+<script type="application/javascript">
+	var module_name;
+  	function date_range(event)
+	{
+	 
+		if(event.keyCode==13)
+		{
+			module_name=document.getElementById("search_field").value;
+			if(!module_name)
+			{
+				document.getElementById("search_field").value=""
+				return false;
+			}
+			req = new Ajax.Request('/modules_lists/search/1', {
+				method: 'get',
+				parameters: {module_name: module_name },
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			});
+			function processReqChange(req) 
+			{
+				document.getElementById("tablesorter-demo").innerHTML=req.responseText
+			}
+		}
+	}
+
+
+	function click_search()
+	{
+	 
+		module_name=document.getElementById("search_field").value;
+		if(!module_name)
+		{
+			document.getElementById("search_field").value=""
+			return false;
+		}
+		req = new Ajax.Request('/registrations/search/1', {
+			method: 'get',
+			parameters: {t: type,user_id:user_id, reg_type: reg_type },
+			onComplete: function(transport) {
+			processReqChange(transport);
+			}
+		});
+		function processReqChange(req) 
+		{
+			document.getElementById("tablesorter-demo").innerHTML=req.responseText
+		}
+	}
+
+	function clear_file(id)
+	{
+		document.getElementById(id).value=""
+		document.getElementById(id).style.color="black"
+	}
+
+ </script>
+
+<div id="form_data">
+<br/><center>
+<%= link_to 'New', new_modules_list_path, :class=>"new1" %>
+<br/>
+<table align ="right">
+  <tr>
+	<td><%= text_field_tag :search, params[:search], :id => 'search_field', :Placeholder => "Search Module", :onKeyUp =>"date_range(event)" %></td>
+	<td><a href="javascript:void(0);" class="new1" onClick ="click_search()">Search</a></td>
+    
+    </td>
+  </tr>
+</table>
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1" width="70%">
+<thead>
+   <tr>
+		<th>S.No</td>
+		<th>Module name</th>
+		<th>Position</th>
+		<th>Path</th>
+		<th colspan="3">Permissions</th>
+  </tr>
+</thead>
+<tbody>
+<% @i=0 %>
+<% @modules_lists.each do |modules_list| %>
+<% if((@i % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+		 end %>
+  <tr>
+	<td height="25px"><%= @i+=1 %></td>
+    <td><%=h modules_list.module_name %></td>
+    <td><%=h modules_list.position %></td>
+    <td><%=h modules_list.path %></td>
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;show&nbsp;&nbsp;&nbsp;', modules_list, :class=>"submit_button" %></td>
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;edit&nbsp;&nbsp;&nbsp;', edit_modules_list_path(modules_list), :class=>"submit_button" %></td> 
+    <td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;delete&nbsp;&nbsp;&nbsp;', modules_list, :class=>"submit_button", :confirm => 'Are you sure?', :method => :delete  %></td>	
+    
+  </tr>
+<% end %>
+</table>

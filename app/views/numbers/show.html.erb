@@ -1,0 +1,23 @@
+<p>
+  <b>Org location:</b>
+  <%=h @number.org_location %>
+</p>
+
+<p>
+  <b>Org code:</b>
+  <%=h @number.org_code %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%=h @number.name %>
+</p>
+
+<p>
+  <b>Value:</b>
+  <%=h @number.value %>
+</p>
+
+
+<%= link_to 'Edit', edit_number_path(@number) %> |
+<%= link_to 'Back', numbers_path %>

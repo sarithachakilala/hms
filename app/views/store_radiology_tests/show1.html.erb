@@ -1,0 +1,63 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="85%" class="nav" style="text-decoration:none;"><center>Radiology Test Record</center></a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/><br/>
+
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div  width="100%">
+<table align="center" width="70%" border="0" cellspacing="2" cellpadding="4">
+<tr>
+<td class='<%= id %>'><b>Org code</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @store_radiology_test.org_code %>
+  <td class='<%= id %>'><b>Org location</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @store_radiology_test.org_location %></td>
+</tr>
+
+<tr>
+  <td class='<%= id %>'><b>Mr no</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @store_radiology_test.mr_no %></td>
+  <td class='<%= id %>'><b>Admn no</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @store_radiology_test.admn_no %></td>
+</tr>
+<tr>
+  <td class='<%= id %>'><b>Collection date</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @store_radiology_test.collection_date %></td>
+  <td class='<%= id %>'><b>Collection time</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @store_radiology_test.collection_time %></td>
+</tr>
+<tr>
+  <td class='<%= id %>'><b>Lab no</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @store_radiology_test.lab_no %></td>
+  <td class='<%= id %>'><b>Impression</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @store_radiology_test.impression %></td>
+</tr>
+<tr>
+  <td class='<%= id %>'><b>Findings</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @store_radiology_test.findings %></td>
+  <td class='<%= id %>'><b>Image path</b></td>
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @store_radiology_test.image_path %></td>
+</tr>
+</table>
+</div>
+<br/><br/>
+<center>
+
+
+<%= link_to 'Edit', edit_store_radiology_test_path(@store_radiology_test), :class=>"new1" %>
+ <%= link_to "Back",  store_radiology_tests_path, :class=>"new1" %></td></center>
+

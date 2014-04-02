@@ -1,0 +1,52 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">General Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/bed_masters?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Bed Masters</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div  width="100%">
+ <table align="center" width="70%" border="0" cellspacing="2" cellpadding="4">
+		<tr>
+			<td class="button" colspan="9"><center><b>Details of Bed</b></center></td> 
+			
+		</tr>
+		
+<tr>
+	<td class='<%= id %>'> <b>Ward Master</b></td> 
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'> <%=h @bed_master.ward_master_id %></td>
+	<td class='<%= id %>'> <b>Room Master</b></td> 
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @bed_master.room_master_id %>
+</td>
+</tr>
+<tr>
+	<td class='<%= id %>'> <b>Name</b></td> 
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'> <%=h @bed_master.name %></td>
+	<td class='<%= id %>'>  <b>Code</b></td> 
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'> <%=h @bed_master.code %></td>
+</tr>
+
+<tr>
+	<td class='<%= id %>'>  <b>Status</b></td> 
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id1 %>'> <%=h @bed_master.status %></td>
+	<td class='<%= id %>'> <b>Org Code</b></td> 
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id1 %>'> <%=h @bed_master.org_code %></td>
+</tr>
+<tr>
+	<td class='<%= id %>'> <b>Org Location</b></td> 
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id1 %>'> <%=h @bed_master.org_location %></td>
+</tr>
+</table>
+ </div>
+<br/><center>
+<td valign="middle"><%= link_to "Back",  bed_masters_path, :class=>"new1" %></td> 

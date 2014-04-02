@@ -1,0 +1,28 @@
+<h1>Listing testmaster_children</h1>
+
+<table>
+  <tr>
+    <th>Testmaster</th>
+    <th>Paramaters</th>
+    <th>Field type</th>
+    <th>Normal range</th>
+    <th>Unit</th>
+  </tr>
+
+<% @testmaster_children.each do |testmaster_child| %>
+  <tr>
+    <td><%=h testmaster_child.testmaster_id %></td>
+    <td><%=h testmaster_child.paramaters %></td>
+    <td><%=h testmaster_child.field_type %></td>
+    <td><%=h testmaster_child.normal_range %></td>
+    <td><%=h testmaster_child.unit %></td>
+    <td><%= link_to 'Show', testmaster_child %></td>
+    <td><%= link_to 'Edit', edit_testmaster_child_path(testmaster_child) %></td>
+    <td><%= link_to 'Destroy', testmaster_child, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New testmaster_child', new_testmaster_child_path %>

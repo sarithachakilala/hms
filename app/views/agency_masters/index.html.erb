@@ -1,0 +1,93 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Pharmacy Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/agency_masters?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Agency Masters</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/><br/>
+<center><h3><font color="#015a84">Agency Master</font></h3>
+<%= link_to 'New', new_agency_master_path, :class=>"new1" %>
+</center>
+<script type="application/javascript">
+	var agency_name
+  	function date_range(event)
+	{
+		
+		if(event.keyCode==13)
+		{
+		agency_name=document.getElementById('search_field').value
+			req = new Ajax.Request('/agency_masters/search/1', {
+				method: 'get',
+				parameters: {agency_name: agency_name },
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			});
+			function processReqChange(req) 
+			{
+				document.getElementById("tablesorter-demo").innerHTML=req.responseText
+			}
+		}
+	}
+
+	function click_search()
+	{
+		
+		agency_name=document.getElementById('search_field').value
+		req = new Ajax.Request('/agency_masters/search/1', {
+			method: 'get',
+			parameters: {agency_name: agency_name},
+			onComplete: function(transport) {
+			processReqChange(transport);
+			}
+		});
+		function processReqChange(req) 
+		{
+			document.getElementById("tablesorter-demo").innerHTML=req.responseText
+		}
+	}
+
+ </script>
+<table align ="right">
+  <tr>
+	<td><%= text_field_tag :search, params[:search], :id => 'search_field', :Placeholder => "Enter Agency Name", :onKeyUp =>"date_range(event)" %></td>
+    <td><a href='javascript:void(0)'  onclick = "click_search()" ><img src="/images/buttons/search.png" class="info"/> </a></td>
+    </td>
+  </tr>
+</table>
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+  <tr>
+	<th>S.No</th>
+    <th>Org.Code</th>
+    <th>Agency Name</th>
+    <th>Contact Person</th>
+    <th>Email Id</th>
+    <th>Contact No</th>
+	<th colspan="2" align="center">Permissions</th>
+  </tr>
+</thead>
+<tbody>
+<% @id=0 %>
+<% @agency_masters.each do |agency_master| %>
+<% if((@id % 2)==0)
+		 id="datacellone"
+else
+		id="datacelltwo" 
+	
+ end %>
+	<tr class='<%= id %>' style="height:30px">
+    <td><%= @id+=1 %></td>
+    <td><%=h agency_master.org_code %></td>
+    <td><%=h agency_master.agency_name %></td>
+    <td><%=h agency_master.contact_person %></td>
+    <td><%=h agency_master.agency_email %></td>
+    <td><%=h agency_master.contact_no %></td>
+
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Edit&nbsp;&nbsp;&nbsp;', edit_agency_master_path(agency_master), :class=>"submit_button" %></td>   
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Delete&nbsp;&nbsp;&nbsp;', agency_master, :confirm => 'Are you sure?', :method => :delete, :class=>"submit_button" %></td>
+  </tr>
+<% end %>
+</table>
+<p align="right"><div align="right" class="pagination"><%= will_paginate @agency_masters,  :style => "font: bold 15px Arial red;" %></p>

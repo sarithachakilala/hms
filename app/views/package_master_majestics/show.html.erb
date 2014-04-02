@@ -1,0 +1,54 @@
+
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Doctor Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/package_master_majestics' class="nav" style="text-decoration:none;">Package Master</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div  width="100%">
+ <table align="center" width="70%" border="0" cellspacing="2" cellpadding="4">
+		<tr>
+			<td class="button" colspan="9"><center><b>Package Master Details:</td> 
+	</center></td> 
+</tr>
+<tr>
+<td class='<%= id %>'><b>Category</td> 
+<td class='<%= id %>'>:</td>
+<td class='<%= id1 %>'><%=h @package_master_majestic.category %></td>
+<td class='<%= id %>'><b>Sub category</td> 
+<td class='<%= id %>'>:</td>
+<td class='<%= id1 %>'>  <%=h @package_master_majestic.sub_category %></td></tr>
+<td class='<%= id %>'><b>Days</td> 
+<td class='<%= id %>'>:</td>
+<td class='<%= id1 %>'>  <%=h @package_master_majestic.days %></td></tr>
+</table>
+</div>
+<br/>
+<center>
+<table align="center" width="70%">
+ <tr>
+	<td colspan="8" align="center">
+		<table border="1" cellspacing="0">
+			<tr class="info">
+				<th>Ward Name</th>
+				<th>Charge</th>
+			</tr>
+			<% for store in @package_master_majestic.package_master_majestic_children %>
+			
+			<tr>
+				<td><%=h store.ward_name %></td>
+				<td><%=h store.charge %></td>
+			</tr>
+<% end %>
+</table>
+</center>
+
+<tr><td></td></tr>
+<tr><center>
+<td align="middle"><%= link_to "back",  package_master_majestics_path, :class=>"new1" %></td> 
+</center></tr>
+</table>

@@ -1,0 +1,55 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Service Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/testmasters?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Test Masters</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div align="center">
+<table width="30%">
+<tr>
+		<td class="button" colspan="18"><center><b><font color="#015a84"><%=h @testmaster.department_name %> Record</font></b></center></td> 
+			
+</tr>
+<tr>
+  <td  class='<%= id %>'><b>Org.code</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id1 %>'><%=h @testmaster.org_code %></td>
+  <td  class='<%= id %>'><b>Org.location</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id1 %>'><%=h @testmaster.org_location %></td>
+ </tr>
+ <tr>
+  <td  class='<%= id %>'><b>Department Name:</b></td>
+  <td class='<%= id %>'>:</td>
+   <td class='<%= id1 %>'><%=h @testmaster.department_name %></td>
+  <td  class='<%= id %>'><b>Test Name</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id1 %>'><%=h @testmaster.test_name %></td>
+</tr>
+<% @i=0 %>
+<table border="0" cellspacing="0"  class="sofT" cellpadding="4" width="80%" align="center">
+  <tr class="info">
+	<th class='<%= id %>'>S.No</th>
+    <th class='<%= id %>'>Paramaters</th>
+    <th class='<%= id %>'>Field Type</th>
+    <th class='<%= id %>'>Normal Range</th>
+    <th class='<%= id %>'>Unit</th>
+  </tr>
+<% for store in @testmaster.testmaster_child %>
+  <tr>
+    <td class='<%= id1 %>'><%= @i=@i+1 %></td>
+    <td class='<%= id1 %>'><%=h store.paramaters %></td>
+    <td class='<%= id1 %>'><%=h store.field_type %></td>
+    <td class='<%= id1 %>'><%=h store.normal_range %></td>
+    <td class='<%= id1 %>'><%=h store.unit %></td>
+    </tr>
+   <% end %>
+</table>
+</div>
+<center>
+<td valign="middle"><%= link_to "back",  testmasters_path, :class=>"new1" %></td>
+

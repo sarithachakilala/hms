@@ -1,0 +1,114 @@
+<script type="text/javascript">
+	
+	function select_investigations(id)
+	{
+		var investigation= document.getElementById(id).value
+		var org_code= document.getElementById("org_code").value
+		req = new Ajax.Request('/testmasters/select_investiogation/1', 
+			{
+				method: 'get',
+				parameters: {investigation: investigation, org_code:org_code },
+				onComplete: function(transport){
+					processReqChange(transport);
+					}
+			}); // end ajax req
+		function processReqChange(req) 
+		{
+			// request is complete
+			if(req.readyState == 4) 
+			{
+				var results = req.responseText;
+				var temp=results.split("<division>")
+				document.getElementById('department_name').length=0
+				var opt = document.createElement("option");
+				document.getElementById("department_name").options.add(opt);
+				opt.text = "Please select"
+				opt.value = ""
+				for(i=0;i<temp.length-1;i++)
+				{
+					var opt = document.createElement("option");
+					document.getElementById("department_name").options.add(opt);
+					opt.text = temp[i]
+					opt.value = temp[i]
+				}
+			}
+		}
+    }
+
+  function validtae()
+{
+	alert("hgjhgj")
+	var parameter=document.getElementById('parameter').vale
+	if(parameter == "")
+	{
+		alert("Plaese Enter Paramaters.");
+	}
+	else
+	{
+		return false;
+	}
+
+ }
+</script>
+<% form_for(@testmaster) do |f| %>
+ <div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Doctor Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/testmasters?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Test Masters</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+
+<fieldset>
+<legend>New Test master</legend>
+  <table width="100%">
+	<tr>
+		<td>Org.Code</td>
+		<td><%= f.text_field :org_code, :class =>"text_field", :id => "org_code", :value =>@org_code, :readonly =>true %></td>
+		<td>Org.Location</td>
+		<td><%= f.text_field :org_location, :class =>"text_field", :id => "org_location", :value =>@org_location, :readonly =>true %></td>
+		<td>Investigation<sup>*</sup></td>
+		<td><%= f.select :investigation, [['Laboratory'],['Radiology']],{:prompt  => true, :id =>"investigation"}, {:onchange => "select_investigations(id)"} %></td> 
+		<td>Department Name<sup>*</sup></td>
+		<td><%= f.select :department_name, '',{:prompt  => true},{:id =>"department_name"} %></td> 
+		<td>Test Name<sup>*</sup></td>
+		<td><%= f.text_field :test_name, :class =>"text_field" %></td>
+  </tr>
+ </table>
+<%  20.times{@testmaster.testmaster_child.build} %>
+ <div id="tableContainer" class="tableContainer">
+<table border="0" cellpadding="0" cellspacing="0" class="scrollTable" id="displayTable">
+<thead class="fixedHeader">
+ <tr>
+    <th>S.NO</th>
+    <th>Paramaters</th>
+    <th>Field Type</th>
+    <th>Normal Range</th>
+    <th>Unit</th>
+  </tr>
+</thead>
+
+	<tbody class="scrollContent">
+ <% @i=0 %>
+ <% f.fields_for :testmaster_child do |a| %>
+  <tr>
+			<td ><%= @i=@i+1 %></td>
+			<td><%= a.text_field :paramaters, :class =>"text_field", :class=>"nbb" , :id=>"parameter"%></td>
+  		    <td><%= a.select :field_type,[['Content'],['Heading'],['Sub-Heading']], :class =>"text_field", :class=>"nbb" %></td>
+			<td><%= a.text_field :normal_range, :class =>"text_field", :class=>"nbb" %></td>
+    		<td><%= a.text_field :unit, :class =>"text_field", :class=>"nbb" %></td>	
+  </tr>
+<% end %>
+</tbody>
+</table>
+ </fieldset>
+   <table align ="center">
+  <tr>
+  	<td><%= submit_tag "", :value => " Save ", :class => "submit_button" %></td>
+<td><%= submit_tag "", :value => " Reset ", :class => "submit_button" %></td>
+	<td valign="middle"><%= link_to "Back",  testmasters_path, :class=>"new1" %></td>
+  </tr>
+</table>
+<% end %>
+  

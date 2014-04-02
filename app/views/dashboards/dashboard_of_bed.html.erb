@@ -1,0 +1,80 @@
+<%= javascript_include_tag 'dashboards/jquery-1.4.2.min' %>
+<%= javascript_include_tag 'dashboards/jquery.min' %>
+<%= javascript_include_tag 'dashboards/jquery-1.5.2.min' %>
+<%= javascript_include_tag 'dashboards/rails' %>
+<%= javascript_include_tag 'dashboards/exporting.src' %>
+<%= javascript_include_tag 'dashboards/highcharts.src' %>
+<%= javascript_include_tag 'dashboards/dark-green' %> 
+<%= javascript_include_tag 'dashboards/exporting' %>
+
+
+<script type="text/javascript" charset="utf-8">
+
+var chart;
+
+$(document).ready(function() {
+   chart = new Highcharts.Chart({
+      chart: {
+         renderTo: 'container',
+         defaultSeriesType: 'column'
+      },
+      title: {
+         text: 'Bed Utilization'
+      },
+      subtitle: {
+         text: 'Majestic'
+      },
+      xAxis: {
+         categories: [
+            '<%= @label %>'
+         ]
+      },
+      yAxis: {
+         min: 0,
+         title: {
+            text: 'Beds '
+         }
+      },
+      legend: {
+         layout: 'vertical',
+         backgroundColor: Highcharts.theme.legendBackgroundColor || '#FFFFFF',
+         align: 'left',
+         verticalAlign: 'top',
+         x: 100,
+         y: 70,
+         floating: true,
+         shadow: true
+      },
+      tooltip: {
+         formatter: function() {
+            return ''+
+               this.x +': '+ this.y +' beds';
+         }
+      },
+      plotOptions: {
+         column: {
+            pointPadding: 0.2,
+            borderWidth: 0
+         }
+      },
+           series: [{
+         name: 'Available',
+         data: [<%= @available_data1 %>]
+   
+      }, {
+         name: 'Occupied',
+         data: [<%= @un_available  %>]
+   
+      }]
+   });
+   
+   
+});
+   
+
+
+</script>
+
+<body >
+   <center> <div id="container" style="width: 590px; height: 400px; margin: 0 auto"></div></center>
+</body>

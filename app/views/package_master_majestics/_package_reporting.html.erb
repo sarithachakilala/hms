@@ -1,0 +1,41 @@
+
+<br/>
+<div align="center" width="100%">
+<table align="center" width="90%" border="1" cellspacing=0>
+	<tr bgcolor ="#378bf8">
+		<th>S.No</th>
+		<th>Date</th>
+		<th>Package Name</th>
+		<th>Sub Package</th>
+		<th>Patient Name</th>
+		<th>MR No</th>
+		<th>Admn.No</th>
+		<th>City</th>
+		<th>Show</th>
+  </tr>
+<% @i=0 %>
+<% @total=0 %>
+<% @rig1.each do |rig1| %>
+<% registration=Registration.find_by_org_code_and_mr_no(rig1.org_code,rig1.mr_no) %>
+ <% if((@i%2)==0) 
+		id="datacelltwo" 
+	else
+		id="datacellone"
+  end %>
+  <tr class='<%= id %>'>
+		<td><%= @i=@i+1 %>
+		<td><%=h rig1.admn_date %></td>
+		<td><%=h rig1.package_category %></td>
+		<td><%=h rig1.sub_category %></td>
+		<td><%=h registration.patient_name %></td>
+		<td><%=h registration.mr_no %></td>
+		<td><%=h rig1.admn_no %></td>
+		<td><%=h registration.city %></td>
+		<% if(@report_type=="bills") %>
+			<td align="center"><a href="javascript:void(0);" class="new1" onClick ="window.open('/final_bills/insurance_bills/1?admn_no=<%= rig1.admn_no %>&org_code=<%= rig1.org_code %>','open_window','menubar, scroll=1,toolbar, location, width=700, height=480, left=0, top=0')">Show</a></td></td>
+		<% else %>
+			<td align="center"><a href="javascript:void(0);" class="new1" onClick ="details('<%=h rig1.id %>')">Show</a></td>
+		<% end %>
+</tr>  
+ <% end %>
+</table>

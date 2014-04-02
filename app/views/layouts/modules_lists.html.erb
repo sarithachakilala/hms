@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <title>ModulesLists: <%= controller.action_name %></title>
+  <%= stylesheet_link_tag 'css' %>
+	
+	<%= javascript_include_tag :defaults %>
+	<%= stylesheet_link_tag 'table_style' %>
+	<%= stylesheet_link_tag 'scaffold' %>
+	<%= javascript_include_tag 'jquery-latest.js' %>
+	<%= javascript_include_tag 'jquery.tablesorter.js' %>
+	<%= javascript_include_tag 'docs.js' %>
+ 	<%= stylesheet_link_tag 'scroll_new1' %>
+	
+	<script type="text/javascript">
+	$(function() {		
+		$("#tablesorter-demo").tablesorter({sortList:[[0,0],[2,1]], widgets: ['zebra']});
+		$("#options").tablesorter({sortList: [[0,0]], headers: { 3:{sorter: false}, 4:{sorter: false}}});
+	});	
+	</script>
+	<script type="text/javascript">
+		function removeClassName (elem, className) {
+			elem.className = elem.className.replace(className, "").trim();
+		}
+		function addCSSClass (elem, className) {
+			removeClassName (elem, className);
+			elem.className = (elem.className + " " + className).trim();
+		}
+		String.prototype.trim = function() {
+			return this.replace( /^\s+|\s+$/, "" );
+		}
+		function stripedTable() {
+			if (document.getElementById && document.getElementsByTagName) {  
+				var allTables = document.getElementsByTagName('table');
+				if (!allTables) { return; }
+				for (var i = 0; i < allTables.length; i++) {
+					if (allTables[i].className.match(/[\w\s ]*scrollTable[\w\s ]*/)) {
+						var trs = allTables[i].getElementsByTagName("tr");
+						for (var j = 0; j < trs.length; j++) {
+							removeClassName(trs[j], 'alternateRow');
+							addCSSClass(trs[j], 'normalRow');
+						}
+						for (var k = 0; k < trs.length; k += 2) {
+							removeClassName(trs[k], 'normalRow');
+							addCSSClass(trs[k], 'alternateRow');
+						}
+					}
+				}
+			}
+		}
+		window.onload = function() { stripedTable(); }
+	</script>
+</head>
+<body>
+<%= yield %>
+</body>
+</html>

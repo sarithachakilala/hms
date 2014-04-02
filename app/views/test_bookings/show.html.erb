@@ -1,0 +1,88 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Labaratory >>&nbsp;&nbsp;&nbsp;<a HREF='/test_bookings?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Perform Tests</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div  width="100%">
+ <table align="center" width="90%" border="0" cellspacing="2" cellpadding="4">
+<tr>
+	<td class="button" colspan="9"><center><b>Details of Patients</b></center></td> 
+</tr>
+<tr>
+	<td colspan="6" align="center">
+<img src="/images/barcodeimages/<%= @test_booking.lab_no %>.png" width="300" height="50"/></td></tr>
+</tr>
+<tr>
+	<td colspan="6" align="center">
+<%= @test_booking.barcode_id %></td></tr>
+</tr>
+<tr>
+<td class='<%= id %>'><b>Org code</b></td>
+<td class='<%= id %>'>:</td>
+<td class='<%= id1 %>'><%=h @test_booking.org_code %></td>
+<td class='<%= id %>'><b>Org location</b></td>
+<td class='<%= id %>'>:</td>
+<td class='<%= id1 %>'><%=h @test_booking.org_location %></td>
+</tr>
+<tr>
+<td class='<%= id %>'> <b>Patient type</b></td>
+<td class='<%= id %>'>:</td>
+<td class='<%= id1 %>'><%=h @test_booking.patient_type %></td>
+<td class='<%= id %>'><b>Mr no</b></td>
+<td class='<%= id %>'>:</td>
+<td class='<%= id1 %>'> <%=h @test_booking.mr_no %></td>
+</tr>
+<tr>
+<td class='<%= id %>'><b>Admn no</b></td>
+<td class='<%= id %>'>:</td>
+<td class='<%= id1 %>'> <%=h @test_booking.admn_no %></td>
+<td class='<%= id %>'><b>Patient name</b></td>
+<td class='<%= id %>'>:</td>
+ <td class='<%= id1 %>'> <%=h @test_booking.patient_name %></td>
+ </tr>
+ <tr>
+<td class='<%= id %>'><b>Refferal doctor</b>
+</td><td class='<%= id %>'>:</td>
+ <td class='<%= id1 %>'> <%=h @test_booking.refferal_doctor %></td>
+<td class='<%= id %>'><b>Lab services</b></td>
+<td class='<%= id %>'>:</td>
+<td class='<%= id1 %>'><%=h @test_booking.lab_services %></td>
+</tr>
+<tr>
+<td class='<%= id %>'><b>Lab no</b></td>
+<td class='<%= id %>'>:</td>
+<td class='<%= id1 %>'><%=h @test_booking.lab_no %></td>
+<td class='<%= id %>'><b>Bill no</b></td>
+<td class='<%= id %>'>:</td>
+<td class='<%= id1 %>'><%=h @test_booking.bill_no %></td>
+</tr>
+<tr>
+<td class='<%= id %>'><b>Tital amount</b></td>
+<td class='<%= id %>'>:</td>
+<td class='<%= id1 %>'><%=h @test_booking.total_amount %></td>
+<td class='<%= id %>'><b>Concession authority</b></td>
+<td class='<%= id %>'>:</td>
+ <td class='<%= id1 %>'> <%=h @test_booking.concession_authority %></td>
+</tr>
+<tr>
+<td class='<%= id %>'><b>Concession</b></td>
+<td class='<%= id %>'>:</td>
+<td class='<%= id1 %>'> <%=h @test_booking.concession %></td>
+<td class='<%= id %>'><b>Grand total</b></td>
+<td class='<%= id %>'>:</td>
+<td class='<%= id1 %>'><%=h @test_booking.grand_total %></td>
+</tr>
+<tr>
+<td class='<%= id %>'><b>User</b></td>
+<td class='<%= id %>'>:</td>
+<td class='<%= id1 %>'><%=h @test_booking.user_id %></td>
+</tr>
+</table>
+</div>
+<br/><center><%= link_to "back",  test_bookings_path, :class=>"new1" %></center>
+

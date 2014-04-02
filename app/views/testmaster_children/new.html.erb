@@ -1,0 +1,31 @@
+<h1>New testmaster_child</h1>
+
+<% form_for(@testmaster_child) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :testmaster_id %><br />
+    <%= f.text_field :testmaster_id %>
+  </p>
+  <p>
+    <%= f.label :paramaters %><br />
+    <%= f.text_field :paramaters %>
+  </p>
+  <p>
+    <%= f.label :field_type %><br />
+    <%= f.text_field :field_type %>
+  </p>
+  <p>
+    <%= f.label :normal_range %><br />
+    <%= f.text_field :normal_range %>
+  </p>
+  <p>
+    <%= f.label :unit %><br />
+    <%= f.text_field :unit %>
+  </p>
+  <p>
+    <%= f.submit 'Create' %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', testmaster_children_path %>

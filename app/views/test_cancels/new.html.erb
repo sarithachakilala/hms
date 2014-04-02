@@ -1,0 +1,23 @@
+<br/>
+<% form_for(@test_cancel) do |f| %>
+  <%= f.error_messages %>
+
+    <%= f.hidden_field :lab_id %>
+    <%= f.hidden_field :department_name %>
+    <%= f.hidden_field :service_name %>
+	<%= f.hidden_field:org_code %>
+    <%= f.hidden_field:org_location %>
+	<%= hidden_field('record_id','', :value => @test_booking_child.id) %>
+	<%= hidden_field('test_booking_id','', :value => @test_booking.id) %>
+	
+	<table align="center" >
+		<tr>
+			<td valign="top"><%= f.label :reason %><sup>*</sup></td>
+			<td><%= f.text_area :reason,:rows=>10, :cols=>60, :required => true %></td>
+		</tr>
+		<tr>
+  	<td align="center" colspan="2"><%= submit_tag "", :value => " Save ", :class => "submit_button" %></td>
+			
+		</tr>
+	</table>
+<% end %>

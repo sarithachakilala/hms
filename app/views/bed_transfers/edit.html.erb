@@ -1,0 +1,105 @@
+</br>
+
+<% form_for(@bed_transfer) do |f| %>
+ <div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">IP Patients >>&nbsp;&nbsp;&nbsp;<a HREF='/bed_transfers?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Bed Transfers</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+ <% @date = Date.today() %>
+<div  width="100%">
+<fieldset>
+<legend><div class="font"><b><h3>Bed Transfer Details Editing</h3> </b></div></legend>
+<table align="center" width="100%">
+  
+  <tr>
+		<td>Org.Code</td>
+		<td><%= f.text_field :org_code, :class =>"text_field", :id => "org_code", :value =>@org_code, :readonly =>true %></td>
+    	<td>Org.Location</td>
+    	<td><%= f.text_field :org_location, :class =>"text_field", :id => "org_location", :value =>@org_location, :readonly =>true %></td>
+		<td>Admn No</td>
+        <td><%= f.text_field :admn_no, :class =>"text_field", :id => "admn_no", :readonly =>true %> </td>
+  </tr>
+  <tr>
+		
+    	<td>MR.No</td>
+		<td><%= f.text_field :mr_no, :class =>"text_field", :id => "mr_no", :readonly =>true %>
+    	
+		<td>Admn Date</td>
+        <td><%= f.text_field :admn_date, :class =>"text_field", :readonly =>true, :value => "#{@date}"  %></td>
+		<td>Patient Name</td>
+<td><%= f.text_field :patient_name, :class =>"text_field", :id=>"patient_name", :readonly=>true%></td>
+        
+		
+   </tr>
+   
+	<tr>
+      	
+       <td>Transfer Date</td>
+        <td><%= f.text_field :transfer_date, :class =>"text_field", :readonly =>true, :value => "#{@date}"  %></td>
+		<td>Consultant</td>
+<td><%= f.text_field :consultant, :class =>"text_field", :id=>"consultant", :readonly=>true%></td>
+     	<td>Transfer Type </td>
+	    <td><%= f.select :transfer_type, [['Permanent'],['Temporary'],['General']],{:include_blank => false, :prompt => true } %></td>	
+    </tr>
+    <tr>
+        
+	  <td>From Ward</td>
+        <td><%= f.text_field :from_ward, :class =>"text_field", :id => "from_ward" %></td>
+	  <td>From Room</td>
+       <td><%= f.text_field :from_room, :class =>"text_field", :id => "from_room" %></td>
+	   <td>From Bed</td>
+       <td><%= f.text_field :from_bed, :class =>"text_field", :id => "from_bed" %></td>
+	   
+	   
+   </tr>
+    <tr>
+	<td>From Floor</td>
+	   <td><%= f.text_field :from_floor, :class =>"text_field", :id => "from_floor" %></td> 
+	    <td>No of days</td>
+        <td><%= f.text_field :no_of_days, :class =>"text_field", :id => "no_of_days" %> </td>
+		<td>Amount</td>
+        <td><%= f.text_field :amount, :class =>"text_field", :id => "amount" %> </td>
+	   
+	   
+   </tr>
+    <tr>
+	<td>To Ward</td>
+       <td><%= f.select :to_ward, WardMaster.find(:all, :conditions =>"org_code ='#{@org_code}'").collect{|p| [p.name]}, {:include_blank => true} , {:id => "to_ward" }  %></td>
+
+	   	
+       	<td>To Room</td>
+       <td><%= f.text_field :to_room, :class =>"text_field", :id => "to_room" %></td>
+	  <td>To Bed</td>
+       <td><%= f.text_field :to_bed, :class =>"text_field", :id => "to_bed" %></td>
+	   	   
+        
+       </tr>
+	   <tr> 
+		<td>To Floor</td>
+	    <td><%= f.text_field :to_floor, :class =>"text_field", :id => "to_floor" %></td> 
+		<td>Charge per Day</td>
+	    <td><%= f.text_field :charge_per_day, :class =>"text_field", :id => "charge_per_day" %></td> 
+		
+   </tr>
+    <tr>
+     <td>Remarks </td>
+	<td colspan=3><%= f.text_area :remarks, :class =>"text_field", :rows=>3, :cols=>47 %></td>   
+ </tr>
+	   
+ </table>
+ </fieldset>
+ <br/>
+<div>
+<table align="center">
+			<tr>
+					<td><%= submit_tag "", :value => " Update ", :class => "submit_button" %></td>
+				<td valign="middle"><%= link_to "back",  bed_transfers_path, :class=>"new1" %></td>
+			</tr>
+		</table>
+</table>
+</div>
+<% end %>

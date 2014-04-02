@@ -1,0 +1,101 @@
+
+<script type="text/javascript">
+	var form_name="new"
+	
+	function setMyDiv(id,form,user_id)
+	{
+		if(form=="edit")
+		{
+			if(form_name=="new")
+				alert("Please select record")
+			else
+			{
+				var iframeEl = document.getElementById('iframe_record');
+				var record_id=iframeEl.contentWindow.document.getElementById('record_id').value
+				var id_value=id+"/edit/"+record_id+"&user_id="+user_id
+				document.getElementById("record").innerHTML = "<iframe src='"+id_value+"' width='99%' height='490px' frameborder=0>";
+			}	
+		}
+		else if(form=="back")
+		{
+			
+			var iframeEl = document.getElementById('iframe_record');
+			var record_id=iframeEl.contentWindow.document.getElementById('record_id').value
+			var id_value=id+"/"+record_id+"?user_id="+user_id+"&button_name="+form
+			<% op_patient_return=OpPatientReturn.first(:conditions => "org_code = '#{@org.org_code}'") %>
+			<% if op_patient_return %>
+			var op_patient_return_length='<%= op_patient_return.id %>'
+			if(op_patient_return_length==parseInt(record_id))
+				alert("This is the first record")
+			else
+				document.getElementById("record").innerHTML = "<iframe src='"+id_value+"' width='1360px' height='490px' frameborder=0 name='iframe_record' id='iframe_record'>";
+		
+		    <% end %>
+		}
+		else if(form=="next")
+		{
+			var iframeEl = document.getElementById('iframe_record');
+			var record_id=iframeEl.contentWindow.document.getElementById('record_id').value
+			var id_value=id+"/"+record_id+"?user_id="+user_id+"&button_name="+form
+			<% op_patient_return=OpPatientReturn.last(:conditions => "org_code = '#{@org.org_code}'") %>
+			<% if op_patient_return %>
+			var op_patient_return_length='<%= op_patient_return.id %>'
+			if(op_patient_return_length==parseInt(record_id))
+				alert("This is last record")
+			else
+				document.getElementById("record").innerHTML = "<iframe src='"+id_value+"' width='1360px' height='490px' frameborder=0 name='iframe_record' id='iframe_record'>";
+		    <% end %>
+		}
+		else if(form=="print")
+		{
+			var iframeEl = document.getElementById('iframe_record');
+			var record_id=iframeEl.contentWindow.document.getElementById('record_id').value
+			var id_value=id+"/print/"+record_id
+			document.getElementById("link_href").href=id_value;
+		
+		}
+		else if(form=="search")
+		{
+			var mr_no=find_mr_no('mr_no',new Array())
+			var id_value=id+"&mr_no="+mr_no
+			document.getElementById("record").innerHTML = "<iframe src='"+id_value+"' width='1360px' height='490px' frameborder=0 name='iframe_record' id='iframe_record'>";
+		}
+		else
+		{
+			document.getElementById("record").innerHTML = "<iframe src='"+id+"' width='1360px' height='490px' frameborder=0 name='iframe_record' id='iframe_record'>";
+			form_name=form;
+		}	
+	}
+</script>
+<body style="margin:0px;" onload="setMyDiv('op_patient_returns/new?user_id=<%= @user_id %>','new','')">
+
+<div id="links" class="header">
+&nbsp;&nbsp;&nbsp;	Pharmacy >> &nbsp;&nbsp;&nbsp;<a HREF='javascript:void(0);' id="op_patient_return" onclick="setMyDiv('op_patient_returns/new?user_id=<%= @user_id %>','new','')" class="nav" style="text-decoration:none;">Returns</a>
+</div>
+<div class="dateformat"><%= format_date(:short, Date.today ) %></div></div></font></i></b></td>
+
+
+#	Button div tag.
+
+<div class="button">
+	<input type="button" name="groovybtn1" class="groovybutton" value="   New" style="background-image:url(/images/new_icon.png);background-repeat: no-repeat;" title="" id="new" onclick="setMyDiv('op_patient_returns/new?user_id=<%= @user_id %>','new')">
+	<input type="button" name="groovybtn1" class="groovybutton" value="   Show" style="background-image:url(/images/show_icon.png);background-repeat: no-repeat;" title="" id="show" onclick="setMyDiv('op_patient_returns/1?user_id=<%= @user_id %>','','')">
+	<input type="button" name="groovybtn1" class="groovybutton" value="   Edit" style="background-image:url(/images/edit_icon.png);background-repeat: no-repeat;" title="" id="edit" onclick="setMyDiv('op_patient_returns','edit','<%= @user_id %>')">
+	<input type="button" name="groovybtn1" class="groovybutton" value="   Back" title="" id="op_patient_returns" onclick="setMyDiv(id,'back','<%= @user_id %>')" style="background-image:url(/images/back.png);background-repeat: no-repeat;">
+	<input type="button" name="groovybtn1" class="groovybutton" value="   Next" title="" id="op_patient_returns" onclick="setMyDiv(id,'next','<%= @user_id %>')" style="background-image:url(/images/next.png);background-repeat: no-repeat;">
+	<a href="#" target="new window" id="link_href" name="link_href" onclick="setMyDiv('op_patient_returns','print','')"><input type="button" name="groovybtn1" class="groovybutton" value="   Print" style="background-image:url(/images/Printer.png);background-repeat: no-repeat;" title=""></a>
+</div>
+
+
+#	Search box div tag.
+
+<div align="right" class="search">
+	<table><tr><td allign="right"><%= text_field_tag('mr_no','',:size =>20, :placeholder =>"Enter MR No") %></td><td><img src="/images/go.png"  id="op_patient_returns/1?user_id=<%= @user_id %>&button_name=search" onclick="setMyDiv(id,'search','')" /></td></tr></table>
+</div>
+
+
+
+#	Form Data display related to button action.
+
+<div id="record" name="record" style="position:absolute;width:100%; top:50px;height:490px;background-color:#ecf3f7;"></div>
+</body>

@@ -1,0 +1,28 @@
+<h1>Editing test_cancel</h1>
+
+<% form_for(@test_cancel) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :lab_id %><br />
+    <%= f.text_field :lab_id %>
+  </p>
+  <p>
+    <%= f.label :department_name %><br />
+    <%= f.text_field :department_name %>
+  </p>
+  <p>
+    <%= f.label :service_name %><br />
+    <%= f.text_field :service_name %>
+  </p>
+  <p>
+    <%= f.label :reason %><br />
+    <%= f.text_area :reason %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @test_cancel %> |
+<%= link_to 'Back', test_cancels_path %>

@@ -1,0 +1,451 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Pharmacy >>&nbsp;&nbsp;&nbsp;<a HREF='/issues_to_ops?user_id=<%= @people.id %>' class="nav" style="text-decoration:none;">Arogyasree Medicine</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<div id="form_data">
+<%= stylesheet_link_tag 'jquery-ui' %>
+<%= javascript_include_tag 'jquery.min.js' %>
+<%= javascript_include_tag 'jquery-ui.min.js' %>  
+  <script>
+  $(document).ready(function() {
+    $("input#service").autocomplete({
+    source: [
+			<% for item_master in @item_batchno %>
+				'<%= item_master %>',
+			<% end %>
+			]
+	});
+  });
+  </script>
+  <script language="javascript" type="text/javascript">
+	function stopRKey(evt) {
+		
+		var evt  = (evt) ? evt : ((event) ? event : null);
+		var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+	
+if ((evt.keyCode == 13) && (node.type=="text")) { return false; }
+	}
+	document.onkeypress = stopRKey;
+</script>
+
+<script type="text/javascript"> 
+var global
+var global1
+ var query1
+var org_code
+var select_patient
+var selectedid
+var dept_type
+var get_type;
+	var query
+	var selectedid1
+	var dept_code
+	var arr_value=new Array('mr_no','name','age','doctorname')
+	var arr=new Array("dname","hod")
+	var arr1=new Array("dcode","dname","hod")
+	var arr_admn=new Array("admn_no","mr_no","name1","age1","doctorname1","reg_type")
+	
+	function Search_medicine(id,event)
+	{
+
+		if(event.keyCode!=13)
+			return false;
+		selectedid1=id
+		query=document.getElementById(id).value
+		document.getElementById(id).value=""
+		ajax()
+	}
+	
+	function mrfun(id)
+	{
+		selectedid="mr_no"
+	    query1=id
+	    if(query1)
+			Ajax_Code()
+	}
+	
+	function Ajax_Code()
+	{
+		org_code=document.getElementById('org_code').value
+		req = new Ajax.Request('/issues_to_ops/ajax_building_arogyasree/1', {
+			method: 'get',
+			parameters: { admission_id: query1},
+			onComplete: function(transport) {
+			processReqChange(transport);
+			}
+		}) 
+		function processReqChange(req) 
+		{
+			// request is complete
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				var temp1=new Array()
+				temp1=results.split(",")
+				for(i=0;i<arr_admn.length;i++)
+				{
+					document.getElementById(arr_admn[i]).value=temp1[i]
+					document.getElementById(arr_admn[i]).style.background="#FEF5CA"
+					document.getElementById(arr_admn[i]).readOnly=true
+				}
+			}
+		}
+	}
+	
+
+	function Search(id) 
+	{
+		var selObj = document.getElementById(id);
+		query = selObj.options[selObj.selectedIndex].value
+		selectedid1=id
+		get_type="look_up"
+		ajax()
+	}
+	function ajax()
+	{
+		org_code=document.getElementById('org_code').value
+		req = new Ajax.Request('/issues_to_ops/ajax_buildings1/1', 
+			{
+				method: 'get',
+				parameters: {q: query, s: selectedid1, org_code: org_code, select_patient: select_patient,get_type:get_type },
+				onComplete: function(transport){
+					processReqChange(transport);
+					}
+			}); // end ajax req
+		function processReqChange(req) 
+		{
+			// request is complete
+			
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				var temp=new Array()
+				var temp_code=new Array()
+				temp_code=results.split("<code>")
+				temp=results.split(",")
+				if(selectedid1=="service")
+				{
+					
+					var list=results.split("<division>")
+					
+					for(l=0;l<list.length-1;l++)
+					{
+						temp=list[l].split(",")
+						var store=new Array();
+						var add_amount_fields="gross,total";
+						item_name_only=query.split("-")
+						store[0]=item_name_only[0]
+						store[1]=temp[0]
+						store[2]=temp[1]
+						store[3]=temp[2]
+						store[4]=temp[3]
+						store[5]=temp[4]
+						store[6]=temp[5]
+						store[7]=temp[6]
+						store[8]="0"
+						store[9]=temp[7]
+						store[10]=temp[8]
+						add_row('r1',12,'displayTableip',store,add_amount_fields,11)
+						
+					}	
+				}
+			}
+		}
+	}
+	
+	
+	function select_quntity(cha)
+	{
+		var r;
+		r="r1"
+		var quantity=parseFloat(document.getElementById(r+cha+"c7").value)
+		var salerate=parseFloat(document.getElementById(r+cha+"c8").value)
+		var issueqt=parseFloat(document.getElementById(r+cha+"c9").value)
+		var discount=parseFloat(document.getElementById(r+cha+"c10").value)
+
+		if(quantity<issueqt)
+		{
+			alert("Enter the Valid Quantity")
+			document.getElementById(r+cha+"c9").value=""
+			document.getElementById(r+cha+"c11").value=""
+		}
+		else
+		{
+			result1=salerate*issueqt
+			var con=(result1-((result1*(discount/100))))
+			document.getElementById(r+cha+"c11").value=con
+			var tot=0
+			var con1
+			for(var k=0;k<=cha;k++)
+			{
+				con1=document.getElementById(r+k+"c11").value
+				tot=(tot+parseFloat(con1))
+				document.getElementById('gross').value=tot
+				document.getElementById('total').value=tot
+			}
+		}
+	}
+	
+</script>
+
+ <% form_for(@issues_to_op) do |f| %>
+  <%= f.error_messages %>
+<%= hidden_field('user_id','', :value => @people.id) %>
+<%= hidden_field('form_name','', :value => "arogya") %>
+  <% @date=format_date(:sort, Date.today ) %>
+
+<div class="right">
+<fieldset>
+<legend><div class="font"><b>Issue Details</b></div></legend>
+
+<table width="100%">
+	<tr>
+	<%= f.hidden_field :mr_no, :size => "20",:id => "mr_no", :onFocusOut => "mrfun()" %>
+	<%= f.hidden_field :org_code, :value => @org_code, :size => 20, :id => "org_code", :required => true, :readonly => true %>
+	<%= f.hidden_field :org_location, :value => @org_location, :size => 20, :id => "org_location", :required => true, :readonly => true %>
+		<td>Issue No</td>
+		<td> <%= f.text_field :issue_no, :size => 20, :id => "issue_no", :readOnly => true %></td>
+		<td> Issue Date</td>
+		<td><%= f.text_field :issue_date, :value => "#{@date}", :size => "20",  :readOnly => true, :id =>"issue_date" %> <a href="javascript:void(0)" onClick="setYears(1900, 2050);showCalender(this,'issue_date');" >
+		<img src="/images/cal.gif" ></a></td>
+		<td>Patient Type<sup>*</sup></td>
+		<td><%= f.text_field :patient_type,:value => 'IP',:id=>"type",:readOnly =>true, :size => "20" %></td>
+		<%= f.hidden_field :treatment_date, :size => "20", :id => "treatment_date"   %>
+</tr>
+<tr>
+		<td>Admn.No<sup>*</sup></td>
+		<td><%= f.text_field :admn_no, :size => "20",:id => "admn_no", :onFocusOut => "frm_ward(id)" %></td>
+		<td>Patient Name</td>
+		<td><%= text_field_tag :patient_name,"", :size => "20", :id => "name1"  %></td>
+		<td> <%= f.label :age %></td>
+		<td><%= text_field_tag :age,"", :size => "20", :id => "age1" %></td>		
+	</tr>
+<tr>
+		<td>Consultant</td>
+		<td><input type="text"  size=20 id="doctorname1"></td>
+		<td>Reg.Type</td>
+		<td><%= f.text_field :reg_type, :size => "20",:id => "reg_type" %></td>
+  </tr>
+</table>
+
+</fieldset>
+<table>
+	<tr>
+		<td>Product Name</td>
+	<!--	<td><%= select :item_name,"s",@item_batchno, {:prompt => true},{:id => "service", :onchange => "Search(id)", :style=>"width:850px;"} %> </td>  -->
+		<td><%= f.text_field :item_name, :id => "service", :onKeyUp => "Search_medicine(id,event)", :style=>"width:350px;" %> </td>
+      
+	</tr>
+	</table>
+
+<table>
+  <tr>
+	<td colspan="13">
+	<div id="info">
+    <table class="tableone">
+ <caption style="background: url(/images/vertical1_04.jpg) repeat-x top left;text-align:center;" >
+  <font color="#F0FFFF" face="Cambria" ><b>Issues To IP Medicines</b></font></caption>
+   
+      
+      <thead>
+        <tr>
+        
+		<th class="th1" style="color:black;">S.No</th>
+		<th class="th2" style="color:black;">Prod.Name</th>
+		<th class="th2" style="color:black;">Prod.Code</th>
+		<th class="th1" style="color:black;">MFR</th>
+       	 <th class="th1" style="color:black;">Bat.No</th>
+		<th class="th2" style="color:black;">Exp.Dt</th>
+		<th class="th1" style="color:black;">Avail.Qty</th>
+		<th class="th1" style="color:black;">Rate</th>
+		<th class="th1" style="color:black;">Sale.Qty</th>
+		<th class="th1" style="color:black;">Dis(%)</th>
+		<th class="th1" style="color:black;">Amount</th>
+		<th class="th1" style="color:black;">Vat</th>
+		<th class="th1" style="color:black;">DEL</th>
+	</tr>
+      </thead>
+     <tbody>
+		<tr><td colspan="13">
+			<div class="innerb">
+			<table class="tabletwo" id="displayTableip">
+			<% i=0 %>
+			<% f.fields_for :issue_op_child do |a| %>
+				<% if (i%2==0) %>
+					<tr>
+				<% else%>
+					<tr class="dk">
+				<% end %>
+					<td class="td1"><%= a.text_field :s_no, :style=>"width:100%", :id => "r1#{i}c1", :class => "nbb" %></td> 
+					<td class="td2"><%= a.text_field :item_name, :style=>"width:100%", :id => "r1#{i}c2", :class => "nbb" %></td> 
+					<td class="td2"><%= a.text_field :item_code, :style=>"width:100%", :id => "r1#{i}c3", :class => "nbb" %></td> 
+					<td class="td1"><%= a.text_field :mfr, :style=>"width:100%", :id => "r1#{i}c4", :class => "nbb" %></td> 
+					<td class="td1"><%= a.text_field :batch_no, :style=>"width:100%", :id => "r1#{i}c5", :class => "nbb" %></td> 
+					<td class="td2"><%= a.text_field :expiry_date, :style=>"width:100%", :id => "r1#{i}c6", :class => "nbb" %></td> 
+					<td class="td1"><%= a.text_field :quantity, :style=>"width:100%", :id => "r1#{i}c7", :class => "nbb" %></td> 
+					<td class="td1"><%= a.text_field :sale_rate, :style=>"width:100%", :id => "r1#{i}c8", :class => "nbb" %></td> 
+					<td class="td1"><%= a.text_field :issue_qty, :style=>"width:100%", :id => "r1#{i}c9", :class => "nbb", :onKeyUp=>"select_quntity('#{i}')" %></td>  
+					<td class="td1"><%= a.text_field :discount, :style=>"width:100%", :id => "r1#{i}c10", :class => "nbb", :onkeyup=>"select_quntity('#{i}')" %></td> 
+					<td class="td1"><%= a.text_field :total, :style=>"width:100%", :id => "r1#{i}c11", :class => "nbb" %></td> 
+					<td class="td1"><%= a.text_field :vat, :style=>"width:100%", :id => "r1#{i}c12", :class => "nbb" %></td> 
+					<td class="td1" id="r1<%= i %>c13"></td>
+				</tr>
+				<% i+=1 %>
+				
+					
+			<% end %>
+			</table>
+			</div>
+		</td>
+		</tr>
+	</tbody>
+     </table>
+   </div>
+	</td>
+  </tr>
+ </table>
+ 
+
+<fieldset>
+<legend><div class="font"><b>Receipt Details</b></div></legend>
+<table width="100%" align="center" >
+	<tr> 
+		<td>Receipt No</td>
+		<td><%= f.text_field :receipt_no, :style => "width:85%;", :readOnly => true,:id => "receipt_no" %>  </td>
+		<td>Total Amt</td>
+		<td><%= f.text_field :total_amount, :style => "width:85%;",:id => "gross", :readOnly => true %></td>
+</tr>
+<tr>
+		<td>Con.Authority </td>
+		<td><%= f.select :ref, Authorizationmaster.find(:all, :conditions=>"org_code='#{@org_code}'").collect{|p| [p.emp_name]}, {:include_blank => true}, {:id => "doctor1",  :onchange => "Search1(id)"}  %><br/>
+		<span id="conauth"></span></td>
+		<%= hidden_field_tag :ref,"",:style => "width:85%;" ,:id => "hidden_global" %>
+		<td>Concession(%)</td>
+		<td><%= f.text_field :discount_percentage, :style => "width:85%;" ,:id => "concession", :onkeyup => "concession_limit(gross,concession,total,hidden_global,reciept_amount)"  %></td>
+		<td>Net.Amt</td>
+		<td><%= f.text_field :due_amount, :style => "width:85%;" ,:id => "total", :value=>"0", :readOnly => true %></td>
+	</tr>
+	 <tr> 
+		<td>Due Authority</td>
+		<td><%= f.select :due_authorization, Authorizationmaster.find(:all, :conditions=>"org_code='#{@org_code}'").collect{|p| [p.emp_name]}, {:include_blank => true}, {:id => "doctor", :onchange => "Search1(id)"}  %><br/>
+		<span id="dueauth"><span></td>
+		<%= hidden_field_tag :due_authorization,"", :style => "width:85%;",:id => "due_authority" %>
+		<td> Due.Amt</td>
+		<td><%= f.text_field :due,:style => "width:85%;",:id => "due11", :value=>"0", :onkeyup => "paid()" %></td>
+		<td>Paid.Amt </td>
+		<td><%= f.text_field :paid_amt, :style => "width:85%;",:id => "reciept_amount", :value=>"0", :readOnly => true %></td>
+	</tr>
+	<tr>
+    <td colspan=5>Payment Mode&nbsp;&nbsp;&nbsp;&nbsp;
+	<%= f.radio_button :payment_type, "cash", :checked => true, :id => "button17" , :onchange => "checked_payment_type(id,'reciept_amount')" %>Cash
+		<%= f.radio_button :payment_type, "cheque", :id => "button18" ,:onchange => "checked_payment_type(id,'reciept_amount')" %>Cheque
+		<%= f.radio_button :payment_type, "card", :id => "button19" ,:onchange => "checked_payment_type(id,'reciept_amount')"%>Card
+              <%= f.radio_button :payment_type, "both", :id => "button14" ,:onchange => "checked_payment_type(id,'reciept_amount')"%>Both</td>
+  </tr>
+<tr style="display:none;" id="bank_det">
+		<td>Bank Name </td> 
+		<td><%= f.text_field :bank_name, :size => 20 , :id => "bank" %></td>
+		<td>Acc No </td>
+		<td><%= f.text_field :acc_no, :size => 20 , :id => "accno" %></td>		
+		<td>Cheque No </td>
+		<td><%= f.text_field :cheque_number, :size => 20, :id => "cheqno" %></td>
+    </tr>
+		<tr style="display:none;" id="card_det">
+			<td>Card No</td>
+			<td><%= f.text_field :card_number, :id => "cardno", :size => 20   %></td>
+			<td>Card Type</td>
+			<td><%= f.select :card_type,[['Mastro'],['Visa'],['Master Card']],{:include_blank => true}, {:id => "cardtype"}  %></td>
+			<td>Expiry Date</td>
+			<td><%= f.date_select :c_expiry_date, :prompt => {:month => 'Month', :year => 'Year' },:start_year => 2010, :order => [:month,:year] %></td>
+		</tr>
+		<tr style="display:none;"  id="cheque_amount_det"> 
+  		    	<td>Cheque Amount</td>
+		    	<td><%= f.text_field :cheque_amount, :id => "cheque_amount", :size => 20 %></td>
+		</tr>
+		<tr style="display:none;"  id="card_amount_det">
+   		       <td>Card Amount</td>
+		       <td><%= f.text_field :card_amount, :id => "card_amount", :size => 20 %></td>
+               </tr> 
+ </table>
+</fieldset>
+<table align="center">
+<tr>
+<td><%= image_submit_tag("buttons/save.png", :class => "info", :border =>"0", :onclick => "store_child()") %>	
+<%= link_to image_tag("buttons/reset.png",:class => "info", :type =>"reset", :border =>"0") , :user_id => @people.id %>
+	<%= link_to image_tag("buttons/back.png", :class => "info", :border =>"0"), issues_to_ops_path(:user_id => @people.id) %></td>
+</tr>
+</table>
+	
+<% end %>
+</div>
+<div class="left">
+<div id="ip1">
+	<table border=1 cellspacing="0" cellpadding="0">
+		<tr>
+			<td><input type="text" size=15 id="admn_no_search" placeholder="Search By Admn.No" onkeyUp="search_field_mr_no(id,'issues_to_ip','admn_no')"></td>
+			<td><input type="text" size=15 id="name_search" placeholder="Search By Name" onkeyUp="search_field_mr_no(id,'issues_to_ip','admn_no')" ></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<div  id="field_search_div">
+				<table border=1 cellspacing="0" cellpadding="0" width="100%">
+				<tr>
+					<th width="50%">Admn.NO</th>
+					<th width="50%">Name</th>
+				</tr>
+				<% for admission in  @admission %>
+					<% reg=Registration.find_by_mr_no_and_org_code(admission.mr_no,@org_code) %>
+						<tr>
+						<% if(reg.reg_type=="Arogyasree") %>
+							<td class="cursor_point" onclick="mrfun('<%= admission.id %>')" bgcolor="blue" style="color:white;"><%= admission.admn_no %></td>
+							<td class="cursor_point" onclick="mrfun('<%= admission.id %>')" bgcolor="blue" style="color:white;"><%= reg.first_name %></td>
+						<% end %>
+						</tr>
+				<% end %>
+				</table>
+				</div>
+			</td>
+		</tr>		
+	</table>
+</div>
+<table id="calenderTable">
+        <tbody id="calenderTableHead">
+          <tr>
+            <td colspan="4" align="center">
+	          <select onChange="showCalenderBody(createCalender(document.getElementById('selectYear').value,
+	           this.selectedIndex, false));" id="selectMonth">
+	              <option value="0">Jan</option>
+	              <option value="1">Feb</option>
+
+	              <option value="2">Mar</option>
+	              <option value="3">Apr</option>
+	              <option value="4">May</option>
+	              <option value="5">Jun</option>
+	              <option value="6">Jul</option>
+	              <option value="7">Aug</option>
+	              <option value="8">Sep</option>
+	              <option value="9">Oct</option>
+	              <option value="10">Nov</option>
+	              <option value="11">Dec</option>
+	          </select>
+            </td>
+            <td colspan="2" align="center">
+			    <select onChange="showCalenderBody(createCalender(this.value, 
+				document.getElementById('selectMonth').selectedIndex, false));" id="selectYear">
+				</select>
+			</td>
+            
+		  </tr>
+       </tbody>
+       <tbody id="calenderTableDays">
+         <tr style="">
+           <td>Sun</td><td>Mon</td><td>Tue</td><td>Wed</td><td>Thu</td><td>Fri</td><td>Sat</td>
+         </tr>
+       </tbody>
+       <tbody id="calender"></tbody>
+    </table>
+

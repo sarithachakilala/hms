@@ -1,0 +1,35 @@
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+  <tr>
+    <th>S.No</th>
+	<th>Appt.Date</th>
+    <th>OP.No</th>
+    <th>MR No</th>
+    <th>Department</th>
+    <th>Consultant</th>
+	<th colspan="2">Permissions</th>
+  </tr>
+</thead>
+<tbody>
+<% @i=0 %>
+<% @appointment_payments.each do |appointment_payment| %>
+<% if((@i % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+  end %>
+ <tr class='<%= id %>'>
+	<td><%= @i+=1 %></td>
+	<td><%=h appointment_payment.appt_date %></td>
+    <td><%=h appointment_payment.op_number %></td>
+    <td><%=h appointment_payment.mr_no %></td>
+    <td><%=h appointment_payment.department %></td>
+    <td><%=h appointment_payment.consultant_name %></td>
+    <td  align="center"><a href="/appointment_payment/report/<%= appointment_payment.id %>?print_type=duplicate&format=pdf"><image src="images/buttons/print.png" size = "54x21" border ="0" /></a></td>
+    <td align="center"><%= link_to image_tag("buttons/display1.png", :class => "info", :border =>"0"), appointment_payment %></td>
+	<td align="center"><%= link_to image_tag("buttons/modify.png", :class => "info", :border =>"0"), edit_appointment_payment_path(appointment_payment) %></td>   
+  </tr>
+<% end %>
+</table>
+
+<br />

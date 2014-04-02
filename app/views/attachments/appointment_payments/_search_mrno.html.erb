@@ -1,0 +1,26 @@
+
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+   <tr>
+     <th align="Center">MR No</th>
+     <th align="Center">Patient Name</th>
+	 <th align="Center">Father Name</th>
+	 <th align="Center">Mobile No</th>
+	 <th align="Center">Age</th>
+	 <th align="Center">Gender</th>
+      </tr>
+	  </thead>
+<% @registrations.each do |registrations| %>
+<tr>
+    
+	<td onclick="Ajax_Code('mr_no','<%=h registrations.mr_no %>','<%=h registrations.patient_name %>','<%=h registrations.age %>','<%=h registrations.gender %>','<%=h registrations.referral_name %>')"><p style="cursor: pointer;"><%=h registrations.mr_no %><font color='red'>(click here)</font></p></td>
+    <td><%=h registrations.patient_name %></td>
+	<td><%=h registrations.father_name %></td>
+	<td><%=h registrations.mobile_no %></td>
+	<td><%=h registrations.age %></td>
+	<td><%=h registrations.gender %></td>
+   	
+  </tr>
+<% end %>
+
+</table>

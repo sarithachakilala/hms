@@ -1,0 +1,61 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Pharmacy >>&nbsp;&nbsp;&nbsp;<a HREF='/pharmacy_payments' class="nav" style="text-decoration:none;">Payments</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<% form_for(@pharmacy_payment) do |f| %>
+  <%= f.error_messages %>
+   <%= f.hidden_field :id, :id => "record_id" %>
+	<div align="center">
+	<table width="100%" bgcolor="#87CEEB">
+	<tr>
+	<td>
+	<fieldset>
+	<legend><div class="font"><b>Payments Details</b></div></legend>
+<table width="100%" bgcolor="#87CEEB">
+<%= f.hidden_field :org_code, :size => 20,:readOnly=>true, :id => "org_code", :readOnly => true %></td>
+<%= f.hidden_field :org_location, :value => @org_location, :size => 20,:readOnly=>true, :id => "org_location", :readonly => true %></td>
+<tr>
+	<td>Payment No</td>
+	<td><%= f.text_field :payment_no, :size=>"20" %></td>
+    <td>Payment Date</td>
+	<td><%= f.text_field :payment_date,:readOnly=>true, :id=>"date", :size=>"20" %></td>
+	<td>Invoice Date</td>
+	<td><%= f.text_field :invoice_date,:readOnly=>true, :id=>"invoice_date", :size=>"20" %></td>
+	<td>Payment Due Date</td>
+	<td><%= f.text_field :payment_due_date,:readOnly=>true, :id=>"due_date", :size=>"20" %></td>
+	
+<tr>	
+</tr>
+		<td>Agency Name</td>
+		<td><%= f.text_field :agency_name,:readOnly=>true, :id=>"agency_name", :size=>"20" %></td>
+		<td>Invoice Total</td>
+		<td><%= f.text_field :invoice_total,:readOnly=>true, :id=>"invoice_total", :size=>"20" %></td>
+		<td>Already Paid Amount</td>
+		<td><%= f.text_field :alread_paid_amount,:readOnly=>true, :id=>"alread_paid_amount", :size=>"20" %></td>
+		<td>Paid Amount</td>
+		<td><%= f.text_field :paid_amount,:readOnly=>true, :id=>"paid_amount", :size=>"20" %></td>
+
+</tr>   <tr>	
+		<td>Balance Amount</td>
+		<td><%= f.text_field :balance_amount,:readOnly=>true, :id=>"balance_amount", :size=>"20" %></td>
+		<td>status</td>
+		<td><%= f.text_field :status,:readOnly=>true, :id=>"balance_amount", :size=>"20" %></td> </tr>	
+ </table>
+<table align="left"> 
+<tr>  
+  <td>Notes</td>
+	<td><%= f.text_area :notes, :rows => 3, :columns => 15 %> </td>
+  </tr>
+  </table>
+  </td>
+  </tr>
+  </table>
+</fieldset>
+</div>
+<br/>
+<center><%= link_to "back",  pharmacy_payments_path, :class=>"new1" %></center>
+<% end %>

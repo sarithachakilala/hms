@@ -1,0 +1,97 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Pharmacy >>&nbsp;&nbsp;&nbsp;<a HREF='/goodsrecieptnotemasters/enquiry/1' class="nav" style="text-decoration:none;">Medicine Search</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<div id="form_data">
+<br/>
+
+<%= stylesheet_link_tag 'look_up_search/jquery-ui' %>
+<%= javascript_include_tag 'jquery.min.js' %>
+<%= javascript_include_tag 'jquery-ui.min.js' %> 
+  
+  <script>
+  $(document).ready(function() {
+  
+
+    $("input#medicine_name").autocomplete({
+    source: [
+			<% for item_master in @item_master %>
+			
+				'<%= item_master.item_name %>',
+			<% end %>
+			]
+	});
+  });
+  </script>
+   <script language="javascript" type="text/javascript">
+	function stopRKey(evt) {
+		
+		var evt  = (evt) ? evt : ((event) ? event : null);
+		var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+		
+		if ((evt.keyCode == 13) && (node.type=="text")) { return false; }
+	}
+	document.onkeypress = stopRKey;
+</script>
+<script type="text/javascript"> 
+		
+	function select_medicine_name()
+	{   
+		var org_code=document.getElementById('org_code').value
+		var medicine_name=document.getElementById('medicine_name').value
+		req = new Ajax.Request('/goodsrecieptnotemasters/find_medicine/1', {
+				method: 'get',
+				parameters: {medicine_name:medicine_name, org_code:org_code},
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			});
+		function processReqChange(req) 
+		{
+			if(req.responseText=="No Records")
+				document.getElementById("table").value=req.responseText
+			else
+				document.getElementById("table").innerHTML=req.responseText
+		}
+	}
+	function clear_function()
+	{
+		document.getElementById('org_code1').value=""
+		document.getElementById('from_date_').value=""
+		document.getElementById('to_date_').value=""
+		document.getElementById('medicine_name').value=""
+	}
+ </script> 
+<body>
+
+<body style="margin:0px;" onload="setMyDiv('/goodsrecieptnotemasters/enquiry/1?user_id=<%= @user_id %>','new','')">
+<font size="3" face="Calibri">
+<fieldset>
+<legend><div class="font"><b>Search</b></div></legend>
+<table width="50%"  align="center">
+<tr>
+<%= hidden_field_tag:org_code,"", :id=>"org_code", :value=>"#{@org_code}" %>
+<%= hidden_field_tag:org_location,"", :id=>"org_location", :value=>"#{@org_location}" %>
+<%= hidden_field_tag:sub_branch,"", :id=>"org_location", :value=>"#{@sub_branch}" %>
+<%= hidden_field_tag:van_no,"", :id=>"org_location", :value=>"#{@van_no}" %>
+	
+	<td><label for="item_name">Medicine Name</label></td>
+	<td><%= text_field_tag:medicine_name,"", :id=>"medicine_name", :onkeyup=>"select_medicine_name(id)", :style=>"width:550px;" %></td>
+</tr>
+
+	
+</table>
+</fieldset>
+
+<div class="font">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Results :</b>
+</div>
+
+<div id="table" align ="center">
+
+</div>
+
+</body>

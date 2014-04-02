@@ -1,0 +1,40 @@
+<h1>Listing purchase_order_return_children</h1>
+
+<table>
+  <tr>
+    <th>Purchase order return</th>
+    <th>S no</th>
+    <th>Item name</th>
+    <th>Item code</th>
+    <th>Batch no</th>
+    <th>Expiry date</th>
+    <th>Quantity</th>
+    <th>Purchase rate</th>
+    <th>Return qty</th>
+    <th>Return rate</th>
+    <th>Return amt</th>
+  </tr>
+
+<% @purchase_order_return_children.each do |purchase_order_return_child| %>
+  <tr>
+    <td><%=h purchase_order_return_child.purchase_order_return_id %></td>
+    <td><%=h purchase_order_return_child.s_no %></td>
+    <td><%=h purchase_order_return_child.item_name %></td>
+    <td><%=h purchase_order_return_child.item_code %></td>
+    <td><%=h purchase_order_return_child.batch_no %></td>
+    <td><%=h purchase_order_return_child.expiry_date %></td>
+    <td><%=h purchase_order_return_child.quantity %></td>
+    <td><%=h purchase_order_return_child.purchase_rate %></td>
+    <td><%=h purchase_order_return_child.return_qty %></td>
+    <td><%=h purchase_order_return_child.return_rate %></td>
+    <td><%=h purchase_order_return_child.return_amt %></td>
+    <td><%= link_to 'Show', purchase_order_return_child %></td>
+    <td><%= link_to 'Edit', edit_purchase_order_return_child_path(purchase_order_return_child) %></td>
+    <td><%= link_to 'Destroy', purchase_order_return_child, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New purchase_order_return_child', new_purchase_order_return_child_path %>

@@ -1,0 +1,27 @@
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+    <th>S.No</th>
+    <th>Code</th>
+    <th>Name</th>
+	<th colspan="3">Permissions</th>
+  </tr>
+</thead>
+<tbody>
+<% @i=0 %>
+<% @state_masters.each do |state_master| %>
+<% if((@i % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+  end %>
+	<tr class='<%= id %>'>
+	<td><%= @i+=1 %></td>
+    <td><%=h state_master.code %></td>
+    <td><%=h state_master.name %></td>
+    <td class='abc' align="center"><%= link_to image_tag("buttons/display1.png", :class => "info", :border =>"0"), state_master %></td>
+    <td class='abc'align="center"><%= link_to image_tag("buttons/modify.png", :class => "info", :border =>"0"), edit_state_master_path(state_master) %></td>
+	<td class='abc'align="center"><%= link_to image_tag("buttons/delete.png", :class => "info", :border =>"0"),state_master, :confirm => 'Are you sure?', :method => :delete %>
+  </tr>
+
+<% end %>
+</table>

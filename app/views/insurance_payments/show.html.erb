@@ -1,0 +1,55 @@
+<div id="links" class="header">
+&nbsp;&nbsp;&nbsp;	Payments >>&nbsp;&nbsp;&nbsp;<a HREF='/insurance_payments?user_id=<%= @people.id %>' class="nav" style="text-decoration:none;">Insurance Payments</a>
+</div>
+<div class="dateformat"><%= format_date(:short, Date.today ) %></div>
+<% form_for(@insurance_payment) do |f| %>
+  <%= f.error_messages %>
+<div class="right">
+<% @date=format_date(:sort, Date.today ) %>
+<%= hidden_field('user_id','', :value => @user_id) %> 
+<br>
+<table width="100%">
+<tr><td>
+<fieldset><legend>Insurance Payment Details</legend>
+<table width="100%" align="center">
+  <tr>
+	<td>Org.Code</td>
+	<td><%= f.text_field :org_code, :size => 20, :id => "org_code", :required => true, :readonly => true %></td>
+	<td>Org.Location</td>
+	<td><%= f.text_field :org_location, :size => 20, :id => "org_location", :required => true, :readonly => true %></td>
+    <td>Ins.No</td>
+    <td><%= f.text_field :ins_no,:size => 20, :id => "ins_no", :readOnly => true %></td>
+  </tr>
+  <tr>	
+	<td>Admn.No</td>
+    <td><%= f.text_field :admn_no,:size => 20, :id => "admn_no", :readOnly => true %></td>
+    <td>MR No</td>
+    <td><%= f.text_field :mr_no,:size => 20, :id => "mr_no", :readOnly => true %></td>
+	<td>Patient Name</td>
+	<td><%= text_field_tag ('patient','name',:size =>20, :value => @registration.first_name+"."+@registration.last_name, :readOnly => true) %></td>
+  </tr>
+  <tr>
+    <td>Admn.Date</td>
+    <td><%= f.text_field :admn_date,:size => 20, :id => "admn_date", :readOnly => true %></td>
+    <td>Discharge Date</td>
+    <td><%= f.text_field :dis_date,:size => 20, :id => "dis_date", :readOnly => true %></td>
+  </tr>
+  <tr>
+    <td>Dispatch Date</td>
+    <td><%= f.text_field :dispatch,:size => 16, :id => "dispatch", :readOnly => true %></td>
+    <td>Cheque Issue Date</td>
+    <td><%= f.text_field :cheque_issue_date,:size => 16, :id => "cheque_issue_date", :readOnly => true %></td>
+    <td>Cheque Submit Date</td>
+    <td><%= f.text_field :cheque_submit_date,:size => 16, :id => "cheque_submit_date", :readOnly => true %></td>
+ </tr>
+  <tr>	
+ 	<td><%= f.label :status %></td>
+    <td><%= f.text_field :status,:size => 20 %></td>
+  </tr>
+ </table>
+</fieldset></td>
+</tr></table>
+<% end %>
+<%= link_to image_tag("buttons/back.png", :class => "info", :border =>"0"), insurance_payments_path(:user_id => @people.id) %></td></td>
+</div>
+</body>

@@ -1,0 +1,32 @@
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+  <tr>
+	<th>S.No</th>
+    <th>Org code</th>
+    <th>Org location</th>
+    <th>Department name</th>
+    <th>Test name</th>
+  <th colspan="3">Permissions</th>
+  </tr>
+ </thead>
+ <tbody>
+ <% @i=0 %>
+<% @testmasters.each do |testmaster| %>
+  <% if((@i%2)==0) 
+		id="datacelltwo"
+	else
+		id="datacellone"
+  end %>
+  <tr class='<%= id %>'>
+    <td><%= @i=@i+1 %></td>
+    <td><%=h testmaster.org_code %></td>
+    <td><%=h testmaster.org_location %></td>
+    <td><%=h testmaster.department_name %></td>
+    <td><%=h testmaster.test_name %></td>
+	<td align="center"><%= link_to image_tag("buttons/display1.png", :class => "info", :border =>"0"), testmaster %></td>
+	<td align="center"><%= link_to image_tag("buttons/modify.png", :class => "info", :border =>"0"), edit_testmaster_path(testmaster) %></td>
+    <!-- <td><%= link_to 'Destroy', testmaster, :confirm => 'Are you sure?', :method => :delete %></td>-->
+  </tr>
+<% end %>
+</tbody>
+</table>

@@ -1,0 +1,95 @@
+
+<% form_for @person do |f| %>
+<table align="center">
+ <% @client=ClientList.last %>
+  <tr>  
+      <td><label for="person_name">User Name</label></td>
+      <td><%= f.text_field :name, :size => 20,:id => "name" %></td>
+     </tr>
+     <% if(controller.action_name=="edit") %>
+        <tr>
+          <td><label for="person_Displayname">Old Password</label></td>
+          <td><%= password_field_tag :old_pass11,"", :size => 20,:id=>"old_pwd",:required => true, :onfocusout=>"verify_old_pwd()" %>
+          <span id="error" style="color:red"></span></td>
+        </tr>
+     <% end %>
+     <tr>
+      <td><label for="person_password">Password</label></td>
+      <td><%= f.password_field :password, :size => 20, :id => "pwd" %></td>
+    </tr>
+    <tr>
+      <td><label for="person_password_confirmation">Password Confirmation</label></td>
+      <td><%= f.password_field :password_confirmation, :size => 20 %></td>
+     </tr>
+     <tr>
+      <td><label for="display_name">Display Name</label></td>
+      <td><%= f.text_field :display_name, :size => 20 %></td>
+     </tr>
+  <tr>
+      <td><label for="client_name">Client Name</label></td>
+      <td><%= f.text_field :client_name, :size => 20, :value=>@client.hospital_name %></td>
+     </tr>
+<tr>
+      <td><label for="org_code">Org.Code</label></td>
+      <td><%= f.text_field :org_code, :size => 20 %></td>
+     </tr>
+<tr>
+      <td><label for="org_code">Org.Location</label></td>
+      <td><%= f.text_field :org_location, :size => 20 %></td>
+     </tr>
+     <tr>
+    <td><label for="person_profile">Profile</label></td>
+    <% if(@people.profile=="Main Admin") %>
+      <td><%= f.text_field :profile, :value => "Admin", :readOnly => true %></td>
+    <% else %>
+      <td><%= f.select :profile, Profilemaster.find(:all).collect{|p| [p.profile_name]},{:prompt => true} %></td>
+    <% end %>
+    </tr>
+
+<tr>
+    <td>Expiry Date</td>
+    <td><%= f.text_field :expiry_date, :id => "expiry_date", :size => 20  %><a href="javascript:void(0)" onClick="setYears(2012, 2050);showCalender(this,'expiry_date');" >
+      <img src="/images/cal.gif" ></a></td>
+  </tr>
+    <tr>
+    <td colspan="2" align="center"><%= submit_tag "Submit", :class => "submit_button" %>
+	
+  </tr>
+</table>
+<% end %>
+
+<table id="calenderTable">
+        <tbody id="calenderTableHead">
+          <tr>
+            <td colspan="4" align="center">
+	          <select onChange="showCalenderBody(createCalender(document.getElementById('selectYear').value,
+	           this.selectedIndex, false));" id="selectMonth">
+	              <option value="0">Jan</option>
+	              <option value="1">Feb</option>
+	              <option value="2">Mar</option>
+	              <option value="3">Apr</option>
+	              <option value="4">May</option>
+	              <option value="5">Jun</option>
+	              <option value="6">Jul</option>
+	              <option value="7">Aug</option>
+	              <option value="8">Sep</option>
+	              <option value="9">Oct</option>
+	              <option value="10">Nov</option>
+	              <option value="11">Dec</option>
+	          </select>
+            </td>
+            <td colspan="2" align="center">
+			    <select onChange="showCalenderBody(createCalender(this.value, 
+				document.getElementById('selectMonth').selectedIndex, false));" id="selectYear">
+				</select>
+			</td>
+            
+		  </tr>
+       </tbody>
+       <tbody id="calenderTableDays">
+         <tr style="">
+           <td>Sun</td><td>Mon</td><td>Tue</td><td>Wed</td><td>Thu</td><td>Fri</td><td>Sat</td>
+         </tr>
+       </tbody>
+       <tbody id="calender"></tbody>
+    </table>

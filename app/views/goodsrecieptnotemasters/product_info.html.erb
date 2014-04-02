@@ -1,0 +1,49 @@
+  <%= stylesheet_link_tag 'css' %>
+  <%= stylesheet_link_tag 'table_style' %>
+<div id="demo">
+		<center><font color='blue'>Product List</font></center>
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div align="center">
+<table width="80%" class="sofT">
+<thead>
+<tr bgcolor ="#378bf8" style="color:white;">
+				<th>S.No</th>
+				<th>Batch No</th>
+				<th>Qty</th>
+				<th>Pur.Rate</th>
+				<th>Units</th>
+				<th>MRP</th>
+				<th>Exp.Date</th>
+				<th>Margin(%)</th>
+				<th>Company</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% i=1 %>
+			<% @purchase_invoice_children.each do |purchase_invoice_child| %>
+			<% purchase_invoice=Goodsrecieptnotemaster.find_by_id(purchase_invoice_child.goodsrecieptnotemaster_id) %>
+			<% product_master=Itemmaster.find_by_product_name(purchase_invoice_child.item_name) %>
+<% if ((i%2==0))
+  id="datacelltwo"
+  else
+  id="datacellone"
+  end %>
+			<tr class='<%= id %>'>
+				 <td><%= i %></td>
+			    <td><%=h purchase_invoice_child.batch_no %></td>
+			    <td><%=h purchase_invoice_child.quantity %></td>
+			    <td><%=h purchase_invoice_child.purchase_rate %></td>
+			    <td><%=h product_master.units %></td>
+			    <td><%=h purchase_invoice_child.mrp %></td>
+			    <td><%=h purchase_invoice_child.expiry_date.strftime("%m/%Y") %></td>
+			    <td><%=h purchase_invoice_child.margin %></td>
+			    <td><%=h product_master.manufacturer %></td>
+			  </tr>
+			  <% i=i+1 %>
+			<% end %>
+		</tbody>
+		<tfoot>
+	</table>
+</div>
+

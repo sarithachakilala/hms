@@ -1,0 +1,453 @@
+<%= javascript_include_tag :defaults %>
+<%= javascript_include_tag 'commonFunctionality.js' %>
+<%= stylesheet_link_tag 'scroll_new1' %>
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Labaratory >>&nbsp;&nbsp;&nbsp;<a HREF='/test_bookings' class="nav" style="text-decoration:none;">Testbooking</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<div id="form_data">
+<script language="javascript" type="text/javascript">
+	function stopRKey(evt) {
+		var evt  = (evt) ? evt : ((event) ? event : null);
+		var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+		if ((evt.keyCode == 13) && (node.type=="text")) { return false; }
+	}
+	document.onkeypress = stopRKey;
+</script>
+<%= stylesheet_link_tag 'look_up_search/jquery-ui' %>
+<%= javascript_include_tag 'jquery.min.js' %>
+<%= javascript_include_tag 'jquery-ui.min.js' %>
+<script>
+	$(document).ready(function() {
+		$("input#services").autocomplete({
+		source: [
+					<% for item_master in @item_master %>
+						'<%= item_master.test_name %>',
+					<% end %>
+				]
+		});
+	});
+</script>
+<script language="javascript" type="text/javascript">
+	var fill_value=new Array('first_name','last_name','dob','gender','age','nationality','email_id','ph_no','receipt_no','bill_no','investigation_id')
+    var bill_no;
+	var selected_type
+	var bill_mode="op";
+	var org_code;
+	var total=0
+	var query
+	var main_service
+	var global
+	function select_patient_type(id)
+	{
+		document.getElementById('ip1').style.display='none';
+		document.getElementById('op1').style.display='none';
+		document.getElementById('osp').style.display='none';
+		if(document.getElementById(id).value=="OP")
+			document.getElementById('op1').style.display='block'
+		else if(document.getElementById(id).value=="OSP")	
+			document.getElementById('osp').style.display='block'
+		else
+			document.getElementById('ip1').style.display='block'
+	}
+	
+	function select_investigation(id,event)
+	{
+		if(event.keyCode!=13)
+			return false;
+		query = document.getElementById(id).value
+		document.getElementById(id).value=""
+		selected_type=id
+		main_service="lab"
+		ajax_code()
+	}
+	function ajax_code()
+	{
+		org_code=document.getElementById('org_code').value
+		req = new Ajax.Request('/test_bookings/ajax_function/1', 
+			{
+				method: 'get',
+				parameters: {query: query, org_code:org_code, main_service:main_service,selected_type:selected_type, },
+				onComplete: function(transport){
+					processReqChange(transport);
+					}
+			}); // end ajax req
+		function processReqChange(req) 
+		{
+			// request is complete
+			
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				var temp=new Array
+				if(selected_type=="due")
+				{
+					global=results
+					document.getElementById('hidden_global').value=global
+					document.getElementById('conauth').innerHTML="(Cons.limit :" +global+"%)"
+				}								
+				else if(selected_type=="due1")
+				{
+						var val=parseInt(document.getElementById('total').value)
+						global1=(val*(results/100));
+						document.getElementById('due_authority').value=global1
+						document.getElementById('dueauth').innerHTML="(Due limit :" +(results)+"%=" +global1+")"
+				}
+				else if(selected_type=="services")
+				{
+					if(results=="error")
+						alert("Fill the charges of tests")
+					else
+					{
+						var results = req.responseText;
+						temp=results.split("<division>")
+						var store=new Array();
+						var add_amount_fields="total,reciept_amount,paid_amount";
+						store[0]=temp[0]
+						store[1]=temp[1]
+						store[2]=temp[2]
+						store[3]="0"
+						store[4]="0"
+						store[5]=temp[2]
+						store[6]="0"
+						store[7]=temp[3]
+						add_row('r',8,'displayTable',store,add_amount_fields,7)
+						
+					}
+				}
+				else if(selected_type=="department")
+				{
+					temp=results.split("<division>")
+					document.getElementById('services').length=0
+					var opt = document.createElement("option");
+					document.getElementById("services").options.add(opt);
+					opt.text = ""
+					opt.value = ""
+					for(i=0;i<temp.length-1;i++)
+					{
+						var opt = document.createElement("option");
+						document.getElementById("services").options.add(opt);
+						opt.text = temp[i]
+						opt.value = temp[i]
+					}
+				}
+				
+			}
+		}
+	}
+	function ajax(id)
+	{
+		org_code=document.getElementById('org_code').value
+		var patient_type=document.getElementById('type').value
+		req = new Ajax.Request('/test_bookings/ajax_function_mr_no/1', 
+			{
+			
+				method: 'get',
+				parameters: {record_id: id, org_code:org_code, patient_type:patient_type },
+				onComplete: function(transport){
+					processReqChange(transport);
+					}
+			}); // end ajax req
+		function processReqChange(req) 
+		{
+			// request is complete
+			
+			if (req.readyState == 4) 
+			{
+			}
+		}
+	}
+	function dis(id)
+	{
+	
+		var x=0
+		x=document.getElementById(id).value
+		var y=0
+		y=document.getElementById("r"+id.charAt(1)+"c4").value
+		z=(parseFloat(y)/100)*parseFloat(x);
+		document.getElementById("r"+id.charAt(1)+"c6").value=parseFloat(z)
+		document.getElementById("r"+id.charAt(1)+"c7").value=document.getElementById("r"+id.charAt(1)+"c4").value-parseFloat(z);
+		var table = document.getElementById("displayTable");
+		document.getElementById('reciept_amount').value=0
+		document.getElementById('total').value=0
+		for(j=0;j<table.rows.length;j++)
+		{
+			if(document.getElementById("r"+j+"c1").value!="")
+			{  
+				document.getElementById('reciept_amount').value=parseFloat(document.getElementById('reciept_amount').value)+parseFloat(document.getElementById("r"+j+"c7").value);
+				document.getElementById('total').value=parseFloat(document.getElementById('total').value)+parseFloat(document.getElementById("r"+j+"c7").value);
+				document.getElementById('paid_amount').value=parseFloat(document.getElementById('total').value)+parseFloat(document.getElementById("r"+j+"c7").value);
+				
+			}
+			else
+				break;
+		}
+	}
+	function concession_amount_cal(id)
+	{
+		if(document.getElementById("concession_authority").value!="" && document.getElementById("concession_authority").value)
+		{
+			if(document.getElementById(id).value!="" && document.getElementById(id).value)
+			{
+				document.getElementById('reciept_amount').value=parseFloat(document.getElementById("total").value)-parseFloat(document.getElementById(id).value)
+				document.getElementById('paid_amount').value=document.getElementById('reciept_amount').value
+			}
+			else
+			{
+				document.getElementById("reciept_amount").value=document.getElementById('total').value
+				document.getElementById("paid_amount").value=document.getElementById('total').value
+			}	
+		}
+		else
+		{
+			alert("Please Enter Concession Authority ");
+			document.getElementById(id).value="";
+		}
+	}
+	
+	function cal_due(id)
+	{
+		if(document.getElementById(id).value!="" && document.getElementById(id).value)
+			document.getElementById('due').value=parseFloat(document.getElementById("reciept_amount").value)-parseFloat(document.getElementById(id).value)
+		else
+			document.getElementById("due").value=document.getElementById('reciept_amount').value
+	}
+</script>
+<div id="form_data">
+<% form_for(@test_booking) do |f| %>
+<div class="right">
+<% @date=format_date(:sort, Date.today ) %>
+<fieldset>
+<legend><div class="font"><b>Patient Details</b></div></legend>
+<table width="100%">
+	<%= f.hidden_field :org_code, :value => @org_code, :id => "org_code", :class=>"text_field", :readonly => true %>
+	<%= f.hidden_field :org_location, :value => @org_location, :id => "org_location", :class=>"text_field", :readonly => true %>
+<%= f.hidden_field :barcode_id, :value => @barcode_id, :id => "barcode_id", :class=>"text_field", :readonly => true %>
+</td>
+	<tr>
+		<td>Patient Type<sup>*</sup></td>
+		<td><%= f.select :patient_type,[['OP'],['IP'],['OSP']],{:prompt=>false}, {:id=>"type", :onchange=>"select_patient_type(id)"} %></td>
+		<td>Lab No<sup>*</sup></td>
+		<td><%= f.text_field :lab_no, :readOnly=>true , :class=>"text_field"%></td>
+		<td>MR No<sup>*</sup></td>
+		<td><%= f.text_field :mr_no, :id => "mr_no", :class=>"text_field" %></td>
+	</tr>
+	<tr>
+		<td>Patient Name<sup>*</sup></td>
+		<td><%= f.text_field :patient_name, :id => "patient_name",:class =>"text_field" %></td>
+		<td>Age<sup>*</sup> </td>
+		<td><%= text_field_tag ('age','',:class =>"text_field", :id=>"age", :readonly=>true ,:class =>"text_field") %></td>
+		<td>Referred Doctor<sup>*</sup></td>
+		<td><%= f.select :refferal_doctor, EmployeeMaster.find(:all, :conditions =>"category='Consultant'").collect{|p| [p.name]}, {:prompt =>true},{:id => "refferd", :class=>"text_field"} %></td>
+		<%= f.hidden_field :admn_no, :id => "admn_no" %>
+		
+	</tr>
+	<tr>
+		<td>Date<sup>*</sup></td>
+		<td><%= f.text_field :booking_date, :id => "booking_date",:class =>"text_field",:value => Date.today.strftime("%Y-%m-%d"), :readOnly => true %></td>
+		<td>Lab Services</td>
+		<td><%= f.text_field :lab_services ,:id => "services",:class =>"text_field", :onKeyUp =>"select_investigation(id,event)" %>
+		 
+	 </tr> 
+</table>
+<% 10.times{ @test_booking.test_booking_child.build } %>
+<table>
+	  <tr>
+			<td colspan="11">
+			<div id="info">
+			<table class="tableone">
+				   <caption style="background: url(/images/vertical1_04.jpg) repeat-x top left;text-align:center;" ><font color="#F0FFFF" face="Cambria" ><b>Tests</b></font></caption>
+				   
+						  <thead>
+						<tr>
+						  <th width="100px" style="color:black;">S.No</th> 
+						  <th width="150px" style="color:black;">Department </th> 
+						  <th width="150px" style="color:black;">Test Name</th> 
+						  <th width="150px" style="color:black;">Rate</th>
+						  <th width="150px" style="color:black;">Discount(%)</th>
+						  <th width="150px" style="color:black;">Dis.Amount</th>
+						  <th width="150px" style="color:black;">Amount</th>
+						   <th width="150px" style="color:black;">Lab Amount</th>
+						   <th width="100px" style="color:black;">Remove</th>
+						</tr>
+						</thead>
+					  <tbody>
+				<tr><td colspan="11">
+					<div class="innerb">
+					<table class="tabletwo" id="displayTable">
+					<% i=0 %>
+					<% f.fields_for :test_booking_child do |a| %>
+						<% if (i%2==0) %>
+							<tr>
+								<% else%>
+									<tr class="dk">
+										<% end %>
+											<td width="90px"><%= a.text_field :s_no, :style=>"width:100%", :id => "r#{i}c1", :class => "nbb", :readOnly => true %></td>  
+											<%= a.hidden_field :investigation, :style=>"width:100%", :id => "r#{i}c9", :class => "nbb", :readOnly => true %>
+											<td width="140px"><%= a.text_field :department, :style=>"width:100%", :id => "r#{i}c2", :class => "nbb", :readOnly => true %></td> 
+											<td width="140px"><%= a.text_field :test_name, :style=>"width:100%", :id => "r#{i}c3", :class => "nbb" , :readOnly => true%></td> 
+											<td width="140px"><%= a.text_field :rate, :style=>"width:100%", :id => "r#{i}c4", :class => "nbb", :readOnly => true %></td> 
+											<td width="140px"><%= a.text_field :dis_ptage, :style=>"width:100%", :id => "r#{i}c5", :class => "nbb", :onKeyUp =>"dis(id)" %></td> 
+											<td width="140px"><%= a.text_field :dis_amount, :style=>"width:100%", :id => "r#{i}c6", :class => "nbb", :readOnly => true %></td> 
+											<td width="140px"><%= a.text_field :amount, :style=>"width:100%", :id => "r#{i}c7", :class => "nbb", :readOnly => true %></td> 
+											<td width="140px"><%= a.text_field :lab_amount, :style=>"width:100%", :id => "r#{i}c8", :class => "nbb" , :readOnly => true%></td>
+											<td width="90px" id="r<%= i %>c9" ></td>
+									</tr>
+								<% i+=1 %>
+								<% end %>
+								</table>
+								</div>
+							</td>
+				</tr>
+		  </tbody>
+		 </table>
+	     </div>
+		 </td>
+  </tr>
+ </table>
+</fieldset>
+<fieldset>
+<legend><div class="font"><b>Receipt Details</b></div></legend>
+<table width="100%">
+<tr> 
+	<td>Bill No</td>
+	<td><%= f.text_field :bill_no, :size => 5, :id=>"bill_no", :readonly =>true, :class=>"text_field" %></td>
+	<td>Total Amount </td>
+	<td><%= f.text_field :total_amount, :id => "total", :readonly => true, :class=>"text_field"  %></td>
+	<td>Conc Authority </td>
+	<td><%= f.text_field :concession_authority, :id => "concession_authority", :class=>"text_field" %></td>
+</tr>
+<tr>
+	<td>Concession</td>
+	<td><%= f.text_field :concession, :size => 5, :id => "concession", :value => "0", :class=>"text_field",:onKeyUp => "concession_amount_cal(id)"  %></td></td>
+	<td>Grand Total</td>
+	<td><%= f.text_field :grand_total, :class=>"text_field", :id =>"reciept_amount", :readonly => true  %></td> </td>
+	<td>Paid Amount</td>
+	<td><%= f.text_field :paid_amount, :class=>"text_field", :id =>"paid_amount", :onKeyUp => "cal_due(id)"  %></td> </td>
+</tr>
+<tr>	
+	<td>Due</td>
+	<td><%= f.text_field :due, :class=>"text_field", :readonly => true, :id =>"due"  %></td> </td>
+</tr>
+</table>
+<%= f.hidden_field :user_id, :value=>@person.id %>
+</fieldset>
+<table align="center">
+  <tr> 
+  		<td><%= submit_tag "", :value => " Save ", :class => "submit_button", :onClick => "this.disabled=true;this.value='Process..';this.form.submit();" %></td>
+		<td><%= submit_tag "", :value => " Reset ", :type => "reset",  :class => "submit_button" %></td>
+		<td valign="middle"><%= link_to "Back",  test_bookings_path, :class=>"new1" %></td>
+  </tr>
+</table>
+<% end %>
+</div>
+<div class="left">
+<div id="ip1"  style="display:none">
+		<table border=1 cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+			<td id="side_panel"><input type="text" , style="width:96%;" id="admn_no_search" onkeyUp="search_field_mr_no(id,'test_bookings','admn_no')"></td>
+			<td id="side_pane2"><input type="text" , style="width:96%;" id="name_search" onkeyUp="search_field_mr_no(id,'test_bookings','admn_no')" ></td>
+		</tr>
+			<tr>
+				<td colspan="2">
+					<div  id="field_search_div">
+					<table border=1 cellspacing="0" cellpadding="0" width="100%">
+					<tr>
+						<th id="side_panel">Admn.NO</th>
+						<th id="side_pane2">Name</th>
+					</tr>
+					<% for admissions in @admissions %>
+						<% registration=Registration.find_by_mr_no_and_org_code(admissions.mr_no,admissions.org_code) %>
+						<tr>
+							<% if(registration.reg_type=="Arogyasree") %>
+								<td class="cursor_point" onclick="ajax('<%= admissions.id %>')" bgcolor="blue" style="color:white;"><%=  admissions.admn_no %></td>
+								<td class="cursor_point" onclick="ajax('<%= admissions.id %>')" bgcolor="blue" style="color:white;"><%= registration.patient_name %></td>
+							<% else %>
+								<td class="cursor_point" onclick="ajax('<%= admissions.id %>')"><%=  admissions.admn_no %></td>
+								<td class="cursor_point" onclick="ajax('<%= admissions.id %>')"><%= registration.patient_name %></td>
+							<% end %>
+						</tr>
+					<% end %>
+					</table>
+					</div>
+				</td>
+			</tr>		
+		</table>
+	</div>
+
+	<div id="op1">
+		<table border=1 cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td id="side_panel"><input type="text" , style="width:96%; id="mr_no_search" placeholder="Search MR No" onkeyUp="search_field_mr_no(id,'test_bookings','mr_no')" ></td>
+				<td id="side_pane2"><input type="text" , style="width:96%; id="name_search" placeholder="Search By Name" onkeyUp="search_field_mr_no(id,'test_bookings','mr_no')" ></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<div  id="field_search_div">
+					<table border=1 cellspacing="0" cellpadding="0" width="100%">
+					<tr>
+						<th id="side_pane1">MR NO</th>
+						<th id="side_pane2">Name</th>
+					</tr>
+					<% for registration in @registration %>
+						<% admission=Admission.find_by_mr_no_and_org_code_and_admn_status(registration.mr_no,registration.org_code,'Admitted') %>
+						<% if(!admission) %>
+							<%(reg_new=registration.reg_date.to_date+7) %>
+							<% if (@date.to_date<=reg_new.to_date) %>
+								<% appt_payment=AppointmentPayment.find_by_mr_no_and_org_code_and_appt_date(registration.mr_no,registration.org_code,registration.reg_date) %>
+								<% if(appt_payment) %>
+									<tr>
+										<td class="cursor_point" onclick="ajax('<%= appt_payment.id %>')"><%=  appt_payment.mr_no %></td>
+										<td class="cursor_point" onclick="ajax('<%= appt_payment.id %>')"><%= registration.patient_name %></td>
+									</tr>
+								<% end %>
+							<% end %>
+						<% end %>
+					<% end %>
+					</table>
+					</div>
+				</td>
+			</tr>		
+		</table>	
+	</div>
+
+	<div id="osp" style="display:none">
+		<table border=1 cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+			<td id="side_panel"><input type="text" , style="width:96%;" id="mr_no_search" onkeyUp="search_field_mr_no(id,'test_bookings','mr_no')"></td>
+			<td id="side_pane2"><input type="text" , style="width:96%;" id="name_search" onkeyUp="search_field_mr_no(id,'test_bookings','mr_no')" ></td>
+		</tr>
+			<tr>
+				<td colspan="2">
+					<div  id="field_search_div">
+					<table border=1 cellspacing="0" cellpadding="0" width="100%">
+					<tr>
+						<th id="side_panel">MR NO</th>
+						<th id="side_pane2">Name</th>
+					</tr>
+					<% for registration in @registration %>
+						<% appt_payment = AppointmentPayment.last(:conditions => " mr_no ='#{registration.mr_no}' and org_code ='#{registration.org_code}'")%>
+						<% if (!appt_payment) %>
+						<tr>
+							<% if(registration.reg_type=="Arogyasree") %>
+								<td class="cursor_point" onclick="ajax('<%= registration.id %>')" bgcolor="blue" style="color:white;"><%=  registration.mr_no %></td>
+								<td class="cursor_point" onclick="ajax('<%= registration.id %>')" bgcolor="blue" style="color:white;"><%= registration.patient_name %></td>
+							<% else %>
+								<td class="cursor_point" onclick="ajax('<%= registration.id %>')"><%=  registration.mr_no %></td>
+								<td class="cursor_point" onclick="ajax('<%= registration.id %>')"><%= registration.patient_name %></td>
+							<% end %>	
+						</tr>
+						<% end %>
+					<% end %>
+					</table>
+					</div>
+				</td>
+			</tr>		
+		</table>	
+	</div>
+</div>
+</div>

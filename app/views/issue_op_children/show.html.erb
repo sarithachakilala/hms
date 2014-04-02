@@ -1,0 +1,62 @@
+<p>
+  <b>Issues to op:</b>
+  <%=h @issue_op_child.issues_to_op_id %>
+</p>
+  <p>
+    <b>mr_no</b>
+    <%=h @issue_op_child.mr_no %>
+  </p>
+
+<p>
+  <b>Item name:</b>
+  <%=h @issue_op_child.item_name %>
+</p>
+
+<p>
+  <b>Item code:</b>
+  <%=h @issue_op_child.item_code %>
+</p>
+
+<p>
+  <b>Batch no:</b>
+  <%=h @issue_op_child.batch_no %>
+</p>
+
+<p>
+  <b>Expiry date:</b>
+  <%=h @issue_op_child.expiry_date %>
+</p>
+
+<p>
+  <b>Quantity:</b>
+  <%=h @issue_op_child.quantity %>
+</p>
+
+<p>
+  <b>Sale rate:</b>
+  <%=h @issue_op_child.sale_rate %>
+</p>
+
+<p>
+  <b>Purchase rate:</b>
+  <%=h @issue_op_child.purchase_rate %>
+</p>
+
+<p>
+  <b>Discount:</b>
+  <%=h @issue_op_child.discount %>
+</p>
+
+<p>
+  <b>Total:</b>
+  <%=h @issue_op_child.total %>
+</p>
+
+<p>
+  <b>Sum tot:</b>
+  <%=h @issue_op_child.sum_tot %>
+</p>
+
+
+<%= link_to 'Edit', edit_issue_op_child_path(@issue_op_child) %> |
+<%= link_to 'Back', issue_op_children_path %>

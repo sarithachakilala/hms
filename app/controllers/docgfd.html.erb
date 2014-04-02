@@ -1,0 +1,11 @@
+
+	for store in @issues_to_op.issue_op_child
+	@store_child=StoreChild.last(:conditions => "item_name = '#{store.item_name}' and quantity > 0")
+	issue=store.issue_qty
+	issue_up=store.new_qty
+	@store_child.quantity=(@store_child.quantity).to_i+(issue_up).to_i-(issue).to_i
+	store.new_qty=issue.to_i
+	store.update_attributes(params[:store])
+	@store_child.update_attributes(params[:store_child])
+
+     end

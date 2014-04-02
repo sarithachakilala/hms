@@ -1,0 +1,108 @@
+<script type="text/javascript">
+	function mrfun(id_val)
+	{
+		var link="/medicine_issues/new_ip_record?user_id=<%= @user_id %>&record_id="+id_val;
+		document.getElementById("main_content").innerHTML = "<iframe src="+link+" width='1155px' height='520px' frameborder=1 scrollbar='AUTO'>";
+	}
+	function consultant()
+	{	
+		var department=document.getElementById("dept").value
+		var date=document.getElementById("dov").value
+		var org_code=document.getElementById("org_code").value
+		var admn_no=document.getElementById("admn_no").value
+		if(admn_no=="" || department=="")
+		{
+			alert("Please select Admn.no and department");
+			return false;
+		}
+		window.open('/consultant_visits/appointment/1?dapartment='+department+'&org_code='+org_code+'&date='+date+'&admn_no='+admn_no,'open_window','dependent, width=900, height=600, left=0, top=0');
+	}
+	function stopRKey(evt) {
+	  
+	  var evt  = (evt) ? evt : ((event) ? event : null);
+	  var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+		if ((evt.keyCode == 13) && (node.type=="text")) { return false; }
+	}
+	function add_data_to_child()
+	{
+		var store=new Array();
+		var add_amount_fields="sample";
+		store[1]=document.getElementById("dept").value
+		store[2]=document.getElementById("consultant").value
+		store[0]=document.getElementById("dov").value+" "+document.getElementById("appt_time").value;
+		store[3]=document.getElementById("cons_type").value
+		store[4]=document.getElementById("cost").value
+		add_row('r',6,'displayTable',store,add_amount_fields,0)
+	}
+	
+	function add_row_single(row_id,total_cols,name,store)
+	{
+		var table = document.getElementById(name); 
+		var start_row=<%= @length %>
+		for(i=start_row;i<table.rows.length;i++)
+		{
+			if(document.getElementById(row_id+i+"c1").value=="")
+			{
+				document.getElementById(row_id+i+"c1").value=i+1
+				for(j=0;j<store.length;j++)
+				{
+					if(store[j])
+						document.getElementById(row_id+i+"c"+(j+2)).value=store[j];
+				}
+				break;
+			}
+		}					
+	}
+	function fill_color()
+	{
+		var field_names=new Array('rno','admn_no','patient_name','ward','room','bed','floor');
+		for(i=0;i<=field_names.length;i++)
+		{
+			document.getElementById(field_names[i]).style.background='#FEF5CA'
+			document.getElementById(field_names[i]).readOnly=true	
+		}
+	}
+</script>
+<body onLoad="fill_color()">
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">IP Patients >>&nbsp;&nbsp;&nbsp;<a HREF='/consultant_visits' class="nav" style="text-decoration:none;">Consultant Visits</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<div id="form_data">
+	<div id="main_content" class="right">
+		<%= render :partial=> "newrecord" %>
+
+	</div>
+	<div class="left">
+	<table border=1 cellspacing="0" cellpadding="0">
+		<tr>
+			<td><input type="text" size=15 id="admn_no_search" placeholder="Search By Admn.No" onkeyUp="search_field_mr_no(id,'consultant_visit','admn_no')"></td>
+			<td><input type="text" size=15 id="name_search" placeholder="Search By Name" onkeyUp="search_field_mr_no(id,'consultant_visit','admn_no')" ></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<div  id="field_search_div">
+				<table border=1 cellspacing="0" cellpadding="0" width="100%">
+				<tr>
+					<th width="50%">Admn.NO</th>
+					<th width="50%">Name</th>
+				</tr>
+				<% @admission=Admission.find(:all,:conditions => "org_code = '#{@org_code}' and admn_status='Admitted'", :order =>"id DESC") %>
+				<% for admission in @admission %>
+					<tr>
+						<td class="cursor_point"><a href="/consultant_visits/new?record_id=<%= admission.id %>" style="text-decoration: none;"><%= admission.admn_no %></a></td>
+						<td class="cursor_point"><a href="/consultant_visits/new?record_id=<%= admission.id %>" style="text-decoration: none;"><%= admission.patient_name %></a></td>
+					</tr>
+					<% end %>
+				</table>
+				</div>
+			</td>
+		</tr>		
+	</table>
+	</div>
+</div>
+</body>

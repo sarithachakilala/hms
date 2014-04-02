@@ -1,0 +1,433 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Pharmacy >>&nbsp;&nbsp;&nbsp;<a HREF='/op_patient_returns' class="nav" style="text-decoration:none;">Sale Returns</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<div id="form_data">
+
+<script language="javascript" type="text/javascript">
+	function stopRKey(evt) {
+		
+		var evt  = (evt) ? evt : ((event) ? event : null);
+		var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+	
+		if ((evt.keyCode == 13) && (node.type=="text")) { return false; }
+	}
+		document.onkeypress = stopRKey;
+</script>
+<script type="text/javascript"> 
+
+//Fill the fields In Based on the entering MR_NUMBER
+var query11
+  var query1
+	var selectedid
+	var mrn
+	var recipt
+	var org_code
+	var patient_type
+	var arr10=new Array("dname","hod")
+	var arr_mr_no=new Array("mrno","ino","age","isdate","name","doc","gen")
+	var arr_admn_no=new Array("admn_no","mrno","ino","age","isdate","name","doc","gen")
+	var arr_osp_no=new Array("ino","age","isdate","name")
+	var arr1=new Array("dcode","dname","hod")
+	
+	function ajaxh(id) 
+	{	
+		var selObj = document.getElementById(id);
+		query11 = selObj.options[selObj.selectedIndex].value
+		if(query11=="")
+			alert("Plz Select Any Value")
+		else
+		{
+			if(id=="dcode")
+			{
+				selectedid="dcode"
+				Ajax_Code()
+			}
+			else if(id=="service")
+			{
+				recipt= document.getElementById('receipt_no').value
+				patient_type= document.getElementById('type').value
+				selectedid="service"
+				Ajax_Code()
+			}
+			else if(id=="dept_type")
+			{
+				selectedid=id
+				Ajax_Code()
+			}
+		}
+	}
+	function ajaxSearch(id,event) 
+	{
+
+		if(event.keyCode!=13)
+			return false;
+		patient_type=document.getElementById('type').value
+		query11= document.getElementById('receipt_no').value
+		selectedid="receipt"
+		Ajax_Code()
+	}	
+	 
+	function Ajax_Code()
+	{
+		org_code=document.getElementById('org_code').value
+		req = new Ajax.Request('/op_patient_returns/ajax_buildings/1', {
+			method: 'get',
+			parameters: {q11: query11,s: selectedid, r: recipt, org_code: org_code, patient_type: patient_type},
+			onComplete: function(transport) {
+			processReqChange(transport);
+			}
+	}); 
+	function processReqChange(req) 
+		{
+			// request is complete
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				var temp=new Array()
+				var temp_code=new Array()
+				temp=results.split(",")
+				temp_code=results.split("<code>")
+				var temp1=new Array()
+				if(selectedid=="dcode")
+				{
+					for(i=0;i<arr10.length;i++)
+					{
+						document.getElementById(arr10[i]).value=temp[i]
+						document.getElementById(arr10[i]).style.background="#FEF5CA"
+						document.getElementById(arr10[i]).readOnly=true
+					}
+				}
+				else if(selectedid=="service")
+				{	
+					if(results=="Invalid Receipt No")
+					{
+						alert("Invalid Receipt No")
+						
+					}else
+					{
+						var store=new Array();
+						var item_name_only=new Array();
+						item_name_only=query11.split("^")
+						var add_amount_fields="amount";
+						store[0]=item_name_only[0]
+						store[1]=temp[0]
+						store[2]=temp[1]
+						store[3]=temp[2]
+						store[4]=temp[3]
+						store[5]=temp[4]
+						store[6]=temp[5]
+						store[7]=temp[6]
+						store[8]=temp[7]
+						store[8]=
+						store[9]=
+						store[10]=""
+						store[11]=temp[7]
+						add_row('r',11,'displayTable',store,add_amount_fields,12)
+					}
+				}
+				else
+				{
+					if(results=="Invalid Receipt No")
+					{
+						alert("Invalid Receipt No")
+						document.getElementById("receipt_no").value="";
+						for(i=0;i<arr_admn_no.length;i++)
+						{
+							document.getElementById(arr_admn_no[i]).value=""
+							document.getElementById(arr_admn_no[i]).style.background="white"
+							document.getElementById(arr_admn_no[i]).readOnly=true
+						}
+
+					}
+					else
+					{
+						for(i=0;i<arr_admn_no.length;i++)
+						{
+							document.getElementById(arr_admn_no[i]).value=temp[i]
+							document.getElementById(arr_admn_no[i]).style.background="#FEF5CA"
+							document.getElementById(arr_admn_no[i]).readOnly=true
+						}
+						document.getElementById('service').disabled=false
+						document.getElementById('service').length=0
+						var opt = document.createElement("option");
+						document.getElementById('service').options.add(opt);
+						opt.text="";
+						temp1=temp[7].split("&")
+						for(i=0;i<temp1.length-1;i++)
+						{
+							var opt = document.createElement("option");
+							document.getElementById('service').options.add(opt);
+							document.getElementById('service').style.background="#FEF5CA"
+							opt.text=temp1[i]
+						}
+					}
+				}
+			}
+		}		
+	}
+
+		 
+	function checkedval(id)
+	{
+		document.getElementById('cheque_amount').value=""
+		document.getElementById('bank').disabled=true
+		document.getElementById('cheqno').disabled=true
+		document.getElementById('cheque_amount').disabled=true
+		document.getElementById('acc_no').disabled=true
+			
+		if(id=="button2")
+		{
+			document.getElementById('bank').disabled=false
+			document.getElementById('cheqno').disabled=false
+			document.getElementById('cheque_amount').disabled=false
+			document.getElementById('acc_no').disabled=false
+			document.getElementById('cheque_amount').value=document.getElementById('amount').value
+		}			
+	}
+	
+	function retrun_amount(cha)
+	{
+		var r;
+		r="r"
+		var return_qty=parseFloat(document.getElementById(r+cha+"c10").value)
+		var return_rate=parseFloat(document.getElementById(r+cha+"c11").value)
+		var issues_qty=parseFloat(document.getElementById(r+cha+"c7").value)
+		
+		if(issues_qty<return_qty)
+		{
+			alert("Enter The Valid Quantity")
+			document.getElementById(r+cha+"c12").value=""
+			document.getElementById(r+cha+"c10").value=""
+			document.getElementById(r+cha+"c11").value=""
+		}
+		else
+		{	
+			var con=(return_rate*return_qty)
+			document.getElementById(r+cha+"c12").value=con
+			
+			var tot=0
+			var con1
+var table = document.getElementById("displayTable")
+			for(var k=0;k<=table.rows.length;k++)
+			{
+if(document.getElementById("r"+k+"c1").value)
+{
+			con1=document.getElementById("r"+k+"c12").value
+			tot=(tot+parseFloat(con1))
+			document.getElementById('amount').value=tot
+			document.getElementById('sub_total').value=tot
+			document.getElementById('reciept_amount').value=tot
+}			document.getElementById('total').value=tot
+}		}
+	}
+
+
+
+function cal_concession(id)
+	{
+		if(document.getElementById("doctor1").value!="" && document.getElementById("doctor1").value)
+		{
+			
+			document.getElementById('amount').value=(parseFloat(document.getElementById('sub_total').value)-(document.getElementById('sub_total').value*document.getElementById(id).value/100)).toFixed(2);
+			document.getElementById('reciept_amount').value=(parseFloat(document.getElementById('sub_total').value)-(document.getElementById('sub_total').value*document.getElementById(id).value/100)).toFixed(2);
+			document.getElementById('total').value=(parseFloat(document.getElementById('sub_total').value)-(document.getElementById('sub_total').value*document.getElementById(id).value/100)).toFixed(2);
+			var sub_total_value=document.getElementById('sub_total').value
+			var discount=document.getElementById(id).value
+			document.getElementById('concession_amount').value=((sub_total_value*discount)/100).toFixed(2);
+
+		}
+		else
+		{
+			alert("Please select Authority Name");
+			document.getElementById(id).value=0;
+		}
+	}
+
+function amount_calculation(amount_type)
+	{ 
+		var sub_total=0,adjust=0;
+		if(document.getElementById('total').value!="")
+			sub_total=parseFloat(document.getElementById('total').value).toFixed(2);
+		
+		if(document.getElementById('adjust').value!="")
+			adjust=document.getElementById('adjust').value;
+
+		if(amount_type=="find_round_amount")
+		{
+			if(document.getElementById('receipt_amt').value!="")
+			{
+				document.getElementById('round').value=(((parseFloat(amount)+parseFloat(cr_note)+parseFloat(adjust))-parseFloat(dr_note))-parseFloat(document.getElementById('net_amount').value)).toFixed(2);
+			}
+			else
+			{
+				document.getElementById('round').value=((parseFloat(amount)+parseFloat(cr_note)+parseFloat(adjust))-parseFloat(dr_note)).toFixed(2);	
+			}	
+		}
+		else
+		{
+
+			var net_amount =(parseFloat(sub_total)+parseFloat(adjust)).toFixed(2);
+			var round_value=Math.round(net_amount)
+			document.getElementById('reciept_amount').value=parseFloat(round_value).toFixed(2);
+			document.getElementById('round').value=(parseFloat(net_amount)-parseFloat(round_value)).toFixed(2);
+			document.getElementById('amount').value=parseFloat(round_value).toFixed(2);
+			
+		}
+	}
+	
+</script>
+	
+
+<body onload="document.getElementById('return_no').focus();">
+
+<% form_for(@op_patient_return) do |f| %>
+
+<% @date=format_date(:sort, Date.today ) %>
+<%= hidden_field :user_id, :value => @person.id %>
+<div align="center">
+<fieldset>
+<legend><div class="font"><b>Return Details</b></div></legend>
+<table width="100%">
+<%= f.hidden_field :org_code, :value => @org_code, :class =>"text_field", :id => "org_code", :required => true, :readonly => true %></td>
+<%= f.hidden_field :org_location, :value => @org_location, :class =>"text_field", :id => "org_location", :required => true, :readonly => true %></td>
+	<tr>
+		
+		<td>Patient Type</td>
+		<td><%= f.select :patient_type,[['OP'],['IP'],['OSP']],{:prompt=>false}, {:id=>"type", :required=>true, :style =>"width:158px;"} %></td>
+		<td>Sc.No</td>
+		<td><%= f.text_field:return_no, :class =>"text_field", :readOnly => "true" %></td>
+		<td>Sc.Date</td>
+		<td><%= f.text_field:return_date, :class =>"text_field", :id => "date", :readOnly => "true", :value => "#{@date}" %></td>
+		<%= f.hidden_field :issue_No, :class =>"text_field", :id =>"ino" %>
+		<%= hidden_field_tag :age,"", :size=>20, :id=>"age" %>
+		<%= hidden_field_tag :issuedate,"", :size=>20, :id=>"isdate" %>
+		<%= hidden_field_tag :gen,"", :size=>20, :id=>"gen" %>
+		<%= hidden_field_tag :doc,"", :size=>20, :id=>"doc" %>			
+		<td>Invoice No<sup>*</sup></td>
+		<td><%= f.text_field:receipt_no, :class =>"text_field", :id => "receipt_no",:required => true,:onKeyUp =>"ajaxSearch(id,event)"  %>
+	</tr>
+	<tr>
+		<td>Patient Name</td>
+		<td><%= f.text_field:patient_name, :class =>"text_field", :id => "name" %></td>
+		<td>MR No</td>
+		<td><%= f.text_field:mr_No, :class =>"text_field", :id => "mrno" %></td>
+		<td>Admn.No</td>
+		<td><%= f.text_field:admn_no, :class =>"text_field", :id => "admn_no" %></td>
+	</tr>
+	</table>
+<table >		
+<tr>
+	<td>Product Name</td>
+	<td><%= f.select :item_name, "",{:prompt => true},{:id => "service", :disabled => true, :onchange => "ajaxh(id)", :style =>"width:658px;"} %></td>	
+ 
+</tr>
+</table>
+<% 10.times{ @op_patient_return.opreturn_child.build } %>
+</fieldset>
+<br />
+</div>
+<div id="op1">
+<table align="center">
+  <tr>
+	<td colspan="12">
+	<div id="info">
+    <table class="tableone">
+<caption style="background: url(/images/vertical1_04.jpg) repeat-x top left;text-align:center;" >
+  <font color="#F0FFFF" face="Cambria" ><b>Return Medicines</b></font></caption>
+      <thead>
+	  <tr>
+        <th width="50px" style="color:black;">S.No</th>
+		<th width="100px" style="color:black;">Product Name</th>
+		<th width="100px" style="color:black;">MFR</th>
+        <th width="100px" style="color:black;">Batch No</th>
+		<th width="80px" style="color:black;">Exp.Dt</th>
+		<th width="50px" style="color:black;">Sale Qty</th>
+		<th width="80px" style="color:black;">Sale Rate</th>
+		<th width="100px" style="color:black;">Return Qty</th>
+		<th width="100px" style="color:black;">Return Rate</th>
+		<th width="100px" style="color:black;">Return Amt</th>
+		<th width="80px" style="color:black;">Vat(%)</th>
+		<th width="50px" style="color:black;">Remove</th>
+	</tr>
+	</thead>
+     <tbody>
+		<tr><td colspan="12">
+			<div class="innerb">
+			<table class="tabletwo" id="displayTable">
+			<% i=0 %>
+			<% f.fields_for :opreturn_child do |a| %>
+				<% if (i%2==0) %>
+					<tr>
+				<% else%>
+					<tr class="dk">
+				<% end %>
+					<td width="50px"><%= a.text_field :s_no, :style=>"width:100%", :id => "r#{i}c1", :class => "nbb", :readOnly => true %></td> 
+					<td width="100px"><%= a.text_field :item_name, :style=>"width:100%", :id => "r#{i}c2", :class => "nbb", :readOnly => true %></td> 
+					<%= a.hidden_field :item_code, :style=>"width:100%", :id => "r#{i}c3", :class => "nbb", :readOnly => true %>
+					<td width="100px"><%= a.text_field :mfr, :style=>"width:100%", :id => "r#{i}c4", :class => "nbb", :readOnly => true %></td> 
+					<td width="100px"><%= a.text_field :batch_no, :style=>"width:100%", :id => "r#{i}c5", :class => "nbb", :readOnly => true %></td> 
+					<td width="80px"><%= a.text_field :expiry_date, :style=>"width:100%", :id => "r#{i}c6", :class => "nbb", :readOnly => true %></td> 
+					<td width="50px"><%= a.text_field :issue_qty, :style=>"width:100%", :id => "r#{i}c7", :class => "nbb", :readOnly => true %></td> 
+					<td width="80px"><%= a.text_field :sale_rate, :style=>"width:100%", :id => "r#{i}c8", :class => "nbb", :readOnly => true %></td> 
+					<%= a.hidden_field :discount, :style=>"width:100%", :id => "r#{i}c9", :class => "nbb" %>
+					<td width="100px"><%= a.text_field :return_qty, :style=>"width:100%", :id => "r#{i}c10", :class => "nbb", :onkeyup=>"retrun_amount('#{i}')" %></td> 
+					<td width="100px"><%= a.text_field :return_rate, :style=>"width:100%", :id => "r#{i}c11", :class => "nbb", :onkeyup=>"retrun_amount('#{i}')" %></td> 
+					<td width="100px"><%= a.text_field :return_amt, :style=>"width:100%", :id => "r#{i}c12", :class => "nbb", :readOnly => true %></td> 
+					<td width="80px"><%= a.text_field :vat, :style=>"width:100%", :id => "r#{i}c13", :class => "nbb", :readOnly => true %></td> 
+					<td width="50px" id="r<%= i %>c14"></td>
+				</tr>
+				<% i+=1 %>
+			<% end %>
+			</table>
+			</div>
+		</td>
+		</tr>
+	</tbody>
+     </table>
+   </div>
+	</td>
+  </tr>
+ </table>
+	</div>
+<div align="center">
+ <table width="100%">
+<tr>
+		<td>Sub Total</td>
+		<td><%= f.text_field :discount_percentage, :class =>"text_field" ,:id => "sub_total"  %></td>
+		<td>Discount(%)</td>
+		<td><%= f.text_field :discount_percentage, :class =>"text_field" ,:id => "concession", :onkeyup => "cal_concession(id)"  %></td>
+		<td>Discount Amount</td>
+		<td><%= f.text_field :concession_amount, :class =>"text_field" ,:id => "concession_amount" , :readOnly => true %></td>
+		<td>Dis.Authority </td>
+		<td><%= f.text_field :ref,:id => "doctor1", :class =>"text_field"  %><br/>
+</tr>
+		<td>Gross</td>
+		<td><%= f.text_field :due_amount, :class =>"text_field" ,:id => "total", :readOnly => true %></td>
+		<td>Adjust</td>
+		<td><%= f.text_field :adjust, :id=>"adjust", :class =>"text_field", :onKeyup => "amount_calculation('find_net_amount')"  %><br/>
+		<td> Round</td>
+		<td><%= f.text_field :round, :class =>"text_field",:id => "round", :onKeyup => "amount_calculation('find_net_amount')", :readOnly => true %></td>
+		<td>Net.Amt </td>
+		<td><%= f.text_field :paid_amt, :class =>"text_field",:id => "reciept_amount", :readOnly => true %></td>
+</tr>
+<tr>
+		<td>Return Amount</td>
+		<td><%= f.text_field:return_amount, :class =>"text_field", :id => "amount" %></td>
+ </tr>
+ </tr>
+	</table>
+ </div><br>
+ <table align="center">
+<tr>
+
+	<td><%= submit_tag "", :value => " Update ", :class => "submit_button" %></td>
+	<td valign="middle"><%= link_to "back",  op_patient_returns_path, :class=>"new1" %></td>
+</tr>
+</table>
+ 
+ <% end %>

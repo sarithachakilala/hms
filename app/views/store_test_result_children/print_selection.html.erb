@@ -1,0 +1,65 @@
+<script type="text/javascript">
+	function set_all_check_boxs()
+	{
+		var length=<%= @total_tests %>
+		var str="";
+		var test="";
+		for(i=1;i<=length;i++)
+		{
+			if(document.getElementById("check"+i).checked)
+				if(i==1)
+					str="on"
+				else
+					str=str+"!on"
+			else
+				if(i==1)
+					str="off"
+				else
+					str=str+"!off"
+		}
+		for(j=1;j<=length;j++)
+		{
+			if(j==1)
+				test=document.getElementById("check_value"+j).value
+			else
+				test=test+"!"+document.getElementById("check_value"+j).value
+		}
+		document.getElementById("check_box_value").value=str
+		document.getElementById("test_names").value=test
+	}
+
+</script>
+<br/><br/>
+<% form_tag({ :action =>  :report_print_selection })do -%> 
+<table  align="center">
+	<tr>
+		<td><b>Lab No   :</b></td>
+		<td><%= @lab_no %></td>
+		<td>&nbsp;</td>
+		<td><b>Total Tests  :</b></td>
+		<td><%= @test_booking_children.length %></td>
+		<td>&nbsp;</td>
+		<td><b>Completed Tests  :</b></td>
+		<td><%= @total_tests %></td>
+		<input type="hidden" value="<%= @total_tests %>" id="length" name="length" >
+		<input type="hidden" value="<%= @lab_no %>" id="lab_id" name="lab_id" >
+	</tr>
+	<% i=1 %>
+	<% for test_booking_children in @test_booking_children %>
+		<% store_test_result = StoreTestResult.find_by_lab_no_and_service_name(@lab_no,test_booking_children.test_name) %>
+		<% if(store_test_result) %>
+		<tr>
+			<td colspan="4" align="right" valign="middle"><%= i %>.<input type="checkbox" id="check<%= i %>" name="check<%= i %>" checked="true"></td>
+			<input type="hidden" value="<%= test_booking_children.test_name %>" id="check_value<%= i %>" name="check_value<%= i %>" >
+			<td colspan="3"><%= test_booking_children.test_name %></td>
+			<% i=i+1 %>
+		</tr>
+		<% end %>
+	<% end %>
+	<input type="hidden" id="check_box_value" name="check_box_value" >
+	<input type="hidden" id="test_names" name="test_names" >
+	<tr>
+		<td colspan="8" align="center"><%= submit_tag "Print", :onClick =>"return set_all_check_boxs()"-%></td>
+	</tr>
+</table>
+<% end -%>

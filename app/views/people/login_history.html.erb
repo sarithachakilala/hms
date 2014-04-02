@@ -1,0 +1,52 @@
+<font face="Calibri">
+<h3><center><font color="#015a84">Log History</font></center></h3>
+<br />
+<style type="text/css">
+	 td.datacellone
+     {
+	 background-color: #c6dfff; color: black;
+	 }
+	 td.datacelltwo 
+	 {
+	 background-color: #d9e8f0; color: black;
+	 }
+  </style> 
+<body bgcolor="#ecf3f7">
+<div align="center" width="100%">
+<table width="100%" cellpadding="2" cellspacing="2">
+  <tr bgcolor =" #378bf8" style="color:white">
+    <th>S No</th>
+	<th>Name</th>
+    <th>IP Address</th>
+	<th>Status</th>
+	<th>Login Time</th>
+	<th>Logout Time</th>
+	<th>Duration</th>
+	
+  </tr>
+  <% i=0 %>
+<% @log_history.each do |log_history| %>
+<% if((log_history.id%2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+  end %>
+  <tr class='<%= id %>'>
+    <td><%=h i+=1 %></td>
+	<td><%=h log_history.name %></td>
+	<td><%=h log_history.ip_address %></td>
+	<td><%=h log_history.status %></td>
+	<td><%=h log_history.login_time %></td>
+	<td><%=h log_history.logout_time %></td>
+	<td>
+	<% if(log_history.status=="Log out") %>
+		<%=h (log_history.logout_time.to_i-log_history.login_time.to_i)/60 %> Min	
+	<% end %></td>
+	
+  </tr>
+<% end %>
+</table>
+<br />
+</div>
+<p align="right"><div align="right"><%= will_paginate @log_history,  :style => "font: bold 15px Calibri red;" %></p>
+</body></font>

@@ -1,0 +1,111 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Doctor Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/package_master_majestics' class="nav" style="text-decoration:none;">Package Master</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<center><h3><font color="#015a84">Package Master</font></h3>
+<%= link_to 'New', new_package_master_majestic_path, :class=>"new1" %>
+</center>
+<script type="application/javascript">
+	var sub_category
+  	function date_range(event)
+	{
+		
+		if(event.keyCode==13)
+		{
+		sub_category=document.getElementById('search_field').value
+			req = new Ajax.Request('/package_master_majestics/search/1', {
+				method: 'get',
+				parameters: {sub_category: sub_category },
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			});
+			function processReqChange(req) 
+			{
+				document.getElementById("tablesorter-demo").innerHTML=req.responseText
+			}
+		}
+	}
+
+	function click_search()
+	{
+		
+		sub_category=document.getElementById('search_field').value
+		req = new Ajax.Request('/package_master_majestics/search/1', {
+			method: 'get',
+			parameters: {sub_category: sub_category},
+			onComplete: function(transport) {
+			processReqChange(transport);
+			}
+		});
+		function processReqChange(req) 
+		{
+			document.getElementById("tablesorter-demo").innerHTML=req.responseText
+		}
+	}
+	function clear_file(id)
+	{
+		document.getElementById(id).value=""
+		document.getElementById(id).style.color="black"
+	}
+
+ </script>
+<table align ="right">
+  <tr>
+	<td><%= text_field_tag :search, params[:search], :id => 'search_field', :Placeholder => "Select Category", :onKeyUp =>"date_range(event)" %></td>
+    <td><a href='javascript:void(0)' onclick = "click_search()" ><img src="/images/buttons/search.png" class="info"/> </a></td>
+    </td>
+  </tr>
+</table>
+<div align="center" width="100%">
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+<tr>
+		<TH rowspan="2">S.No</TH> 
+		<TH rowspan="2">Org.Code</TH> 
+    	<TH rowspan="2">Category</TH>
+    	<TH rowspan="2">Sub category</TH>
+		<% if(@package_master_majestics[0]) %>
+			<TH colspan="<%= @package_master_majestics[0].package_master_majestic_children.length %>">Package Charge based on ward</TH>
+		<% end %>
+		<th rowspan="2" colspan="2" align="center">Permissions</th>
+	</tr>
+	<tr class="info">
+		<% if(@package_master_majestics[0]) %>
+			<% for package_child in @package_master_majestics[0].package_master_majestic_children %>
+				<th><%= package_child.ward_name %></th>
+			<% end %>
+		<% end %>
+  	</tr>
+</thead>
+<tbody>
+<% @i=0 %>
+<% @package_master_majestics.each do |package_master_majestic| %>
+<% if((@i%2)==0) 
+		id="datacelltwo"
+	else
+		id="datacellone"
+	end %>
+  <tr class='<%= id %>' style="height:30px">
+    <td><%= @i+=1 %></td>
+    <td><%=h package_master_majestic.org_code %></td>
+    <td><%=h package_master_majestic.category %></td>
+    <td><%=h package_master_majestic.sub_category %></td>
+    <% for package_child in package_master_majestic.package_master_majestic_children %>
+	<td><%= package_child.charge %></td>
+    <% end %>
+
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;edit&nbsp;&nbsp;&nbsp;', edit_package_master_majestic_path(package_master_majestic), :class=>"submit_button" %></td>   
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;delete&nbsp;&nbsp;&nbsp;', package_master_majestic, :confirm => 'Are you sure?', :method => :delete, :class=>"submit_button" %></td>
+    
+  </tr>
+<% end %>
+</tbody>
+</table>
+</div>
+<br/>
+<p align="right"><div align="right" class="pagination"><%= will_paginate @package_master_majestics,  :style => "font: bold 15px Arial red;" %></p>

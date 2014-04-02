@@ -1,0 +1,42 @@
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+	<tr>
+	<th>S.No</th> 
+	<th>Org Code</th>
+    <th>Org Location</th>
+    <th>Name</th>
+    <th>Code</th>
+    <th>Room</th>
+    <th>Ward</th>
+    <th>Floor</th>
+    <th>Status</th>
+    <th colspan="3">Permissions</th>
+   </tr>
+</thead>
+<tbody>
+<% @i=0 %>
+<% @bed_masters.each do |bed_master| %>
+<% if((@i % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+  end %>
+  <tr class='<%= id %>'>
+	<td><%= @i+=1 %></td>
+	<% room=RoomMaster.find_by_id(bed_master.room_master_id) 
+     	ward=WardMaster.find_by_id(bed_master.ward_master_id)
+    %>
+	<td><%=h bed_master.org_code %></td>
+    <td><%=h bed_master.org_location %></td>
+    <td><%=h bed_master.name %></td>
+    <td><%=h bed_master.code %></td>
+	<td><%=h room.name %></td>
+    <td><%=h ward.name %></td>
+    <td><%=h room.floor %></td> 
+    <td><%=h bed_master.status %></td>
+     <td class='abc' align="center"><%= link_to image_tag("buttons/display1.png", :class => "info", :border =>"0"), bed_master %></td>
+    <td class='abc'align="center"><%= link_to image_tag("buttons/modify.png", :class => "info", :border =>"0"), edit_bed_master_path(bed_master) %></td>
+	<td class='abc'align="center"><%= link_to image_tag("buttons/delete.png", :class => "info", :border =>"0"),bed_master, :confirm => 'Are you sure?', :method => :delete %>
+  </tr>
+<% end %>
+</table>

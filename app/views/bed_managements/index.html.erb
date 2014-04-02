@@ -1,0 +1,27 @@
+<h1>Listing bed_managements</h1>
+
+<table>
+  <tr>
+    <th>User</th>
+    <th>Ward</th>
+    <th>Room</th>
+    <th>Bed</th>
+  </tr>
+
+<% @bed_managements.each do |bed_management| %>
+  <tr>
+    <td><%=h bed_management.user_id %></td>
+    <td><%=h bed_management.ward %></td>
+    <td><%=h bed_management.room %></td>
+    <td><%=h bed_management.bed %></td>
+    <td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Show&nbsp;&nbsp;&nbsp;', bed_management, :class=>"submit_button" %></td>
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Edit&nbsp;&nbsp;&nbsp;', edit_bed_management_path(bed_management), :class=>"submit_button" %></td>   
+   
+    <td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Delete&nbsp;&nbsp;&nbsp;', bed_management, :confirm => 'Are you sure?', :method => :delete, :class=>"submit_button" %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New bed_management', new_bed_management_path %>

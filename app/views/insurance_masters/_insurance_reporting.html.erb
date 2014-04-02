@@ -1,0 +1,36 @@
+<br/>
+<div align="center" width="100%">
+<table align="center" width="90%" border="1" cellspacing=0>
+	<tr bgcolor ="#378bf8" style="color:white;">
+		<th>S.No</th>
+		<th>Insurance Name</th>
+		<th>Police No</th>
+		<th>Plan Name</th>
+		<th>Date</th>
+		<th>Patient Name</th>
+		<th>MR No</th>
+		<th>City</th>
+		<th>Details</th>
+  </tr>
+<% @i=0 %>
+<% @total=0 %>
+<% @rig1.each do |rig1| %>
+
+ <% if((@i%2)==0) 
+		id="datacelltwo" 
+	else
+		id="datacellone"
+  end %> 
+  <tr class='<%= id %>' style="height:30px">
+		<td><%= @i=@i+1 %>
+		<td><%=h rig1.ins_company_name %></td>
+		<td><%=h rig1.policy_no %></td>
+		<td><%=h rig1.plan_name %></td>
+		<td><%=h rig1.reg_date %></td>
+		<td><%=h rig1.patient_name %></td>
+		<td><%=h rig1.mr_no %></td>
+		<td><%=h rig1.city %></td>
+		<td align="center"><a href="javascript:void(0)" onClick="details('<%=h rig1.id %>')" class="submit_button" >&nbsp;&nbsp;Show&nbsp;&nbsp;</a>
+	</tr>
+<% end %>
+</table>

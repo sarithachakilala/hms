@@ -1,0 +1,183 @@
+
+<body onload="window.print();">
+
+<script type="text/javascript"> 
+	function print_page()
+	{
+		document.getElementById('print').style.display='none'
+		document.getElementById('back').style.display='none'
+		window.print();
+		return false;
+	}
+</script>
+<h3><font color="#015a84">Showing <%=h @issues_to_op.mr_no %> Record</font></h3>
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div align="center">
+<table width="100%">
+		<tr>
+		<td class='<%= id %>'>Org.Code</td>
+		<td class='<%= id1 %>'><%=h @issues_to_op.org_code %></td>
+		<td class='<%= id %>'>Org.Location</td>
+		<td class='<%= id1 %>'><%=h @issues_to_op.org_location  %></td> 
+		<td class='<%= id %>'>MR No</td>
+		<td class='<%= id1 %>'><%=h @issues_to_op.mr_no %></td>
+		<td class='<%= id %>'> Dept.Code </td>
+		<td class='<%= id1 %>'><%=h @issues_to_op.dep_code  %></td> 
+	</tr>
+	<tr>	
+		<td class='<%= id %>'> Dept.Name </td>
+		<td class='<%= id1 %>'><%=h @issues_to_op.dep_name %></td>
+		<td class='<%= id %>'>HOD</td>
+		<td class='<%= id1 %>'><%=h @issues_to_op.hod %></td>
+
+
+		<td class='<%= id %>'>  Issue No</td>
+		<td class='<%= id1 %>'> <%=h @issues_to_op.issue_no %></td>
+	
+		<td class='<%= id %>'> Issue Dt</td>
+		<td class='<%= id1 %>'> <%=h @issues_to_op.issue_date %></td> 
+			</tr>
+	<tr>			
+	</table>
+
+<table border="1" cellspacing="0"  class="sofT" cellpadding="4" width="100%">
+  <tr class="info">
+
+	<td class='<%= id %>'>Item Name</th>
+	<td class='<%= id %>'>Item Code</th>
+	<td class='<%= id %>'>Batch No</th>
+	<td class='<%= id %>'>Expiry Dt</th>
+	<td class='<%= id %>'>Quantity</th>
+	<td class='<%= id %>'>Sale Rate</th>
+	<td class='<%= id %>'>Issued Qty</th>
+	<td class='<%= id %>'>Discount</th>
+	<td class='<%= id %>'>Amount</th>
+</tr>
+<% for store in @issues_to_op.issue_op_child %>
+<tr>
+<td class='<%= id1 %>'><%=h store.item_name %></td>
+<td class='<%= id1 %>'><%=h store.item_code %></td>
+<td class='<%= id1 %>'><%=h store.batch_no %></td>
+<td class='<%= id1 %>'><%=h store.expiry_date %></td>
+<td class='<%= id1 %>'><%=h store.quantity %></td>
+<td class='<%= id1 %>'><%=h store.sale_rate %></td>
+<td class='<%= id1 %>'><%=h store.issue_qty %></td>
+<td class='<%= id1 %>'><%=h store.discount %></td>
+<td class='<%= id1 %>'><%=h store.total %></td>
+</tr>
+<% end %>
+</table>
+<br>
+
+<table border="1" cellspacing="0"  class="sofT" cellpadding="4" width="100%">
+  <tr class="info">
+
+	<td class='<%= id %>'>Item Name</th>
+	<td class='<%= id %>'>Item Code</th>
+	<td class='<%= id %>'>Batch No</th>
+	<td class='<%= id %>'>Expiry Dt</th>
+	<td class='<%= id %>'>Quantity</th>
+	<td class='<%= id %>'>Sale Rate</th>
+	<td class='<%= id %>'>Issued Qty</th>
+	<td class='<%= id %>'>Discount</th>
+	<td class='<%= id %>'>Amount</th>
+</tr>
+<% for store in @issues_to_op.issue_ip_child %>
+<tr>
+<td class='<%= id1 %>'><%=h store.item_name %></td>
+<td class='<%= id1 %>'><%=h store.item_code %></td>
+<td class='<%= id1 %>'><%=h store.batch_no %></td>
+<td class='<%= id1 %>'><%=h store.expiry_date %></td>
+<td class='<%= id1 %>'><%=h store.quantity %></td>
+<td class='<%= id1 %>'><%=h store.sale_rate %></td>
+<td class='<%= id1 %>'><%=h store.issue_qty %></td>
+<td class='<%= id1 %>'><%=h store.discount %></td>
+<td class='<%= id1 %>'><%=h store.total %></td>
+</tr>
+<% end %>
+</table>
+<br>
+
+<table border="1" cellspacing="0"  class="sofT" cellpadding="4" width="100%">
+  <tr class="info">
+
+	<td class='<%= id %>'>Item Name</th>
+	<td class='<%= id %>'>Item Code</th>
+	<td class='<%= id %>'>Batch No</th>
+	<td class='<%= id %>'>Expiry Dt</th>
+	<td class='<%= id %>'>Quantity</th>
+	<td class='<%= id %>'>Sale Rate</th>
+	<td class='<%= id %>'>Issued Qty</th>
+	<td class='<%= id %>'>Discount</th>
+	<td class='<%= id %>'>Amount</th>
+</tr>
+<% for store in @issues_to_op.issues_to_osp_child %>
+<tr>
+<td class='<%= id1 %>'><%=h store.item_name %></td>
+<td class='<%= id1 %>'><%=h store.item_code %></td>
+<td class='<%= id1 %>'><%=h store.batch_no %></td>
+<td class='<%= id1 %>'><%=h store.expiry_date %></td>
+<td class='<%= id1 %>'><%=h store.quantity %></td>
+<td class='<%= id1 %>'><%=h store.sale_rate %></td>
+<td class='<%= id1 %>'><%=h store.issue_qty %></td>
+<td class='<%= id1 %>'><%=h store.discount %></td>
+<td class='<%= id1 %>'><%=h store.total %></td>
+</tr>
+<% end %>
+</table>
+<br>
+<table width="100%">
+	<td class='<%= id %>'> Receipt No</td>
+		<td class='<%= id1 %>'> <%=h @issues_to_op.receipt_no %></td>
+ 
+		<td class='<%= id %>'> Grand Total </td>
+		<td class='<%= id1 %>'> <%=h @issues_to_op.total_amount %></td>
+		
+
+		<td class='<%= id %>'> Discount(%)</td>
+		<td class='<%= id1 %>'> <%=h @issues_to_op.discount_percentage %></td>
+ 		<td class='<%= id %>'>Auth.Dep</td>
+		<td class='<%= id1 %>'> <%=h @issues_to_op.discount_authorization %></td>
+	</tr>
+	<tr>
+		<td class='<%= id %>'>  Auth.Doc</td>
+		<td class='<%= id1 %>'>  <%=h @issues_to_op.ref %></td>
+	
+		<td class='<%= id %>'>Total Amt</td>
+		<td class='<%= id1 %>'> <%=h @issues_to_op.due_amount %></td>
+
+		<td class='<%= id %>'>Paid Amt</td>
+		<td class='<%= id1 %>'> <%=h @issues_to_op.paid_amt %></td>
+
+		<td class='<%= id %>'>Due Amt</td>
+		<td class='<%= id1 %>'> <%=h @issues_to_op.due %></td>
+</tr>
+	<tr>	
+		<td class='<%= id %>'>Dept</td>
+		<td class='<%= id1 %>'> <%=h @issues_to_op.due_ref %> </td>
+		<td class='<%= id %>'>Doc</td> 
+		<td class='<%= id1 %>'><%=h @issues_to_op.due_authorization %></td>
+
+		<td class='<%= id %>'>Total Amt</td>
+		<td class='<%= id1 %>'> <%=h @issues_to_op.due_amount %></td>
+	
+		<td class='<%= id %>'>Payment Mode</td>
+		<td class='<%= id1 %>'> <%=h @issues_to_op.payment_type %></td>
+</tr>
+	<tr>
+		<td class='<%= id %>'>Bank Name</td>
+		<td class='<%= id1 %>'> <%=h @issues_to_op.bank_name %></td>
+
+		<td class='<%= id %>'>Cheque No</td>
+		<td class='<%= id1%>'> <%=h @issues_to_op.cheque_number %></td>
+
+		<td class='<%= id %>'> Card Number</td>
+		<td class='<%= id1 %>'> <%=h @issues_to_op.card_number %></td>
+
+		<td class='<%= id %>'>  Expiry Date</td>
+		<td class='<%= id1 %>'> <%=h @issues_to_op.c_expiry_date %></td>
+	</tr>
+</table>
+
+</div>

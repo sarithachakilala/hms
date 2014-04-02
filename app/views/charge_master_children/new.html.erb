@@ -1,0 +1,35 @@
+<h1>New charge_master_child</h1>
+
+<% form_for(@charge_master_child) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :charge_master_id %><br />
+    <%= f.text_field :charge_master_id %>
+  </p>
+  <p>
+    <%= f.label :reg_type %><br />
+    <%= f.text_field :reg_type %>
+  </p>
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :discount_price %><br />
+    <%= f.text_field :discount_price %>
+  </p>
+  <p>
+    <%= f.label :discount_persentage %><br />
+    <%= f.text_field :discount_persentage %>
+  </p>
+  <p>
+    <%= f.label :amount %><br />
+    <%= f.text_field :amount %>
+  </p>
+  <p>
+    <%= f.submit 'Create' %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', charge_master_children_path %>

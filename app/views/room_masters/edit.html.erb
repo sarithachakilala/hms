@@ -1,0 +1,49 @@
+<% form_for(@room_master) do |f| %>
+ <div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">General Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/room_masters?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Room Masters</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+  <div  width="100%">
+<fieldset>
+<legend><div class="font"><b> Edititng Room Information</b></div></legend>
+<table align="center" >
+  <tr>
+	<td>Org Code </td>
+    <td><%= f.text_field :org_code, {:id => "org_code", :class =>"text_field"} %></td>
+	<td> Org Location </td><td>
+    <%= f.text_field :org_location, :class =>"text_field", :id =>"org_name" %>	<td><%= f.label :ward_master_id %><sup>*</sup></td>
+	<td><%= select :ward_master,"", WardMaster.find(:all).collect{|p| [p.name]},{:include_blank =>true},{:name=> "ward", :value=>@ward} %> </td>
+	<td><%= f.label :name %></td>
+	<td><%= f.text_field :name, :class =>"text_field" %>  </td>
+</tr>
+<tr>
+<td><%= f.label :code %></td>
+	<td><%= f.text_field :code, :class =>"text_field"%> </td>
+	<td><%= f.label :floor %></td>
+	<td><%= f.text_field :floor, :class =>"text_field" %></td>
+	<td> <%= f.label :no_of_beds %></td>
+	<td> <%= f.text_field :no_of_beds, :class =>"text_field" %></td>
+	<td> <%= f.label :extension_no %></td>
+	<td><%= f.text_field :extension_no, :class =>"text_field"%></td>
+    <td><%= f.label :status %></td>
+	<td><%= f.text_field :status, :class =>"text_field" %></td>
+
+  </td>
+  </tr>
+  </table>
+  </fieldset>
+  <div>
+<table align="center">
+			<tr>
+					<td><%= submit_tag "", :value => " Update ", :class => "submit_button" %></td>
+				<td valign="middle"><%= link_to "back",  room_masters_path, :class=>"new1" %></td>
+			</tr>
+		</table>
+</table>
+</div>
+<% end %>
+

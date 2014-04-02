@@ -1,0 +1,64 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">IP Patients >>&nbsp;&nbsp;&nbsp;<a HREF='/appointment_payments?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Appointment Payments</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div  width="100%">
+<h4 align=center>Appointment Payment Details</h4><br/>
+<table align="center" width="70%" border="0" cellspacing="2" cellpadding="4">
+
+<tr>
+	<td class='<%= id %>'><b>Org code</b></td>
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id1 %>'><%=h @appointment_payment.org_code %>
+	<td class='<%= id %>'><b>Org location:</b></td>
+	<td class='<%= id %>'>:</td>  
+	 <td class='<%= id %>'> <%=h @appointment_payment.org_location %></td>
+</tr>
+<tr>
+	<td class='<%= id %>'><b>Registration Id:</b></td>
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id %>'><%=h @appointment_payment.registration_id %>
+	<td class='<%= id %>'><b>Op number:</b></td>
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @appointment_payment.op_number %>
+ </tr>
+ <tr>
+	<td class='<%= id %>'><b>MR No:</b></td>
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id %>'><%=h @appointment_payment.mr_no %>
+	<td class='<%= id %>'><b>Department:</b></td>
+	<td class='<%= id %>'>:</td> 
+	 <td class='<%= id %>'><%=h @appointment_payment.department %></td>
+  </tr>
+ 
+<tr>
+    <td class='<%= id %>'><b>Appt.Time:</b></td>
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id %>'><%=h @appointment_payment.appt_time%></td>
+	<td class='<%= id %>'><b>Appt.Date</b></td>
+	<td class='<%= id %>'>:</td> 
+	 <td class='<%= id %>'><%=h @appointment_payment.appt_date %></td>
+</tr>
+<tr>
+    <td class='<%= id %>'><b>Department:</b></td>
+	<td class='<%= id %>'>:</td> 
+	<td class='<%= id %>'><%=h @appointment_payment.department %></td>
+	<td class='<%= id %>'><b>Consultant Id:</b></td>
+    <td class='<%= id %>'>:</td> 
+	<td class='<%= id %>'><%=h @appointment_payment.consultant_id %></td>
+</tr> 
+ <tr>
+    <td class='<%= id %>'><b>Bill No:</b></td>
+	<td class='<%= id %>'>:</td> 
+    <td class='<%= id %>'><%=h @appointment_payment.bill_no11 %></td>
+</tr>
+</table>
+</div>
+<br/>
+<center><%= link_to "Back",  appointment_payments_path, :class=>"new1" %></center>

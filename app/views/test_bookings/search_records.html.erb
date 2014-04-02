@@ -1,0 +1,124 @@
+<script type="text/javascript">
+	function set_url()
+	{
+		from_date=document.getElementById('from_date').value
+		to_date=document.getElementById('to_date').value
+		lab_id=document.getElementById('lab_id').value
+		if(lab_id!="")
+			lab_id="Lab"+lab_id;
+		mr_no=document.getElementById('mr_no').value
+		first_name=document.getElementById('first_name').value
+		var org_code=document.getElementById('org_code').value
+		var department=document.getElementById('department').value
+		document.getElementById('search_result').src="/test_bookings/search_results/1?from_date="+from_date+"&to_date="+to_date+"&lab_id="+lab_id+"&mr_no="+mr_no+"&first_name="+first_name+"&org_code="+org_code+"&department="+department
+	}
+	
+
+
+	function set_url_by_event(event)
+	{
+		if((event.keyCode>47 && event.keyCode<58) || event.keyCode==8 || event.keyCode==13)
+		{
+			if(event.keyCode!=13)
+				return false;
+			from_date=document.getElementById('from_date').value
+			to_date=document.getElementById('to_date').value
+			lab_id=document.getElementById('lab_id').value
+			if(lab_id!="")
+				lab_id="Lab"+lab_id;
+			mr_no=document.getElementById('mr_no').value
+			first_name=document.getElementById('first_name').value
+			var org_code=document.getElementById('org_code').value
+			document.getElementById('search_result').src="/test_bookings/search_results/1?from_date="+from_date+"&to_date="+to_date+"&lab_id="+lab_id+"&mr_no="+mr_no+"&first_name="+first_name+"&org_code="+org_code
+		}
+		else
+		{
+			alert("Please enter number only");	
+			document.getElementById('lab_id').value=""
+		}	
+	}
+
+	function clear_data()
+	{
+		document.getElementById('from_date').value=""
+		document.getElementById('to_date').value=""
+		document.getElementById('lab_id').value=""
+		document.getElementById('mr_no').value=""
+		document.getElementById('first_name').value=""
+	}
+</script>
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Laboratory >> &nbsp;&nbsp;&nbsp;<a HREF='javascript:void(0);' id="store_test_result" onclick="setMyDiv('store_test_results/search/1?user_id=<%= @user_id %>','new','')" class="nav" style="text-decoration:none;">Perform Tests</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<div id="form_data">
+<body onload="set_url()">
+<% @date=format_date(:sort, Date.today ) %>
+<fieldset><legend>Search Tests</legend>
+	<table width="95%" align="center">
+		<tr>
+			<td>Org.Code</td>
+			<td><%= text_field_tag ('org_code','', :value => @org_code, :size => 20, :required => true, :readonly => true) %></td>
+			<td>Form Date</td>
+			<td><%= text_field_tag('from_date','',:size=>20, :value => @date) %><a href="javascript:void(0)" onClick="setYears(2000, 2050);showCalender(this,'from_date');" >
+			<img src="/images/cal.gif" ></a></td>
+			<td>To Date</td>
+			<td><%= text_field_tag('to_date','',:size=>20, :value => @date) %><a href="javascript:void(0)" onClick="setYears(2000, 2050);showCalender(this,'to_date');" >
+			<img src="/images/cal.gif" ></a></td>
+			<td>Department</td>
+			<td><%= select :department,'',[['Laboratory'],['Radiology']],{:prompt =>false}, {:id => "department", :onChange => "set_url()"} %></td>
+			</tr>
+		<tr>
+			<td>Lab No</td>
+			<td><%= text_field_tag('lab_id','',:size=>15, :onKeyUp => "set_url_by_event(event)") %></td>
+			<td>MR No</td>
+			<td><%= text_field_tag('mr_no','',:size=>20) %></td>
+			<td>Patient Name</td>
+			<td><%= text_field_tag('first_name','',:size=>20) %></td>
+			<td><a href="javascript:void(0);" class="new1" onClick ="set_url()">Search</a></td>
+			<td><%= link_to 'Clear','', :class=>"new1",:onClick => "clear_data()"  %></td>
+		</tr>
+	</table>
+</fieldset>
+<iframe src="" id="search_result" width="100%" height="400px" frameborder=0></iframe>
+<table id="calenderTable">
+    <tbody id="calenderTableHead">
+        <tr>
+			<td colspan="4" align="center">
+	          <select onChange="showCalenderBody(createCalender(document.getElementById('selectYear').value,
+	           this.selectedIndex, false));" id="selectMonth">
+	              <option value="0">Jan</option>
+	              <option value="1">Feb</option>
+	              <option value="2">Mar</option>
+	              <option value="3">Apr</option>
+	              <option value="4">May</option>
+	              <option value="5">Jun</option>
+	              <option value="6">Jul</option>
+	              <option value="7">Aug</option>
+	              <option value="8">Sep</option>
+	              <option value="9">Oct</option>
+	              <option value="10">Nov</option>
+	              <option value="11">Dec</option>
+	          </select>
+            </td>
+            <td colspan="2" align="center">
+			    <select onChange="showCalenderBody(createCalender(this.value, 
+				document.getElementById('selectMonth').selectedIndex, false));" id="selectYear">
+				</select>
+			</td>
+           
+		</tr>
+	</tbody>
+	<tbody id="calenderTableDays">
+		<tr style="">
+			<td>Sun</td><td>Mon</td><td>Tue</td><td>Wed</td><td>Thu</td><td>Fri</td><td>Sat</td>
+		</tr>
+	</tbody>
+    <tbody id="calender"></tbody>
+</table>
+</body>
+</div>

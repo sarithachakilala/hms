@@ -1,0 +1,69 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Service Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/charge_masters?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Charge Masters</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div  width="100%">
+ <table align="center" width="70%" border="0" cellspacing="2" cellpadding="4">
+		 
+   
+	<td class='<%= id %>'><b>Org.Code</b></td>
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @charge_master.org_code %></td>
+	<td class='<%= id %>'><b>Org.Location</b></td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @charge_master.org_location %></td>
+  <td class='<%= id %>'><b>Service group</b></td>
+  	<td class='<%= id %>'>:</td>
+  <td class='<%= id1 %>'><%=h @charge_master.service_group %></td>
+</tr>
+<tr>
+  <td class='<%= id %>'><b>Service name</b></td>
+  	<td class='<%= id %>'>:</td>
+  <td class='<%= id1 %>'><%=h @charge_master.service_name %></td>
+  <td class='<%= id %>'><b>Test name</b></td>
+  	<td class='<%= id %>'>:</td>
+  <td class='<%= id1 %>'><%=h @charge_master.test_name %></td>
+  <td class='<%= id %>'><b>Charge</b></td>
+  	<td class='<%= id %>'>:</td>
+  <td class='<%= id1 %>'><%=h @charge_master.charge %></td>
+</tr>
+
+<tr>
+
+  <td class='<%= id %>'><b>Insurance</b></td>
+  	<td class='<%= id %>'>:</td>
+  <td class='<%= id1 %>'><%=h @charge_master.insurance %></td>
+  <td class='<%= id %>'><b>Ins discount type</b></td>
+  	<td class='<%= id %>'>:</td>
+  <td class='<%= id1 %>'><%=h @charge_master.ins_discount_type %></td>
+  <td class='<%= id %>'><b>Ins discount value</b></td>
+  	<td class='<%= id %>'>:</td>
+  <td class='<%= id1 %>'><%=h @charge_master.ins_discount_value %></td>
+</tr>
+
+<tr>
+  <td class='<%= id %>'><b>Corporate</b></td>
+  	<td class='<%= id %>'>:</td>
+  <td class='<%= id1 %>'><%=h @charge_master.corporate %></td>
+  <td class='<%= id %>'><b>Crp discount type</b></td>
+  	<td class='<%= id %>'>:</td>
+  <td class='<%= id1 %>'><%=h @charge_master.crp_discount_type %></td>
+  <td class='<%= id %>'><b>Crp discount value</b></td>
+  	<td class='<%= id %>'>:</td>
+  <td class='<%= id1 %>'><%=h @charge_master.crp_discount_value %></td>
+</table>
+ 
+ </div>
+<br/>
+<table align ="center">
+  <tr>
+	<td valign="middle"><%= link_to "Back",  charge_masters_path, :class=>"new1" %></td>
+</tr>
+</table>
+

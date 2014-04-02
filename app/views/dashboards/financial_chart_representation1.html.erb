@@ -1,0 +1,228 @@
+<head>
+<%= javascript_include_tag 'dashboards/jquery-1.4.2.min' %>
+<%= javascript_include_tag 'dashboards/jquery.min' %>
+<%= javascript_include_tag 'dashboards/jquery-1.5.2.min' %>
+<%= javascript_include_tag 'dashboards/rails' %>
+<%= javascript_include_tag 'dashboards/exporting.src' %>
+<%= javascript_include_tag 'dashboards/highcharts.src' %>
+<%= javascript_include_tag 'dashboards/dark-green' %> 
+<%= javascript_include_tag 'dashboards/exporting' %>
+<% if(@revenue_type=="Monthly") %> 
+
+<script type="text/javascript" charset="utf-8">
+var chart;
+$(document).ready(function() {
+   chart = new Highcharts.Chart({
+      chart: {
+         renderTo: 'container',
+         defaultSeriesType: 'column'
+      },
+      title: {
+         text: 'Year wise monthly Finance for different modules.'
+      },
+      xAxis: {
+         categories: [
+			'Jan', 
+            'Feb', 
+            'Mar', 
+            'Apr', 
+            'May', 
+            'Jun', 
+            'Jul', 
+            'Aug', 
+            'Sep', 
+            'Oct', 
+            'Nov', 
+            'Dec'
+			]
+      },
+	  yAxis: {
+         title: {
+            text: 'Amount (Rs)'
+         }
+      },
+      tooltip: {
+         formatter: function() {
+            return ''+
+                this.series.name +': '+ this.y +'/-';
+         }
+      },
+      credits: {
+         enabled: false
+      },
+      series: [{
+         name: 'Registrations',
+         data: [<% for j in 0...@array.length %>
+				 <%= @array[j] %>,
+				<% end %>]
+      }, {
+         name: 'Appointments',
+         data: [<% for j in 0...@array1.length %>
+				 <%= @array1[j] %>,
+				<% end %>]
+      }, {
+         name: 'OPBilling',
+         data: [<% for j in 0...@array2.length %>
+				 <%= @array2[j] %>,
+				<% end %>]
+      }, {
+         name: 'Advance Payments',
+         data: [<% for j in 0...@array3.length %>
+				 <%= @array3[j] %>,
+				<% end %>]
+      },
+	   {
+         name: 'Final Bill',
+         data: [<% for j in 0...@array4.length %>
+				 <%= @array4[j] %>,
+				<% end %>]
+      }
+	  ]
+   });
+   
+   
+});
+
+ </script>  
+
+<% elsif(@revenue_type=="Weekly") %>
+
+<script type="text/javascript" charset="utf-8">
+
+var chart;
+$(document).ready(function() {
+   chart = new Highcharts.Chart({
+      chart: {
+         renderTo: 'container',
+         defaultSeriesType: 'column'
+      },
+      title: {
+         text: 'Date wise Finance for different modules '
+      },
+      xAxis: {
+	         
+         categories: [<% for j in @from_date..@to_date %>
+	       
+			'<%= j.to_s %>',
+		
+		
+		<% end %>]
+		
+      },
+	  yAxis: {
+         title: {
+            text: 'Amount (Rs)'
+         }
+      },
+      tooltip: {
+         formatter: function() {
+            return ''+
+                this.series.name +': '+ this.y +'/-';
+         }
+      },
+      credits: {
+         enabled: false
+      },
+      series: [{
+         name: 'Registrations',
+         data: [<% for j in 0...@array.length %>
+				 <%= @array[j] %>,
+				<% end %>]
+      }, {
+         name: 'Appointments',
+         data: [<% for j in 0...@array1.length %>
+				 <%= @array1[j] %>,
+				<% end %>]
+      }, {
+         name: 'OPBilling',
+         data: [<% for j in 0...@array2.length %>
+				 <%= @array2[j] %>,
+				<% end %>]
+      }, {
+         name: 'Advance Payments',
+         data: [<% for j in 0...@array3.length %>
+				 <%= @array3[j] %>,
+				<% end %>]
+      },
+	   {
+         name: 'Final Bill',
+         data: [<% for j in 0...@array4.length %>
+				 <%= @array4[j] %>,
+				<% end %>]
+      }]
+   });
+   
+   
+});
+
+ </script> 
+ 
+ <% else %>
+ 
+<script type="text/javascript" charset="utf-8">
+ var chart;
+$(document).ready(function() {
+   chart = new Highcharts.Chart({
+      chart: {
+         renderTo: 'container',
+         defaultSeriesType: 'column'
+      },
+      title: {
+         text: 'Yearly Finance for different modules'
+      },
+      xAxis: {
+         categories: [<%= @year %>]
+      },
+	  yAxis: {
+         title: {
+            text: 'Amount (Rs)'
+         }
+      },
+      tooltip: {
+         formatter: function() {
+            return ''+
+                this.series.name +': '+ this.y +'/-';
+         }
+      },
+      credits: {
+         enabled: false
+      },
+      series: [{
+         name: 'Registrations',
+         data: [
+				 <%= @array %>
+				]
+      }, {
+         name: 'Appointments',
+         data: [
+				 <%= @array1 %>
+				]
+      }, {
+         name: 'OPBilling',
+         data: [
+				 <%= @array2 %>
+				]
+      }, {
+         name: 'Advance Payments',
+         data: [
+				 <%= @array3 %>
+				]
+      },
+	   {
+         name: 'Final Bill',
+         data: [
+				 <%= @array4 %>
+				]
+      }]
+   });
+   
+   
+});
+ 
+ </script>
+ 
+ 
+<% end %>	
+<body>
+    <div id="container" style="width: 800px; height: 400px; margin: 0 auto"></div>
+ </body>    

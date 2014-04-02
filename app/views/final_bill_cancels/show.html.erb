@@ -1,0 +1,60 @@
+
+<div id="links" class="header">
+&nbsp;&nbsp;&nbsp; Payments>> IP  >>&nbsp;&nbsp;&nbsp;<a HREF='/final_bill_cancels' class="nav" style="text-decoration:none;">Final Bill Cancels</a>
+</div>
+
+<div class="dateformat"><%= format_date(:short, Date.today ) %></div>
+<br/>
+<% form_for(@final_bill_cancel) do |f| %>
+  <%= f.error_messages %>
+<div>
+<table width="100%" bgcolor="#87CEEB">
+<tr><td colspan="8"><fieldset><legend><div class="font"><b><%=h @final_bill_cancel.admn_no %> Record</b></div></legend>
+ <%= f.hidden_field :id, :id => "record_id" %>
+	<table width="100%">
+  <tr>
+    <td>Admn.No</td>
+    <td><%= f.text_field :admn_no,:size =>20, :id=>"admn_no", :readonly => true%></td>
+    <td>MR No</td>
+    <td><%= f.text_field :mr_no,:size =>20, :id =>"mr_no" , :readonly => true%></td>
+	<td>Date</td>
+    <td><%= f.text_field :final_bill_cancel_date, :size =>20, :readonly =>true, :value => "#{@date}"  %></td>
+	<td>Bill No</td>
+    <td><%= f.text_field :receipt_no, :size =>20, :id=>"receipt_no", :readonly => true %></td>
+  </tr>
+  <tr>
+	<td>Org.Code</td>
+	
+		<td><%= f.text_field :org_code, :value => @org_code, :size => 20, :id => "org_code", :readonly => true %></td>
+	
+    <td>Org.Location</td>
+    <td><%= f.text_field :org_location, :value => @org_location, :size => 20, :id => "org_location", :readonly => true %></td>
+    <td>Patient Name</td>
+	<td><%= text_field_tag ('first_name','', :size =>20, :readonly => true) %></td>
+  </tr>
+  <tr>
+	<td>Floor</td>
+	<td><%= text_field_tag ('floor','', :size =>20, :readonly => true) %></td>
+	<td>Ward</td>
+	<td><%= text_field_tag ('ward','', :size =>20, :readonly => true) %></td>
+	<td>Room</td>
+	<td><%= text_field_tag ('room','', :size =>20, :readonly => true) %></td>
+	<td>Bed</td>
+	<td><%= text_field_tag ('bed','', :size =>20, :readonly => true) %></td>
+  </tr>
+  <tr>
+    <td>Final Bill Amount</td>
+    <td><%= f.text_field :final_bill_amount, :size =>20, :id => "final_bill_amount", :readonly => true %></td>
+    <td>Final Bill Cancel Amount</td>
+    <td><%= f.text_field :final_bill_cancel_amount, :size =>20, :readonly => true%></td>
+  </tr></table></fieldset></td>
+ 
+
+
+</body>
+<br/>
+<table align="center">
+<tr><td><%= link_to "Back",  final_bill_cancels_path, :class=>"new1" %></td></tr>
+</table>
+</div>
+<% end %>

@@ -1,0 +1,45 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Employee Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/refferal_masters' class="nav" style="text-decoration:none;">Referral Master</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<br/>
+
+<% form_for(@refferal_master) do |f| %>
+<div id="form_data">
+<fieldset>
+<legend><div class="font"><b>Referral Masters</b></div></legend>
+	<table width="100%">
+ <tr>
+ <%= hidden_field('call_from','', :value => @call_from, :id=>"call_from") %>
+	<td>Org.Code</td>
+	<td><%= f.text_field :org_code, :size => 20, :id => "org_code", :required => true, :value=>@org_code, :readOnly=>true %></td>
+	<td>Org.Location</td>
+	<td><%= f.text_field :org_location, :size => 20, :id => "org_location", :required => true, :value=>@org_location, :readOnly=>true %></td>
+	<td>Referral Name<sup>*</sup></td>
+	<td><%= f.text_field :refferal_name, :size => 20 %></td>
+</tr>
+<tr>
+	
+	<td>Ph.No<sup>*</sup></td>
+	<td><%= f.text_field :ph_no, :size => 20 %></td>
+	<td>Email</td>
+	<td><%= f.text_field :email, :size => 20 %></td>
+    <%= f.hidden_field :user_id, :value=>@person.id %>
+ </tr>
+</table>
+<table align ="center">
+  <tr>
+  <% if(@call_from=="registrations") %>
+  	<td><%= submit_tag "", :value => " Save ", :class => "submit_button", :onClick => "this.disabled=true;this.value='Process..';this.form.submit(); " %></td>
+ <% else %>
+  	<td><%= submit_tag "", :value => " Save ", :class => "submit_button", :onClick => "this.disabled=true;this.value='Process..';this.form.submit();" %></td>
+   <td><%= submit_tag "", :value => " Reset ", :class => "submit_button" %></td>
+	<td valign="middle"><%= link_to "Back",  refferal_masters_path, :class=>"new1" %></td> 
+<% end %>
+  </tr>
+</table>
+<% end %>

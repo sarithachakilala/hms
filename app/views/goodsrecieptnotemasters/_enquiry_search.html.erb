@@ -1,0 +1,34 @@
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div align="center">
+
+<table width="90%" class="sofT" cellpadding="3">
+<tr class="info">
+<th>S.No</th>
+<th>Item Name</th>
+<th>Item Code</th>
+<th>Batch No</th>
+<th>Expiry Date</th>
+<th>Quantity</th>
+<th>Sale Rate</th>
+</tr>
+ <% @i=0 %>
+<% @ip_child.each do |ip_child| %>
+  <% if ((@i%2==0))
+  id="datacelltwo"
+  else
+  id="datacellone"
+  end %>
+  <tr class='<%= id %>'>
+	<td><%= @i+=1 %></td>
+
+    <td><%=h ip_child.item_name %></td>
+    <td><%=h ip_child.item_code %></td>
+    <td><%=h ip_child.batch_no %></td>
+	<td><%=h ip_child.expiry_date  %></td>
+	<td><%=h ip_child.received_qty %></td>
+	<td><%=h ip_child.sale_rate %></td>
+    
+ </tr>
+<% end %>
+</div>

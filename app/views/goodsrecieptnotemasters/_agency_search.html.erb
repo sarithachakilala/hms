@@ -1,0 +1,33 @@
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div align="center" width="100%">
+<table align="center" width="90%" border="1" cellspacing=0>
+<tr class="info">
+<th>S.No</th>
+<th>Agency Name</th>
+<th>Purchase Date</th>
+<th>Invoice No</th>
+<th>Invoice Date</th>
+<th>Note Amount</th>
+<th>Show</th>
+<th>Print</th>
+</tr>
+ <% @i=0 %>
+<% @goodsreceipt.each do |ip_child| %>
+  <% if ((@i%2==0))
+  id="datacelltwo"
+  else
+  id="datacellone"
+  end %>
+  <tr class='<%= id %>'>
+	<td><%= @i+=1 %></td>
+    <td><%=h ip_child.agency_name %></td>
+    <td><%=h ip_child.po_date.strftime("%d-%m-%Y") %></td>
+	<td><%=h ip_child.invoice_number %></td>
+	<td><%=h ip_child.invoice_date %></td>
+    <td><%=h number_with_precision(ip_child.total_amount, :precision => 2, :separator => '.') %></td>
+	<td align="center"><a href="javascript:void(0);" class="new1" onClick ="window.open('/goodsrecieptnotemasters/show1/1?goods_id=<%= ip_child.id %>','open_window','dependent, width=900, height=480, left=0, top=0');">Show</a></td>
+	<td align="center"><a href="/goodsrecieptnotemasters/report/1?goods_id=<%= ip_child.id %>&format=pdf" class="new1">Print</a></td>
+ </tr>
+<% end %>
+</div>

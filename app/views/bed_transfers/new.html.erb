@@ -1,0 +1,161 @@
+
+<script type="text/javascript">
+function Select_ward(id)
+	{
+	
+		var selObj = document.getElementById(id);
+		query= selObj.options[selObj.selectedIndex].value
+		if( query == "")
+		{
+			alert("please select ward")
+		}
+		else
+		{
+			var org_code=document.getElementById('org_code').value;
+			window.open('/bed_transfers/bed_select/1?q='+query+'&org_code='+org_code,'open_window','status, scrollbars, resizable, dependent, width=640, height=480, left=0, top=0')
+		}
+	}
+	
+</script>
+
+
+<% form_for(@bed_transfer) do |f| %>
+
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">IP Patients >>&nbsp;&nbsp;&nbsp;<a HREF='/bed_transfers?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Bed Transfer</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<body onload="document.getElementById('admn_no').focus();"><br/>
+<%= text_field :user_id, :value => @person.id%>
+<div id="form_data">
+<div class="right">
+<fieldset>
+<% @date = Date.today() %>
+<table width="100%" >
+<legend><div class="font"><b>Bed Transfer Details</div></legend>
+<table align="center" width="100%">
+<%= f.hidden_field :bed_id , :id => "bed_id" %>
+<%= f.hidden_field :new_bed_id , :id => "new_bed_id" %>
+		<%= f.hidden_field :org_code, :class =>"text_field", :id => "org_code", :value =>@org_code, :readonly =>true %>
+    	<%= f.hidden_field :org_location, :class =>"text_field", :id => "org_location", :value =>@org_location, :readonly =>true %>
+	<tr>
+		<td>Admn No</td>
+        <td><%= f.text_field :admn_no, :class =>"text_field", :id => "admn_no", :readonly=>true%> </td>
+    	<td>MR.No</td>
+		<td><%= f.text_field :mr_no, :class =>"text_field", :id => "rno", :readonly=>true %></td>
+		<td>Admn Date</td>
+        <td><%= f.text_field :admn_date, :class =>"text_field", :id=>"admn_date", :readonly=>true%></td>
+	</tr>
+    <tr>
+		<td>Patient Name</td>
+<td><%= f.text_field :patient_name, :class =>"text_field", :id=>"patient_name", :readonly=>true%></td>
+        
+		<td>Consultant</td>
+<td><%= f.text_field :consultant, :class =>"text_field", :id=>"consultant", :readonly=>true%></td>
+    
+        <td>Transfer Date</td>
+        <td><%= f.text_field :transfer_date, :class =>"text_field", :readonly =>true, :value => "#{@date}"  %></td>
+	 </tr>
+	
+    <tr>
+		<td><sup>From</sup> Ward</td>
+        <td><%= f.text_field :from_ward, :class =>"text_field", :id => "from_ward" , :readonly=>true%></td>	
+	    <td>Room</td>
+        <td><%= f.text_field :from_room, :class =>"text_field", :id => "from_room", :readonly=>true %></td>	
+	    <td>Bed</td>
+        <td><%= f.text_field :from_bed, :class =>"text_field", :id => "from_bed", :readonly=>true %></td>
+
+   </tr>
+   <tr>
+		<td>Floor</td>
+	    <td><%= f.text_field :from_floor, :class =>"text_field", :id => "from_floor", :readonly=>true %></td> 
+		<td>No of days</td>
+        <td><%= f.text_field :no_of_days, :class =>"text_field", :id => "no_of_days" %> </td> 
+		<td>Amount</td>
+        <td><%= f.text_field :amount, :class =>"text_field", :id => "amount" %> </td>
+	</tr>
+	<tr>	
+		<td><sup>To</sup> Ward</td>
+		<td><%= f.select :to_ward, WardMaster.find(:all).collect{|p| [p.name]}, {:prompt => true} , {:id => "to_ward", :onChange=>"Select_ward(id)" }  %>
+ </td>
+       	<td>Room</td>
+		<td><%= f.text_field :to_room, :class =>"text_field", :id => "to_room",:readOnly => true %></td>
+		<td>Bed</td>
+		<td><%= f.text_field :to_bed, :class =>"text_field", :id => "to_bed",:readOnly => true %></td>
+   </tr>
+    <tr>
+		<td>Floor</td>
+	    <td><%= f.text_field :to_floor, :class =>"text_field", :id => "to_floor",:readOnly => true %></td>
+		<td>Charge per Day</td>
+		<td><%= f.text_field :charge_per_day, :class =>"text_field", :id => "charge_per_day",:readOnly => true %></td> 
+		<td>Transfer Type<sup>*</sup></td>
+	    <td><%= f.select :transfer_type, [['Permanent'],['Temporary']],{:include_blank => false, :prompt => true } %></td>
+    </tr>
+    <tr>
+	
+     <td>Remarks </td>
+	<td colspan=3><%= f.text_area :remarks, :class =>"text_field", :rows=>3, :cols=>47 %></td>   
+ </tr>
+ </table>
+</fieldset>
+<table align ="center">
+  <tr>
+  	<td><%= submit_tag "", :value => " Save&Process ", :class => "submit_button", :onClick => "this.disabled=true;this.value='Process..';this.form.submit();" %></td>
+	<td><%= submit_tag "", :value => " Reset ", :type => "reset",  :class => "submit_button" %></td>
+	<td valign="middle"><%= link_to "Back",  bed_transfers_path, :class=>"new1" %></td>
+ </tr>
+</table>
+</div>
+<% end %>
+<div class="left">
+	<table border=1 cellspacing="0" cellpadding="0">
+		<tr>
+			<td><input type="text" size=15 id="admn_no_search" placeholder="Search By Admn.No" onkeyUp="search_field_mr_no(id,'consultant_visit','admn_no')"></td>
+			<td><input type="text" size=15 id="name_search" placeholder="Search By Name" onkeyUp="search_field_mr_no(id,'consultant_visit','admn_no')" ></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<div  id="field_search_div">
+				<table border=1 cellspacing="0" cellpadding="0" width="100%">
+				<tr>
+					<th width="50%">Admn.NO</th>
+					<th width="50%">Name</th>
+				</tr>
+				<% @admission=Admission.find(:all,:conditions => "admn_status='Admitted'", :order =>"id DESC") %>
+				<% for admission in @admission %>
+
+					<% @reg=Registration.find_by_mr_no(admission.mr_no) %>
+			<% if(@reg) %>
+
+			<% if(@reg.reg_type=="Arogyasree") %>
+					<tr>
+						<td class="cursor_point" onclick="check_admn_no('<%= admission.id %>')" bgcolor="green" style="color:white;"><%= admission.admn_no %></td>
+						<td class="cursor_point" onclick="check_admn_no('<%= admission.id %>')" bgcolor="green" style="color:white;"><%= admission.patient_name %></td>
+					</tr>
+			<% elsif(@reg.reg_type=="Insurance") %>
+					<tr>
+						<td class="cursor_point" onclick="check_admn_no('<%= admission.id %>')" bgcolor="blue" style="color:white;"><%= admission.admn_no %></td>
+						<td class="cursor_point" onclick="check_admn_no('<%= admission.id %>')" bgcolor="blue" style="color:white;"><%= admission.patient_name %></td>
+					</tr>
+
+			<% else %>
+					<tr>
+						<td class="cursor_point" onclick="check_admn_no('<%= admission.id %>')"><%= admission.admn_no %></td>
+						<td class="cursor_point" onclick="check_admn_no('<%= admission.id %>')"><%= admission.patient_name %></td>
+					</tr>
+			<% end %>
+<% end %>
+					<% end %>
+				</table>
+				</div>
+			</td>
+		</tr>		
+	</table>
+</div>
+
+</div>
+</body>

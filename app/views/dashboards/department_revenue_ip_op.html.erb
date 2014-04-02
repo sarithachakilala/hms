@@ -1,0 +1,168 @@
+<%= stylesheet_link_tag 'css' %>
+<%= javascript_include_tag :defaults %>
+
+<script type="text/javascript"> 
+	function clear_function()
+	{
+		document.getElementById('dept').value=""
+		document.getElementById('date').value=""		
+		document.getElementById('date1').value=""		
+	}
+    function type_selection(id)
+	{
+		
+		var selObj = document.getElementById('type')
+		var ch= selObj.options[selObj.selectedIndex].value
+		
+		if(ch=="Weekly")
+		{
+		 	
+			document.getElementById('month_c').disabled = true
+			document.getElementById('year_c').disabled = true
+		   document.getElementById('date').disabled = false
+			document.getElementById('date1').disabled = false
+		}
+		else if(ch=="Monthly")
+		{
+				
+			document.getElementById('month_c').disabled = false
+			document.getElementById('year_c').disabled = false
+			document.getElementById('date').disabled = true
+			document.getElementById('date1').disabled = true
+		}
+		else if(ch=="Yearly")
+		{
+			document.getElementById('month_c').disabled = true
+			document.getElementById('year_c').disabled = false
+			document.getElementById('date').disabled = true
+			document.getElementById('date1').disabled = true
+		}
+	}
+	function check()
+	{
+	    
+	     var ch=document.getElementById('type').value
+	    var department=document.getElementById('department_c').value
+		
+		var from_date=document.getElementById('date').value
+		var to_date=document.getElementById('date1').value
+		
+		var month=document.getElementById('month_c').value
+		var year=document.getElementById('year_c').value
+		var org_code=document.getElementById('org_code_c').value
+																													
+		document.getElementById("frame").src="/dashboards/dashboard_of_department_revenue/1?type="+ch+"&from_date="+from_date+"&to_date="+to_date+"&department="+department+"&month="+month+"&year="+year+"&org_code="+org_code
+	}
+	
+	function select_org_code(id)
+	{
+		var org_code=document.getElementById(id).value
+		req = new Ajax.Request('/dashboards/select_departments/1', {
+				method: 'get',
+				parameters: { org_code: org_code },
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			}); 
+			function processReqChange(req) 
+			{
+				// request is complete
+				if (req.readyState == 4) 
+				{
+					var temp=req.responseText.split("<division>");
+					document.getElementById('department_c').length=0
+					var opt = document.createElement('option');
+						document.getElementById('department_c').options.add(opt);
+						opt.text ="All"
+						opt.value=""
+					for(var j=0;j<temp.length-1;j++)
+					{
+						var opt = document.createElement('option');
+						document.getElementById('department_c').options.add(opt);
+						opt.text =temp[j]
+						opt.value=temp[j]
+					}
+				}
+			}
+	}
+	
+</script> 
+<body >
+
+<div class="dateformat"><%= format_date(:short, Date.today ) %></div>
+<font size="3" face="Calibri">
+<fieldset>
+<% form_tag (:controller => "management_info_system_reports", :action => "department_margin_representation1" ) do %>
+<legend><div class="font"><b>Search</b></div></legend>
+<table width="100%"  align="center">
+<tr>
+	<td>Org.Code</td>
+	<td><%= select :org_code,"c",Person.find(:all, :conditions =>"profile = 'admin'").collect{|p| [p.org_code]},{:prompt => false},{:id=>"org_code_c", :onChange => "select_org_code(id)"} %>
+	<td><label for="item_name">Type</label></td>
+	<td><%= select("type","",[['Weekly'],['Monthly'],['Yearly']],{:include_blank => false}, :id => "type", :onchange => "type_selection(id)") %></td>
+    <td><label for="item_name">Department</label></td>
+	<td><%= select "department","c", DepartmentMaster.find(:all).collect{|p|[p.department]},{:prompt =>false},{:id =>"department_c"} %>
+	<td><label for="item_name">From Date</label></td>
+	<td><input type=text id="date" name="date"><a href="javascript:void(0)" onClick="setYears(2011, 2050);showCalender(this,'date');" >
+    <img src="/images/cal.gif" ></a></td>
+    <td><label for="item_name">To Date</label></td>
+	<td><input type=text id="date1" name="date1"><a href="javascript:void(0)" onClick="setYears(2011, 2050);showCalender(this,'date1');" >
+    <img src="/images/cal.gif" ></a></td>
+	<td><label for="item_name">Month</label></td>
+	<td><%= select("month", "c",[['Jan'],['Feb'],['Mar'],['Apr'],['May'],['Jun'],['Jul'],['Aug'],['Sep'],['Oct'],['Nov'],['Dec']], {:include_blank => true, :id=>"consultant"},:disabled =>true) %></td>
+	<td><label for="item_name">Year</label></td>
+	<% @ar=Array.new(20) %>
+	<% j=0 %>
+	<% for i in 1..20 %>
+	<% @ar[i-1]=2010+i %>
+	<% end %>
+	<td><%= select("year", "c",@ar,{:include_blank => true, :id => "consultant"},:disabled =>true) %></td>
+	
+	<td><a href="javascript:void(0)", onclick = " check()" %><%= image_tag ("buttons/search.png", :border=>0, :class=>"info") %>
+	</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= link_to image_tag("buttons/clear.png", :border =>"0", :size=>"57x25"), "javascript: clear_function()" %></td>
+    
+	</tr>	
+</table>
+<% end %>
+<table id="calenderTable">
+        <tbody id="calenderTableHead">
+          <tr>
+            <td colspan="4" align="center">
+	          <select onChange="showCalenderBody(createCalender(document.getElementById('selectYear').value,
+	           this.selectedIndex, false));" id="selectMonth">
+	              <option value="0">Jan</option>
+	              <option value="1">Feb</option>
+	              <option value="2">Mar</option>
+	              <option value="3">Apr</option>
+	              <option value="4">May</option>
+	              <option value="5">Jun</option>
+	              <option value="6">Jul</option>
+	              <option value="7">Aug</option>
+	              <option value="8">Sep</option>
+	              <option value="9">Oct</option>
+	              <option value="10">Nov</option>
+	              <option value="11">Dec</option>
+	          </select>
+            </td>
+            <td colspan="2" align="center">
+			    <select onChange="showCalenderBody(createCalender(this.value, 
+				document.getElementById('selectMonth').selectedIndex, false));" id="selectYear">
+				</select>
+			</td>
+       
+		  </tr>
+       </tbody>
+       <tbody id="calenderTableDays">
+         <tr style="">
+           <td>Sun</td><td>Mon</td><td>Tue</td><td>Wed</td><td>Thu</td><td>Fri</td><td>Sat</td>
+         </tr>
+       </tbody>
+       <tbody id="calender"></tbody>
+    </table>
+
+</fieldset>
+<center>
+   <iframe src="" id="frame" width="100%" height="420px" align="center" style="border:none"/>
+  
+</center>
+</body>

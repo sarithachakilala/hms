@@ -1,0 +1,227 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Payments>>&nbsp;&nbsp;&nbsp;<a HREF='/ip_dues' class="nav" style="text-decoration:none;">Ip Dues</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<div id="form_data">
+<%= javascript_include_tag 'commonFunctionality.js' %>
+<script type="text/javascript">
+
+    var field_names=new Array('admn_no','mr_no','receipt_no','first_name','floor','ward','room','bed','gross_amount','due');
+	var concession	
+	var admn_no
+	var type
+	var global
+	function select_concession_authority(id)
+	{
+		var selObj = document.getElementById(id);
+		concession = selObj.options[selObj.selectedIndex].value
+		type="concession_authority"
+		ajax()
+	}	
+	
+	function check_admn_no(id)
+	{
+		admn_no=id;
+		ajax()
+	}
+	function ajax()
+	{
+		var org_code=document.getElementById('org_code').value
+		req = new Ajax.Request('/ip_dues/ajax_function/1', 
+			{
+				method: 'get',
+				parameters: { admn_no:admn_no, org_code:org_code,type:type, concession:concession },
+				onComplete: function(transport){
+					processReqChange(transport);
+					}
+			}); // end ajax req
+		function processReqChange(req) 
+		{
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				var temp=new Array
+				temp=results.split("<division>")
+				if(type=="concession_authority")
+				{
+					global=results
+					document.getElementById('hidden_global').value=global
+					document.getElementById('conauth').innerHTML="(Cons.limit :" +global+"%)"
+				}
+				else
+				{
+					for(var i=0;i<field_names.length;i++)
+					{
+						document.getElementById(field_names[i]).value=temp[i]
+						document.getElementById(field_names[i]).style.background="#FEF5CA"
+						document.getElementById(field_names[i]).readOnly=true
+					}
+					document.getElementById('remaining_amount').value=temp[field_names.length-1]
+				}
+			}		
+		}			
+	}
+	
+	function search_Admn_No()
+	{
+		window.open('/searches?form_name=admission','open_window','dependent, width=900, height=580, left=0, top=0');
+	}
+
+				function select_org_code(id)
+				{
+					var org_code=document.getElementById(id).value
+					if(org_code)
+					{
+						req = new Ajax.Request('/registrations/select_org_code/1', {
+							method: 'get',
+							parameters: { org_code: org_code },
+							onComplete: function(transport) {
+							processReqChange(transport);
+							}
+						}); // end ajax req
+					}
+					else
+					{
+						alert("Please Select org_code")
+					}
+				}
+		function chekc_concession_limit()
+		{
+		
+			var limit_con=parseInt(document.getElementById('concession').value)
+			var globla_con=parseInt(global)
+			if(limit_con<=globla_con)
+			{
+			calculate_concession('due','concession','remaining_amount')
+			}
+			else
+			{
+			alert("Please enter the Concession(%) limit below :"+globla_con)
+			document.getElementById('remaining_amount').value=0
+			}
+		}
+			
+
+var count=1;
+function calci(id)
+{
+
+document.getElementById('balance_amount').value="";
+document.getElementById('payment_amount').value="";
+	if(count%2==0)
+	{
+	document.getElementById('enabl').style.display='none';
+	count++;
+	}
+	else
+	{	
+		document.getElementById('enabl').style.display='block';
+	count++;
+	}
+	if(id=='cancel')
+	{
+	document.getElementById('enabl').style.display='none';
+	
+	}
+}
+	function delete_amount(id)
+	{
+		var payment_amount=document.getElementById("payment_amount").value
+		var grand_total=document.getElementById("remaining_amount").value
+		document.getElementById("balance_amount").value=parseFloat(payment_amount)-parseFloat(grand_total)
+	}
+	
+
+</script>
+<script language="javascript" type="text/javascript">
+			function stopRKey(evt) {
+				
+				var evt  = (evt) ? evt : ((event) ? event : null);
+				var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+				if ((evt.keyCode == 13) && (node.type=="text")) { return false; }
+			}
+			document.onkeypress = stopRKey;
+		</script>
+
+<% form_for(@ip_due) do |f| %>
+  <%= f.error_messages %>
+
+<body onload="document.getElementById('admn_no').focus();">
+<% @date=format_date(:sort, Date.today ) %>
+<div class="right">
+
+<table width="100%">
+  <tr><td colspan="8"><fieldset><legend><div class="font"><b>Dues Payment</b></div></legend>
+	<table width="100%">
+	<%= hidden_field :'user_id',:value => @person.id%>
+	<%= f.hidden_field :org_code, :value =>@person.org_code, :size => 20, :id => "org_code", :readonly => true %>
+	<%= f.hidden_field :org_location, :value => @person.org_location, :size => 20, :id => "org_location", :readonly => true %>
+<tr>
+    <td>Admn.No<sup>*</sup></td>
+    <td><%= f.text_field :admn_no,:id => "admn_no",:size =>20 %></td>
+    <td>MR No</td>
+    <td><%= f.text_field :mr_no,:size =>20, :id=>"mr_no" %></td>
+	<td>Date</td>
+    <td><%= f.text_field :due_date,:size =>20, :readonly =>true, :value => "#{@date}"  %></td>
+	<td>Receipt No</td>
+    <td><%= f.text_field :receipt_no,:size =>20,:id=>"receipt_no" %></td>
+ </tr>
+ <tr>
+    <td>Patient Name</td>
+	<td><%= text_field_tag ('first_name','',:size =>20) %></td>
+	<td>Ward</td>
+	<td><%= text_field_tag ('ward','',:size =>20) %></td>
+	<td>Room</td>
+	<td><%= text_field_tag ('room','',:size =>20) %></td>
+	<td>Bed</td>
+	<td><%= text_field_tag ('bed','',:size =>20) %></td>
+  </tr>
+  <tr>
+	<td>Floor</td>
+	<td><%= text_field_tag ('floor','',:size =>20) %></td>
+    <td>Gross Amount</td>
+    <td><%= f.text_field :gross_amount,:size =>20, :id=>"gross_amount" %></td>
+    <td>Due</td>
+    <td><%= f.text_field :due,:size =>20,:id=>"due" %></td>
+    <td>Concession Authority</td>
+	<td><%= f.text_field :concession_authority,:size =>20, :id=>"concession_authority" %></td>
+	<%= hidden_field_tag :concession_authority,"", :size => 20, :id => "hidden_global" %>
+	<span id="conauth"></span></td>
+</tr><tr>
+    <td>Bank Name</td>
+    <td><%= f.text_field :bank_name,:id => "bank_name", :size =>20, :disabled => true %></td>
+	<td>Cheque No</td>
+    <td><%= f.text_field :cheque_no,:id => "cheque_no",:size =>20, :disabled => true %></td>
+    <td>Acc.No</td>
+    <td><%= f.text_field :acc_no,:id => "acc_no",:size =>20, :disabled => true %></td>
+	<td>Cheque Amount</td>
+    <td><%= f.text_field :cheque_amount,:id => "cheque_amount",:size =>20, :disabled => true %></td>
+  </tr>
+  <tr>
+    <td>Card No</td>
+    <td><%= f.text_field :card_no,:id => "card_no",:size =>20, :disabled => true %></td>
+    <td>Card Type</td>
+    <td><%= f.select :card_type,[['Mastro'],['Visa'],['Master Card']],{:prompt => true}, {:disabled => "true", :id => "card_type"} %> </td> 
+    <td><%= f.label :expiry_date %></td>
+    <td><%= f.date_select :expiry_date,:prompt => {:month => 'Month', :year => 'Year' },:discard_day => true,:start_year => 1995, :end_year => 2030,:order => [:month,:year], :disabled => true %>  </td>
+    <td>Card Amount</td>
+    <td><%= f.text_field :card_amount,:id => "card_amount",:size =>20, :disabled => true %></td>
+	</tr></table></fieldset></td>
+  </tr>
+  
+</table>
+
+<table align="center">
+		<tr>
+			<td><%= submit_tag "", :value => " Update ", :class => "submit_button" %></td>
+			<td valign="middle"><%= link_to "Back",  ip_dues_path, :class=>"new1" %></td>
+		</tr>
+</table>
+
+<% end %>
+</div>
+</body>

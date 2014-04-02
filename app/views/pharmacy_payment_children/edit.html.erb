@@ -1,0 +1,36 @@
+<h1>Editing pharmacy_payment_child</h1>
+
+<% form_for(@pharmacy_payment_child) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :pharmacy_payment_id %><br />
+    <%= f.text_field :pharmacy_payment_id %>
+  </p>
+  <p>
+    <%= f.label :invoice_date %><br />
+    <%= f.date_select :invoice_date %>
+  </p>
+  <p>
+    <%= f.label :invoice_no %><br />
+    <%= f.text_field :invoice_no %>
+  </p>
+  <p>
+    <%= f.label :po_no %><br />
+    <%= f.text_field :po_no %>
+  </p>
+  <p>
+    <%= f.label :amount %><br />
+    <%= f.text_field :amount %>
+  </p>
+  <p>
+    <%= f.label :check_option %><br />
+    <%= f.text_field :check_option %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @pharmacy_payment_child %> |
+<%= link_to 'Back', pharmacy_payment_children_path %>

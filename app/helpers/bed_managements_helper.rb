@@ -1,0 +1,2 @@
+module BedManagementsHelper
+end

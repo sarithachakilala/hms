@@ -1,0 +1,67 @@
+<script type="text/javascript"> 
+
+	var query;
+	function test_result()
+	{
+	  	query = document.getElementById('appt_date').value
+		req = new Ajax.Request('/appointment_payments/work_list_search/1', 
+			{
+				method: 'get',
+				parameters: {date1 :query},
+				onComplete: function(transport){
+					processReqChange(transport);
+					}
+			}); // end ajax req
+		function processReqChange(req) 
+		{
+			// request is complete
+			if (req.readyState == 4) 
+			{
+				document.getElementById("table").innerHTML=req.responseText
+			}
+		}
+	}
+	
+	function clear_function()
+	{
+		
+		document.getElementById('appt_date').value=""
+		document.getElementById('consultant_id').value=""
+		document.getElementById('department_name').value=""
+		document.getElementById('consultant_code').value=""
+		
+	}
+
+</script> 
+
+<body onLoad="test_result()" style="margin:0px;" onload="setMyDiv('/doctor_workbench/work_list/1?user_id=<%= @user_id %>','new','')">
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">IP Patients >>&nbsp;&nbsp;&nbsp;<a HREF='/appointment_payments' class="nav" style="text-decoration:none;">Appointment Cancels</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<br/>
+<div id="form_data">
+<fieldset><legend><div class="font"><b>Appointment Cancels </b></div></legend>
+<% @date = Date.today() %>
+<% @i=0 %>
+<font size="3" face="Calibri">
+<br/>
+<table width="75%" align="center">
+<td width="10%"><label for="item_name">Org.Code</label></td>
+<td><%= text_field_tag 'org_code',@org_code, :size => 20 , :readonly =>true %></td>
+<td width="15%"><label for="item_name">Appointment Date</label></td>
+<td><%= text_field_tag 'appt_date',@date, :size => 20 %><a href="javascript:void(0)" onClick="setYears(1947, 2015);showCalender(this,'appt_date');" >
+<img src="/images/cal.gif" ></a></td>
+<td><a href="javascript:void(0);" class="new1" onClick ="test_result()">Search</a></td>
+<td><a href="javascript:void(0);" class="new1" onClick ="clear_function()">Clear</a></td>
+</tr>
+</table>
+</fieldset>
+<div id="table" align="center">
+</div>
+</form>
+</body>

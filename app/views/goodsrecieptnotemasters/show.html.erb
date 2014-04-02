@@ -1,0 +1,114 @@
+<%= stylesheet_link_tag 'scroll' %>
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Pharmacy >>&nbsp;&nbsp;&nbsp;<a HREF='/goodsrecieptnotemasters/new' class="nav" style="text-decoration:none;">Goods Reciept Note Details</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<% if @goodsrecieptnotemaster %>
+<% form_for(@goodsrecieptnotemaster) do |f| %>	 
+<table width="100%" bgcolor="#87CEEB">
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+  <tr><td colspan="8"><fieldset><legend><div class="font"><b><%=h @goodsrecieptnotemaster.invoice_number %> Record</b></div></legend>
+   <%= f.hidden_field :id, :id => "record_id" %>
+  <table width="100%">
+  <tr>
+		<td>PO.No</td>
+        <td><%= f.text_field :po_number,:id => "po_number", :readonly => true , :size =>"20"%></td>
+        <td>PO.Date</td>
+        <td><%= f.text_field :po_date, :id => "po_date", :size =>"20",:readOnly => true %></td>
+		<td>Agency Name</td>
+        <td><%= f.text_field :agency_name, :id => "vendor_code", :size =>20,:readOnly => true %></td>
+		<td>Agency DL No</td>
+        <td><%= f.text_field :agency_dl_no, :id => "agency_dl_no", :size =>20,:readOnly => true %></td>
+    </tr>
+    <tr>
+		<td>Agency TIN No</td>
+        <td><%= f.text_field :agency_tin_no, :id => "agency_tin_no", :size =>20,:readOnly => true %></td>
+		<td>Invoice No<sup>*</sup></td>
+        <td><%= f.text_field :invoice_number,:size =>"20", :required => true %></td>
+        <td>Invoice Dt<sup>*</sup></td>
+     	<td><%= f.text_field :invoice_date, :size => "15", :id => "dob", :required => true %>
+		<a href="javascript:void(0)" onClick="setYears(2000, 2050);showCalender(this,'dob'); "  >
+		<img src="/images/cal.gif" ></a></td>
+	    <%= f.hidden_field :status, :value=>"Received" %>
+	</td>
+</table> 
+
+	</table>
+	</fieldset>
+	<br/>
+	<div id="info">
+    <table class="tableone">
+		<tr class="info">	
+		<th>S.No</th>
+		<th>Product Name</th>
+		<th>Drug Type</th>
+		<th>Rec.Qty</th>
+		<th>Free</th>
+		<th>Packing</th>
+		<th>Units</th>
+		<th>MFR</th>
+		<th>Batch No</th>
+		<th>Exp.Dt</th>
+		<th>MRP</th>
+		<th>Purchase Rate</th>
+		<th>Purchase Discount(%)</th>
+		<th>Sale Rate</th>
+		<th>Sale Discount(%)</th>
+		<th>Amount</th>
+		<th>Vat(%)</th>
+</tr>
+<% i=1 %>
+<% for store in @goodsrecieptnotemaster.store_child %>
+<tr class='<%= id %>'>
+		<td style="color:black;"><%= i %></td>
+		<td style="color:black;"><%=h store.item_name %></td>
+		<td style="color:black;"><%=h store.drug_type %></td>
+		<td style="color:black;"><%=h store.quantity %></td>
+		<td style="color:black;"><%=h store.free %></td>
+		<td style="color:black;"><%=h store.packing %></td>
+		<td style="color:black;"><%=h store.units %></td>
+		<td style="color:black;"><%=h store.mfr %></td>
+		<td style="color:black;"><%=h store.batch_no %></td>
+		<td style="color:black;"><%=h store.expiry_date %></td>
+		<td style="color:black;"><%=h store.mrp %></td>
+		<td style="color:black;"><%=h store.purchase_rate %></td>
+		<td style="color:black;"><%=h store.purchase_discount %></td>
+		<td style="color:black;"><%=h store.sale_rate %></td>
+		<td style="color:black;"><%=h store.discount %></td>
+		<td style="color:black;"><%=h store.amount %></td>
+		<td style="color:black;"><%=h store.vat %></td>
+  </tr>
+<% i=i+1 %>
+<% end %>
+</table>
+</fieldset>
+<br>
+<fieldset><legend><div class="font"><b>Payment Details</b></div></legend>
+<table width="100%">
+	<tr>
+			 <td>Total Amount</td> 
+             <td><%= f.text_field :total_amount, :size =>"20", :id => "total_amount", :readOnly => true %>
+             <td>Discount(%)</td>
+             <td><%= f.text_field :discount,:size =>"20", :id => "discount", :readOnly => true %>
+             <td>Net Invoice Amt</td>
+             <td><%= f.text_field :net_invoice_amount, :id => "net_invoice_amount", :size =>"20",:readOnly => true %></td>
+	</tr>
+	<tr>
+	 </table> 
+   </fieldset>
+<% end %>
+</div>
+</body>
+</table>
+<br>	
+<table align="center">
+<tr><td>
+<center><%= link_to "back",  goodsrecieptnotemasters_path, :class=>"new1" %></center>
+ 
+</td></tr></table>
+<% end%>

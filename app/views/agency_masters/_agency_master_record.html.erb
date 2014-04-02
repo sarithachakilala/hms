@@ -1,0 +1,34 @@
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+  <tr>
+	<th>S.No</th>
+    <th>Org.Code</th>
+    <th>Agency Name</th>
+    <th>Contact Person</th>
+    <th>Email Id</th>
+    <th>Contact No</th>
+	<th colspan="3">Permissions</th>
+  </tr>
+</thead>
+<tbody>
+<% @id=0 %>
+<% @agency_masters.each do |agency_master| %>
+<% if((@id % 2)==0)
+		 id="datacellone"
+else
+		id="datacelltwo" 
+	
+ end %>
+	<tr class='<%= id %>'>
+    <td><%= @id=@id+1 %></td>
+    <td><%=h agency_master.org_code %></td>
+    <td><%=h agency_master.agency_name %></td>
+    <td><%=h agency_master.contact_person %></td>
+    <td><%=h agency_master.agency_email %></td>
+    <td><%=h agency_master.contact_no %></td>
+	<td align="center"><%= link_to image_tag("buttons/display1.png", :class => "info", :border =>"0"), agency_master %></td>
+	<td align="center"><%= link_to image_tag("buttons/modify.png", :class => "info", :border =>"0"), edit_agency_master_path(agency_master) %></td>
+	<td align="center"><%= link_to image_tag("buttons/delete.png", :class => "info", :border =>"0"),agency_master, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>

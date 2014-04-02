@@ -1,0 +1,97 @@
+<div id="links" class="header">
+&nbsp;&nbsp;&nbsp; Payments>> IP  >>&nbsp;&nbsp;&nbsp;<a HREF='/ip_dues' class="nav" style="text-decoration:none;">Ip Dues</a>
+</div><div class="dateformat"><%= format_date(:short, Date.today ) %></div>
+<br/>
+
+<% form_for(@ip_due) do |f| %>
+  <%= f.error_messages %>
+
+<table width="100%" bgcolor="#87CEEB">
+
+  <tr><td colspan="8"><fieldset><legend><div class="font"><b><%=h @ip_due.admn_no %> Details</b></div></legend>
+   <%= f.hidden_field :id, :id => "record_id" %>
+
+	 <table width="100%">
+  <tr>
+    <td>Admn.No</td>
+    <td><%= f.text_field :admn_no,:id => "admn_no",:size =>20, :readonly =>true %></td>
+    <td>MR No</td>
+    <td><%= f.text_field :mr_no,:size =>20, :id=>"mr_no", :readonly =>true  %></td>
+    <td>Date</td>
+    <td><%= f.text_field :due_date,:size =>20, :readonly =>true, :value => "#{@date}"  %></td>
+	<td>Receipt No</td>
+    <td><%= f.text_field :receipt_no,:size =>20,:id=>"receipt_no", :readonly =>true  %></td>
+  </tr>
+  <tr>
+	<td>Org.Code</td>
+	
+		<td><%= f.text_field :org_code, :value => @org_code, :size => 20, :id => "org_code", :readonly => true %></td>
+	
+    <td>Org.Location</td>
+    <td><%= f.text_field :org_location, :value => @org_location, :size => 20, :id => "org_location", :readonly => true %></td>
+    <td>First Name</td>
+	<td><%= text_field_tag ('first_name','',:size =>20, :readonly =>true ) %></td>
+	<td>Last Name</td>
+	<td><%= text_field_tag ('last_name','',:size =>20, :readonly =>true)  %></td>
+  </tr>
+  <tr>
+	<td>Floor</td>
+	<td><%= text_field_tag ('floor','',:size =>20, :readonly =>true ) %></td>
+	<td>Ward</td>
+	<td><%= text_field_tag ('ward','',:size =>20, :readonly =>true ) %></td>
+	<td>Room</td>
+	<td><%= text_field_tag ('room','',:size =>20, :readonly =>true)  %></td>
+	<td>Bed</td>
+	<td><%= text_field_tag ('bed','',:size =>20, :readonly =>true)  %></td>
+  </tr>
+  <tr>
+    <td>Gross Amount</td>
+    <td><%= f.text_field :gross_amount,:size =>20, :id=>"gross_amount", :readonly =>true  %></td>
+    <td><%= f.label :due %></td>
+    <td><%= f.text_field :due,:size =>20,:id=>"due", :readonly =>true  %></td>
+  </tr>
+  <tr>
+    <td>Concession Authority</td>
+    <td><%= f.text_field :concession_authority, :id => "concession_authority", :readonly =>true  %></td>
+    <td><%= f.label :concession %>(%)</td>
+    <td><%= f.text_field :concession,:size =>20, :id=>"concession", :readonly =>true  %>
+		<span id="concession_limit"></span>
+	</td>
+    <td>Remaining Amount</td>
+    <td><%= f.text_field :remaining_amount,:size =>20, :id=>"remaining_amount", :readOnly=>true %></td>
+  </tr>
+   <tr>
+    <td>Payment Mode</td>
+	<td colspan="2"><%= f.radio_button :payment_mode, "cash", :checked => true, :id => "button11" , :onchange => "checkedval(id,'remaining_amount','ip_due_expiry_date_2i','ip_due_expiry_date_1i')" %>Cash
+		<%= f.radio_button :payment_mode, "cheque", :id => "button12" %>Cheque
+		<%= f.radio_button :payment_mode, "card", :id => "button13" %>Card
+              <%= f.radio_button :payment_mode, "both", :id => "button14" %>Both</td>
+  </tr>
+  <tr>
+    <td>Bank Name</td>
+    <td><%= f.text_field :bank_name,:id => "bank_name", :size =>20, :disabled => true %></td>
+	<td>Cheque No</td>
+    <td><%= f.text_field :cheque_no,:id => "cheque_no",:size =>20, :disabled => true %></td>
+    <td>Acc.No</td>
+    <td><%= f.text_field :acc_no,:id => "acc_no",:size =>20, :disabled => true %></td>
+	<td>Cheque Amount</td>
+    <td><%= f.text_field :cheque_amount,:id => "cheque_amount",:size =>20, :disabled => true %></td>
+  </tr>
+  <tr>
+    <td>Card No</td>
+    <td><%= f.text_field :card_no,:id => "card_no",:size =>20, :disabled => true %></td>
+    <td>Card Type</td>
+    <td><%= f.select :card_type,[['Mastro'],['Visa'],['Master Card']],{:prompt => true}, { :id => "card_type"} %> </td> 
+    <td><%= f.label :expiry_date %></td>
+    <td><%= f.date_select :expiry_date,:prompt => {:month => 'Month', :year => 'Year' },:discard_day => true,:start_year => 1995, :end_year => 2030,:order => [:month,:year], :disabled => true %>  </td>
+    <td>Card Amount</td>
+    <td><%= f.text_field :card_amount,:id => "card_amount",:size =>20, :disabled => true %></td>
+	</tr></table></fieldset></td>
+  </tr>
+ 
+ </table>
+<% end %>
+</div>
+<br/>
+<center><%= link_to "Back",  ip_dues_path, :class=>"new1" %></center>
+</body>

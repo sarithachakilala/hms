@@ -1,0 +1,90 @@
+<script type="text/javascript">
+
+	function date_range()
+	{
+		var selObj = document.getElementById('org_code_c');
+		org_code = selObj.options[selObj.selectedIndex].value
+		var date1=document.getElementById('date').value
+		var date2=document.getElementById('date1').value
+		var patient_name=document.getElementById('patient_name').value
+		var mr_no=document.getElementById('mr_no').value
+		
+		if(date1=="" || date2=="")
+		{
+			alert("Plz Select Dates")
+			return false;
+		}
+		req = new Ajax.Request('/issues_to_ops/sales_report_by_patientwise_report/1', {
+				method: 'get',
+				parameters: { mr_no :mr_no, date1: date1, date2: date2, org_code:org_code, patient_name:patient_name },
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			});
+		function processReqChange(req) 
+		{
+			if(req.responseText=="No Records")
+			{
+				document.getElementById("table").style.color='red'
+				document.getElementById("table").innerHTML=req.responseText
+			}else
+				document.getElementById("table").innerHTML=req.responseText
+		}
+	}
+	function clear_function()
+	{
+		document.getElementById('date').value=""
+		document.getElementById('date1').value=""
+		document.getElementById('patient_name').value=""
+		document.getElementById('mr_no').value=""
+		document.getElementById('org_code_c').value=""
+	}
+</script>
+<body style="margin:0px;" onload="setMyDiv('/issues_to_ops/issues_to_op_reports/1?user_id=<%= @user_id %>','new','')">
+<div id="links" class="header">
+	&nbsp;&nbsp;&nbsp;Report >>&nbsp;&nbsp;&nbsp; Pharmacy Reports >>&nbsp;&nbsp;&nbsp;<a HREF='javascript:void(0);' id="management_info_system_report" onclick="setMyDiv('/issues_to_ops/issues_to_op_reports/1?user_id=<%= @user_id %>','new','')" class="nav" style="text-decoration:none;">Sales Report By Patientwise</a>
+</div>
+<div class="dateformat"><%= format_date(:short, Date.today ) %></div>
+
+<body>
+<%= form_tag ({:controller => "issues_to_ops", :action => "generate_reports_patientwise"}, {:method => "post"}) %>
+<fieldset>
+<legend>Search</legend>
+
+<div align="center" width="100%">
+<table align="center" width="100%">
+
+<tr>
+
+	<td><label for="item_name">From Date</label></td>
+	<td><input type=text id="date" value='<%= Date.today %>'><a href="javascript:void(0)" onClick="setYears(2000, 2050);showCalender(this,'date');" >
+      <img src="/images/cal.gif" ></a></td>
+	<td><label for="item_name">To Date</label></td>
+	<td><input type=text id="date1" value='<%= Date.today %>' ><a href="javascript:void(0)" onClick="setYears(2000, 2050);showCalender(this,'date1');" >
+      <img src="/images/cal.gif" ></a></td>
+	<td>MR No</td>
+			<td><%= text_field :"mr_no","", {:size=>"20", :id=>"mr_no"} %></td>
+	<td>Patient Name</td>
+			<td><%= text_field :"patient_type","", {:size=>"20", :id=>"patient_name"} %></td>
+
+	 <td>Org.Code</td>
+		<td><%= select :"org","code",Person.find(:all, :select =>"DISTINCT org_code").collect{|p| [p.org_code]},{:prompt=>'All'}, {:id=>"org_code_c"} %>
+
+	
+	<td class="button"><a href="javascript:void(0)" onclick = "date_range()" %><%= image_tag("buttons/search.png", :border=>0, :class=>"info") %></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= link_to image_tag("buttons/clear.png", :border =>"0", :size=>"54x21"), "javascript: clear_function()" %></td>
+	
+</tr>
+</table>
+</div>
+</body>
+</fieldset>
+
+<div id="table" align="center">
+
+</div>
+<br>
+<center><%= image_submit_tag("buttons/save-as.png", :width => "54px", :height =>"21px", :border =>"0") %></center>
+ <%= form_tag %>
+ 
+
+

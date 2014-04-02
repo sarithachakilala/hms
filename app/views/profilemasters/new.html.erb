@@ -1,0 +1,147 @@
+
+<script type="text/javascript">
+var new_verify=0
+var show_verify=0
+var edit_verify=0
+var remove_verify=0
+var ch=o
+var store_value;
+
+ function fill(form_length)
+ {
+	store_value=new Array();
+	for(i=0;i<form_length;i++)
+		store_value[i]=0;
+ }
+ function check_va1(k,j)
+ {
+	var i=0
+	var h=k*4
+	if(j==0)
+	{
+		ch=new_verify
+		new_verify=new_verify+1
+	}else if(j==1){
+		ch=show_verify
+		show_verify=show_verify+1
+	}else if(j==2){
+		ch=edit_verify
+		edit_verify=edit_verify+1
+	}else if(j==3){
+		ch=remove_verify
+		remove_verify=remove_verify+1
+	}
+	
+	if(ch%2==0)
+	{
+    	for(i=j;i<h;i+=4)
+		{
+			document.getElementById(i).checked=true
+		}
+		
+	}
+	else
+	{
+		for(i=j;i<h;i+=4)
+			document.getElementById(i).checked=false
+		
+	}
+	
+ }
+ function check_va11(k,j)
+ {
+	var j_int=parseInt(j)
+	var h=(j_int+1)*4;
+	if(store_value[j]==0)
+	{
+		store_value[j_int]=1;
+		for(i=h-4;i<h;i++)
+			document.getElementById(i).checked=true
+	}
+	else
+	{
+		store_value[j_int]=0;
+		for(i=h-4;i<h;i++)
+			document.getElementById(i).checked=false
+	}
+	
+ }
+</script>
+<body onLoad="fill(<%= @da %>)">
+<% (@forms_name.length-@profilemaster.childmaster.length).times { @profilemaster.childmaster.build   } %>
+<% form_for(@profilemaster) do |f| %>
+  <% @k=@field_type.length %>
+  <% @i=0 %>
+  <% @j=0 %>
+  <% @count=0 %>
+  <% @no=0 %>
+  <% @sub=0%>
+  <% @name_position=0 %>
+  <table cellpadding=5 id="ta" align="center" width="70%">
+  <tr>
+		<td  align="right" style="color:black;">Profile Name</td>
+		<td  align="center" style="color:black;"><%= f.text_field :profile_name %></td>
+ </tr>
+ <tr>
+  <th>&nbsp;</th>
+  <th style="color:black;">Forms</th>
+  <th align="center" style="color:black;">New <%= link_to image_tag ('toggle_check.png', :border=>0), "javascript:check_va1('#{@k}',0)"%></th>
+  <th align="center" style="color:black;">Show <%= link_to image_tag ('toggle_check.png',  :border=>0), "javascript:check_va1('#{@k}',1)"%></th>
+  <th align="center" style="color:black;">Edit <%= link_to image_tag ('toggle_check.png',  :border=>0), "javascript:check_va1('#{@k}',2)"%></th>
+  <th align="center" style="color:black;">Remove <%= link_to image_tag ('toggle_check.png', :border=>0), "javascript:check_va1('#{@k}',3)"%></th>
+  </tr>
+  <%= hidden_field('role','',:value => @role) %>
+  <%= f.hidden_field :user_role, :value => @role %>
+  <% f.fields_for :childmaster do |b| %>
+     <% if @j% 2==0 %> 
+		<%	id="datacellone" %>
+	<% else %>
+		<%	id="datacelltwo" %>
+  <% end %>
+  <% if(@field_type[@name_position]=="Main") %>
+  <tr>
+  	<td><%= @no+=1%>.<%= b.text_field :forms, :style => "border:none;font-weight:bold;background-color:#ecf3f7;color:#378bf8",:size => "23", :value => "#{@forms_name[@name_position]}", :readOnly => true%><%= link_to image_tag ('toggle_check.png', :border=>0), "javascript:check_va11('#{@k}','#{@j}')"%></td>
+    <td>&nbsp;</td>
+	<td align="center"><%= b.check_box :new, :id => "#{@i}" %></td><% @i+=1 %>
+	<td align="center"><%= b.check_box :view, :id => "#{@i}" %></td><% @i+=1 %>
+	<td align="center"><%= b.check_box :edit, :id => "#{@i}" %></td><% @i+=1 %>
+	<td align="center"><%= b.check_box :remove,:id => "#{@i}" %></td><% @i+=1 %>
+	<% @count+=1 %>
+	<% @j+=1 %>
+	<% @sub=0%>
+	<% @name_position=@name_position+1 %>
+   </tr>
+  <% elsif(@field_type[@name_position]=="Sub-Heading") %>
+	<tr>
+    <td align="right"><%= @no%>.<%= @sub+=1%>.<%= b.text_field :forms, :style => "border:none;font-weight:bold;background-color:#ecf3f7;color:#015a84",:size => "20", :value => "#{@forms_name[@name_position]}", :readOnly => true%><%= link_to image_tag ('toggle_check.png', :border=>0), "javascript:check_va11('#{@k}','#{@j}')"%></td>
+    <td>&nbsp;</td>
+	<td align="center"><%= b.check_box :new, :id => "#{@i}" %></td><% @i+=1 %>
+	<td align="center"><%= b.check_box :view, :id => "#{@i}" %></td><% @i+=1 %>
+	<td align="center"><%= b.check_box :edit, :id => "#{@i}" %></td><% @i+=1 %>
+	<td align="center"><%= b.check_box :remove,:id => "#{@i}" %></td><% @i+=1 %>
+	<% @count+=1 %>
+	<% @j+=1 %>
+	<% @name_position=@name_position+1 %>
+   </tr>
+  <% else %>
+  <tr>
+   <td>&nbsp;</td>
+   <td class='<%= id %>'><%= link_to image_tag ('toggle_check.png', :border=>0), "javascript:check_va11('#{@k}','#{@j}')"%><%= b.text_field :forms, :style => "border:none;", :value => "#{@forms_name[@name_position]}",:size => "40", :readOnly => true%></td>
+   <td class='<%= id %>' align="center"><%= b.check_box :new, :id => "#{@i}" %></td><% @i+=1 %>
+   <td class='<%= id %>' align="center"><%= b.check_box :view, :id => "#{@i}" %></td><% @i+=1 %>
+   <td class='<%= id %>' align="center"><%= b.check_box :edit, :id => "#{@i}" %></td><% @i+=1 %>
+   <td class='<%= id %>' align="center"><%= b.check_box :remove,:id => "#{@i}" %></td><% @i+=1 %>
+    </tr>
+    <% @j+=1 %>
+	<% @count+=1 %>
+	<% @name_position=@name_position+1 %>
+  <% end %>	
+  <% end %>
+  </table><br />
+  <center>
+     <td><%= submit_tag "", :value => " Save ", :class => "submit_button" %></td>
+	<td valign="middle"><%= link_to "Back",  profilemasters_path, :class=>"new1" %></td>
+  </center>
+<% end %>
+
+</body>

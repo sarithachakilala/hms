@@ -1,0 +1,51 @@
+
+
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Doctor Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/department_masters?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Depatrment Masters</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<div align="center">
+<table width="30%">
+  
+ 		
+<tr>
+	<td class='<%= id %>'><b>Org.Code</b></td>
+	<td class='<%= id %>'>:</td>  
+	<td class='<%= id1 %>'><%=h @department_master.org_code %></td>
+	<td class='<%= id %>'><b>Org.Location</b></td>
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @department_master.org_location %></td>
+</tr>
+<tr>
+  <td class='<%= id %>'><b>Category</b></td>
+  <td class='<%= id %>'>:</td>  
+  <td class='<%= id1 %>'><%=h @department_master.category %></td>
+  <td class='<%= id %>'><b>Department</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id1 %>'><%=h @department_master.department %></td>
+</tr>
+<tr>
+	<td class='<%= id %>'><b>Status</b></td>
+	<td class='<%= id %>'>:</td>  
+    <td class='<%= id1 %>'><%=h @department_master.status %></td>
+	<td class='<%= id %>'><b>HOD</b></td>
+	<td class='<%= id %>'>:</td>  
+   <td class='<%= id1 %>'><%=h @department_master.hod %></td>
+</tr>
+<tr>
+  <td class='<%= id %>'><b>Ph.No.Hod</b></td>
+  <td class='<%= id %>'>:</td>  
+  <td class='<%= id1 %>'><%=h @department_master.ph_no_hod %></td>
+</tr>
+</table>
+</fieldset>
+</div>
+<br/>
+<center>
+<td valign="middle"><%= link_to "back",  department_masters_path, :class=>"new1" %></td>

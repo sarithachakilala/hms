@@ -1,0 +1,46 @@
+<script type="text/javascript"> 
+	selection_option="doctor_visit"
+	function clear_function()
+	{
+			
+		document.getElementById('item_name').value=""		
+	}
+    	function check()
+	{
+		var item_name=document.getElementById('item_name').value
+			
+		document.getElementById("frame").src="/reports/product_wise__supplier_list/1?item_name="+item_name
+	}
+	
+	
+</script> 
+<body style="margin:0px;">
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Reports >> Pharmacy Report >>&nbsp;&nbsp;&nbsp;<a HREF='/reports/product_wise_report/1' class="nav" style="text-decoration:none;">Product 	Wise Supplier List</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<div id="form_data">
+<fieldset>
+<legend><div class="font"><b>Search</b></div></legend>
+<% @date=Date.today("%Y-%m-%d") %>
+<table width="50%"  align="center">
+<tr>
+	<input type="hidden" id="org_code" %>
+	<td><label for="item_name">Product </label></td>
+	<td><%= select('period','',  StoreChild.find(:all, :select =>"distinct item_name").collect{|p|[p.item_name]},{:prompt => true},{:id => "item_name"}) %></td>
+	
+<td><a href="javascript:void(0);" class="new1" onClick ="check()">Filter</a></td>
+      <td><%= link_to 'Clear','', :class=>"new1", :onClick => "clear_function()" %></td>
+</tr>	
+</table>
+
+</fieldset>
+<br/><br/>
+ <center>
+   <iframe src="" id="frame" width="100%" height="400px" align="center" style="border:none"/>
+</center>
+</body>

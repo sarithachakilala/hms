@@ -1,0 +1,57 @@
+<br/>
+<script type="text/javascript"> 
+    var query1=""
+	var selectid;
+	//Ajax Code
+	function Ajax_Code(ward,room,bed,floor,cost,bed_id)
+	{
+		var openerWindow = window.opener;
+	
+		openerWindow.document.getElementById("to_room").value=room;
+		openerWindow.document.getElementById("to_bed").value=bed;
+		openerWindow.document.getElementById("to_floor").value=floor;
+		openerWindow.document.getElementById("charge_per_day").value=cost;
+		openerWindow.document.getElementById("new_bed_id").value=bed_id;
+		window.close();	
+	}
+</script>
+<style>
+table.cursor_style
+{
+ cursor: pointer; 
+}
+</style>
+<table width="100%" align="center" cellspacing="0" border=1 >
+<% if(@mr!="") %>
+<tr>
+	<td colspan="5" align="center"><b>Ward :</b> <%=@ward.name %></td>
+</tr>
+<% end %>
+</table>
+<% @val=@bed_names.length/5.to_f %>
+<% j=0 %>
+<% for r in 0...@room.length %>
+	<% @room_total=RoomMaster.find(:all, :conditions => "ward_master_id = '#{@ward.id}' and floor='#{@room[r].floor}'") %>
+	<br/>
+	<table border="1" cellspacing="0" width="100%">
+		<tr>
+			<th colspan="5" align="left"><font color="#d14100">Floor :</font> <%= @room[r].floor %></th>
+		</tr>
+		<% for room_total in @room_total %>
+			<% no_of_colos=0 %>
+			<% @beds=BedMaster.find(:all, :conditions => "ward_master_id = '#{@ward.id}' and room_master_id='#{room_total.id}' and status='Available'") %>
+			<% for bed in @beds %>
+			<% if(no_of_colos==0) %>
+				<tr>
+			<% end %>
+				<td class="cursor_style" bgcolor="#7FFFD4" align="center" height="80px" onclick="Ajax_Code('<%= @ward.name %>','<%= room_total.name %>','<%= bed.name %>','<%= room_total.floor %>','<%= @ward.cost %>','<%= bed.id %>')"><%= bed.name %><br/><%= room_total.name %></td>
+				<% no_of_colos=no_of_colos+1 %>
+			<% if(no_of_colos==5) %>
+				</tr>
+			<% end %>
+			<% end %>
+		<% end %>
+	</table>
+<% end %>
+<br />
+

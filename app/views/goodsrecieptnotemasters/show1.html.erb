@@ -1,0 +1,25 @@
+<%= stylesheet_link_tag 'css' %>
+<%= javascript_include_tag :defaults %>
+<%= javascript_include_tag 'calendar.js' %>
+<%= stylesheet_link_tag 'scroll' %>
+<br/>
+<br/>
+<% if @purchase %>
+<table border="1" cellspacing="0" align="center" >
+<tr bgcolor ="#378bf8">
+	<th width="100px">PO.No</th>
+	<th width="100px">Purchase Date</th>
+	<th width="300px">Agency Name</th>
+	<th width="300px">Medicines</th>
+</tr>
+<tr>
+<td align="center"><%= @v1 %></td>
+<td align="center"><%= @purchase[0].po_date%></td>
+<td align="center"><%=  @purchase[0].vendor_code%></td>
+<% @purchase.each do |i| %>
+<td colspan="4" align="right"><%= i.item_name  %></td>
+</tr> 
+<% end %>				 
+<% end %>				 
+</body>
+</table>

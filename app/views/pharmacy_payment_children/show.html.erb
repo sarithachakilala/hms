@@ -1,0 +1,33 @@
+<p>
+  <b>Pharmacy payment:</b>
+  <%=h @pharmacy_payment_child.pharmacy_payment_id %>
+</p>
+
+<p>
+  <b>Invoice date:</b>
+  <%=h @pharmacy_payment_child.invoice_date %>
+</p>
+
+<p>
+  <b>Invoice no:</b>
+  <%=h @pharmacy_payment_child.invoice_no %>
+</p>
+
+<p>
+  <b>Po no:</b>
+  <%=h @pharmacy_payment_child.po_no %>
+</p>
+
+<p>
+  <b>Amount:</b>
+  <%=h @pharmacy_payment_child.amount %>
+</p>
+
+<p>
+  <b>Check option:</b>
+  <%=h @pharmacy_payment_child.check_option %>
+</p>
+
+
+<%= link_to 'Edit', edit_pharmacy_payment_child_path(@pharmacy_payment_child) %> |
+<%= link_to 'Back', pharmacy_payment_children_path %>

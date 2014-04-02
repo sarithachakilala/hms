@@ -1,0 +1,98 @@
+<%= javascript_include_tag 'dashboards/jquery-1.4.2.min' %>
+<%= javascript_include_tag 'dashboards/jquery.min' %>
+<%= javascript_include_tag 'dashboards/jquery-1.5.2.min' %>
+<%= javascript_include_tag 'dashboards/exporting.src' %>
+<%= javascript_include_tag 'dashboards/highcharts.src' %>
+<%= javascript_include_tag 'dashboards/dark-green' %> 
+<%= javascript_include_tag 'dashboards/exporting' %>
+<script type="text/javascript" charset="utf-8">
+var chart;
+
+$(document).ready(function() {
+	chart = new Highcharts.Chart({
+		chart: {
+			renderTo: 'container',
+			type: 'line',
+			marginRight: 130,
+			marginBottom: 25
+		},
+		title: {
+			text: 'VitalObservation',
+			x: -20 //center
+		},
+		xAxis: {
+			
+			categories: [
+						<% for i in 0..@date.length %>
+							new String('<%= @date[i] %>'),
+						<% end %>
+				]
+		},
+		yAxis: {
+			title: {
+				text: 'Value'
+			},
+			plotLines: [{
+				value: 0,
+				width: 1,
+				color: '#808080'
+			}]
+		},
+		tooltip: {
+			formatter: function() {
+					return '<b>'+ this.series.name +'</b><br/>'+
+					this.x +': '+ this.y;
+			}
+		},
+		legend: {
+			layout: 'vertical',
+			align: 'right',
+			verticalAlign: 'top',
+			x: -10,
+			y: 100,
+			borderWidth: 0
+		},
+		series: [{
+			name: 'Weight',
+			data: [ <% for vital_observation in @vital_observation %>
+						<%= vital_observation.weight %>,
+					<% end %>
+			]
+		}, {
+			name: 'Pulse',
+			data: [
+					<% for vital_observation in @vital_observation %>
+						<%= vital_observation.pulse %>,
+					<% end %>
+			]
+		}, {
+			name: 'Temparature',
+			data: [
+					<% for vital_observation in @vital_observation %>
+						<%= vital_observation.temparature %>,
+					<% end %>
+			]
+		}, {
+			name: 'BP-Systolic',
+			data: [
+					<% for vital_observation in @vital_observation %>
+						<%= vital_observation.bp_systolic %>,
+					<% end %>
+			]
+		}, {
+			name: 'BP-Diastolic',
+			data: [
+					<% for vital_observation in @vital_observation %>
+						<%= vital_observation.bp_diastolic %>,
+					<% end %>
+			]
+		}]
+	});
+});
+
+</script>
+	
+<body>
+    <div id="container" style="width: 800px; height: 400px; margin: 0 auto"></div>
+</body>   
+   

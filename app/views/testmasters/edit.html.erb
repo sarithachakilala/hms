@@ -1,0 +1,58 @@
+
+<% form_for(@testmaster) do |f| %>
+  <div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Doctor Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/testmasters?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Test Masters</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<fieldset>
+
+<legend>New Test master</legend>
+  <table width="100%">
+	<tr>
+		<td>Org.Code</td>
+		<td><%= f.text_field :org_code, :class => "text_field", :id => "org_code" %></td>
+		<td>Org.Location</td>
+		<td><%= f.text_field :org_location, :class => "text_field", :id => "org_location" %></td>
+		<td>DepartmentName<sup>*</sup></td>
+		<td><%= f.text_field :department_name, :class => "text_field", :id => "dept_name" %>
+		<td>Test Name<sup>*</sup></td>
+		<td><%= f.text_field :test_name, :class => "text_field" %></td>
+  </tr>
+ </table>
+ <div id="tableContainer" class="tableContainer">
+<table border="0" cellpadding="0" cellspacing="0" class="scrollTable" id="displayTable">
+<thead class="fixedHeader">
+ <tr>
+    <th>S.NO</th>
+    <th>Paramaters</th>
+    <th>Field type</th>
+    <th>Normal range</th>
+    <th>Unit</th>
+  </tr>
+</thead>
+	<tbody class="scrollContent">
+ <% @i=0 %>
+ <% f.fields_for :testmaster_child do |a| %>
+  <tr>
+			<td ><%= @i=@i+1 %></td>
+			<td><%= a.text_field :paramaters, :class =>"text_field", :class=>"nbb" %></td>
+  		    <td><%= a.select :field_type,[['Content'],['Heading'],['Sub-Heading']], :class =>"text_field", :class=>"nbb" %></td>
+			<td><%= a.text_field :normal_range, :class =>"text_field", :class=>"nbb" %></td>
+    		<td><%= a.text_field :unit, :class =>"text_field", :class=>"nbb" %></td>	
+  </tr>
+<% end %>
+</tbody>
+</table>
+ </fieldset>
+  <table align ="center">
+  <tr>
+  	<td><%= submit_tag "", :value => " Update ", :class => "submit_button" %></td>
+				<td valign="middle"><%= link_to "back",  testmasters_path, :class=>"new1" %></td>
+	
+  </tr>
+</table>
+<% end %>

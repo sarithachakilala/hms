@@ -1,0 +1,2 @@
+module BedTransfersHelper
+end

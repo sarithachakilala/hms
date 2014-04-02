@@ -1,0 +1,36 @@
+
+   <%= stylesheet_link_tag 'css' %>
+  <%= stylesheet_link_tag 'table_style' %>
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div align="center" id="table">
+
+<table width="80%" class="sofT">
+<thead width="80%">
+<tr bgcolor ="#378bf8" style="color:white;">
+<th>S.No</th>
+<th>Org.Code</th>
+<th>Invoice.Date</th>
+<th>Agency Name</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+ <% @i=0 %>
+<% @goods.each do |goodsreception| %>
+  <% if ((@i%2==0))
+  id="datacelltwo"
+  else
+  id="datacellone"
+  end %>
+  <tr class='<%= id %>'>
+	<td><%= @i+=1 %></td>
+	<td><%=h goodsreception.org_code %></td>
+    <td><%=h goodsreception.invoice_date %></td>
+    <td><%=h goodsreception.agency_name %></td>
+	<td><%=h goodsreception.status %></td>
+
+    
+ </tr>
+<% end %>
+</fieldset>

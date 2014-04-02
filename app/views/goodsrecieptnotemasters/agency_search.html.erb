@@ -1,0 +1,63 @@
+<%= stylesheet_link_tag 'jquery-ui' %>
+<%= javascript_include_tag 'jquery.min.js' %>
+<%= javascript_include_tag 'jquery-ui.min.js' %>  
+<script type="text/javascript"> 
+		
+	function select_agency(id)
+	{   
+		var org_code=document.getElementById('org_code').value
+		var agency_name=document.getElementById(id).value
+		
+		
+		req = new Ajax.Request('/goodsrecieptnotemasters/agency_enquiry/1', {
+				method: 'get',
+				parameters: {agency_name:agency_name, org_code:org_code},
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			});
+		function processReqChange(req) 
+		{
+			if(req.responseText=="No Records")
+				document.getElementById("table").value=req.responseText
+			else
+				document.getElementById("table").innerHTML=req.responseText
+		}
+	}
+	function clear_function()
+	{
+		document.getElementById('org_code1').value=""
+		document.getElementById('from_date_').value=""
+		document.getElementById('to_date_').value=""
+		document.getElementById('medicine_name').value=""
+	}
+ </script> 
+<body>
+
+<body style="margin:0px;" onload="setMyDiv('/goodsrecieptnotemasters/enquiry/1?user_id=<%= @user_id %>','new','')">
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Report >>&nbsp;&nbsp;&nbsp;<a HREF='/goodsrecieptnotemasters/agency_search/1' class="nav" style="text-decoration:none;">Agency Wise Report</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<font size="3" face="Calibri">
+<fieldset>
+<legend><div class="font"><b>Search</b></div></legend>
+<table width="30%"  align="center">
+<tr>
+<%= hidden_field_tag:org_code,"", :id=>"org_code", :value=>"#{@org_code}" %>
+<%= hidden_field_tag:org_location,"", :id=>"org_location", :value=>"#{@org_location}" %>
+	<td><label for="item_name">Agency Name</label></td>
+	<td><%= select :agency_name,"", Goodsrecieptnotemaster.find(:all, :select=>"Distinct agency_name").collect{|p|[p.agency_name]},{:prompt=>true} ,{:id=>"agency_name", :onChange=>"select_agency(id)"} %></td>
+</tr>
+</table>
+</fieldset>
+<div class="font">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Results :</b>
+</div>
+<div id="table" align ="center">
+
+</div>
+</body>

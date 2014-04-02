@@ -1,0 +1,56 @@
+<script type="text/javascript">
+var selectid;
+var query1;
+var org_code;
+function Select_dept(id)
+	{
+		var selObj = document.getElementById(id);
+		query1= selObj.options[selObj.selectedIndex].value
+		document.getElementById("service_group_code").value=query1
+    }
+</script>
+
+<% form_for(@servicemaster) do |f| %>
+ <div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Service Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/servicemasters?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Service Masters</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<div  width="100%">
+<fieldset>
+<legend><div class="font"><b>New Service Master</b></div></legend>
+ <table align="center" width="70%">
+  
+  <tr>
+    <td>Org.Code</td>
+	<td><%= f.text_field :org_code, :class => "text_field", :id => "org_code", :value =>@org_code, :readonly =>true %></td>
+    <td>Org.Location</td>
+	<td><%= f.text_field :org_location, :class => "text_field", :id => "org_location", :value =>@org_location, :readonly =>true %></td>
+  </tr>
+  <tr>
+    <td>Service Group Name<sup>*</sup></td>
+	<td><%= f.select :service_group_code, [['Laboratory'],['Radiology'],['GeneralServices'],['VaccinationServices'],['MiscellaneousServices']],{:prompt  => true, :id =>"service_name"}, {:onchange => "Select_dept(id)"} %></td> 
+	<td>ServiceGroupCode</td>
+	<td><%= f.text_field :service_group_code , :class => "text_field", :id => "service_group_code" %></td>
+ </tr>
+ <tr>
+	 <td>Service Name<sup>*</sup></td>
+     <td><%= f.text_field :service_name,:class =>"text_field"%></td>
+     <td>Service Code<sup>*</sup></td>
+     <td><%= f.text_field :service_code,:class =>"text_field"%></td>
+  </tr>
+  </table>
+  </fieldset>
+  <table align ="center">
+  <tr>
+  	<td><%= submit_tag "", :value => " Save ", :class => "submit_button" %></td>
+<td><%= submit_tag "", :value => " Reset ", :class => "submit_button" %></td>
+	<td valign="middle"><%= link_to "Back",  servicemasters_path, :class=>"new1" %></td>
+  </tr>
+</table>
+<% end %>
+</body>
+ 

@@ -1,0 +1,249 @@
+<%= stylesheet_link_tag 'look_up_search/jquery-ui' %>
+<%= javascript_include_tag 'jquery.min.js' %>
+<%= javascript_include_tag 'jquery-ui.min.js' %> 
+
+
+<script type="text/javascript">
+	function select_dept(id)
+	{
+		var department=document.getElementById('department').value
+		var query=document.getElementById(id).value	
+		var consultant_id=document.getElementById('consultant_id').value
+		var appt_date=document.getElementById('appt_date').value
+		var field_id=id
+		req = new Ajax.Request('/appointment_payments/select_department/1', 
+			{
+				method: 'get',
+				parameters: {query: query, consultant_id:consultant_id,field_id:field_id,appt_date:appt_date},
+				onComplete: function(transport){
+				processReqChange(transport);
+			}
+		}); // end ajax req
+		function processReqChange(req) 
+		{
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				if(field_id=="department")
+				{
+					var temp=results.split("<division>")
+					document.getElementById('consultant_id').length=0
+					var opt = document.createElement('option');
+					document.getElementById('consultant_id').options.add(opt);
+					opt.text ="Please select"
+					opt.value="Please select"
+					for(j=0;j<temp.length-1;j++)
+					{
+						var opt = document.createElement('option');
+						document.getElementById('consultant_id').options.add(opt);
+						opt.text =temp[j]
+						opt.value=temp[j]
+					}
+					
+				}
+				else if(field_id=="consultant_id")
+				{
+					var temp=results.split("<division>")
+					document.getElementById('op_number').value=temp[0]
+					document.getElementById('consultant_fee').value=temp[1]
+					document.getElementById('pamt').value=temp[1]
+					calculate1()
+				}
+				
+			}
+		}
+	}
+
+	function mrno_search()
+	{
+		
+	    var mr_no=document.getElementById(id).value
+		req=new Ajax.Request('/appointment_payments/ajaxreq/1',
+		{
+		method:'get',
+		parameters:{mr_no:mr_no},
+		onComplete:function(transport){
+		processReqChange(transport);
+		}
+		}
+		);
+		function processReqChange(req)
+		{
+		if(req.readyState==4)
+
+			document.getElementById("t1").value=req.responseText;
+
+		}
+	}
+  	function search()
+ 	{
+		window.open('/appointment_payments/home/1','dependent, width=900, height=480, left=100, top=100', target='_blank');
+ 	}
+	
+	function fill_color()
+	{
+		var field_names=new Array('mr_no','patient_name','age','gender','referral');
+		for(i=0;i<=field_names.length;i++)
+		{
+			document.getElementById(field_names[i]).style.background='#FEF5CA'
+			document.getElementById(field_names[i]).readOnly=true	
+		}
+		document.getElementById("appt_date").value="hai"
+	}
+function calculate(id)
+	{	
+
+		if(document.getElementById('con_aut').value!="")
+		{
+			var fee=document.getElementById('consultant_fee').value
+			var reg_fee=document.getElementById('reg_fee').value
+			var paid=document.getElementById('pamt').value
+			
+				document.getElementById('conc').value=((parseFloat(fee)+parseFloat(reg_fee))-parseFloat(paid))
+		}
+		else
+		{
+			document.getElementById('pamt').value=""
+			alert("Please enter Concession Authority");
+		}
+		
+	}
+function calculate1()
+	{	
+
+		
+			var paid=document.getElementById('consultant_fee').value
+			var reg=document.getElementById('reg_fee').value
+			var cons=document.getElementById('conc').value
+			if(document.getElementById('pamt').value != "")
+			{
+
+document.getElementById('pamt').value=((parseFloat(paid)+parseFloat(reg))-parseFloat(cons)).toFixed(2)
+			}
+	
+	}
+
+
+	
+ </script>
+<body onLoad="fill_color();">
+<br/>
+<% form_for(@appointment_payment) do |f| %>
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Out Patients >>&nbsp;&nbsp;&nbsp;<a HREF='/appointment_payments' class="nav" style="text-decoration:none;">Appointment Payments</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<br/>
+<div id="form_data">
+<fieldset><legend><div class="font"><b>Appointment Payments Details</b></div></legend>
+<% @date = Date.today() %>
+	<%= f.hidden_field :org_code, :class =>"text_field", :id => "org_code", :readonly=>true, :value=>@org_code %>
+	<%= f.hidden_field :org_location, :class =>"text_field", :id => "org_location", :readonly=>true, :value=>@org_location %>
+	<%= f.hidden_field :user_id, :class =>"text_field", :value=>@person.id %>
+	<%= f.hidden_field :registration_id, :class =>"text_field", :id => "registration_id", :readonly=>true %>
+	<table width="100%">
+	 <tr>
+    	<td>MR.No<sup>*</sup></td>
+		<td><%= f.text_field :mr_no, :class =>"text_field", :id => "mr_no", :readonly=>true %><%= link_to image_tag("search1.png", :border=>0, :height => "20", :width => "22"),"javascript: search()"  %></td>
+		<td>Book Date<sup>*</sup></td>
+        <td><%= f.text_field :book_date, :class =>"text_field", :readonly =>true, :value => "#{@date}"  %></td>
+		<td>Patient Name<sup>*</sup></td>
+        <td><%= f.text_field :patient_name,:class =>"text_field", :id=>"patient_name", :readonly=>true %></td>
+	</tr>
+	<tr>
+        <td>Age<sup>*</sup></td>
+        <td><%= f.text_field :age,:class =>"text_field", :id=>"age", :readonly=>true %></td>
+		<td>Gender<sup>*</sup></td>
+        <td><%= f.text_field :gender,:class =>"text_field",:id=>"gender", :readonly=>true %></td>
+     	<td>Appt.Type<sup>*</sup></td>
+		<td><%= f.select :appt_type, [['OP'],['Phone']], {:include_blank => false},{ :style=>"width:158px;" } %></td>	
+	</tr>
+	<tr>
+		<td>Referral</td>
+
+		
+		<td><%= f.text_field :referral_name,:class =>"text_field",:id=>"referral",:value => @referral, :readonly=>true %></td>
+		<td>Appt.Time<sup>*</sup></td>
+       <td><%= f.time_select :appt_time, :default=>Time.now %></td>
+       <td>Appt.Date<sup>*</sup></td>
+	<td><%= f.text_field :appt_date, :class =>"text_field", :id =>"appt_date", :value => "#{@date}" %><a href="javascript:void(0)" onClick="setYears(1947, 2015);showCalender(this,'appt_date');" >
+<img src="/images/cal.gif" ></a></td>
+	</tr>
+	<tr>
+	   <td>Department<sup>*</sup></td>
+	   <td><%= f.select :department,  DepartmentMaster.find(:all).collect{|p| [p.department]},{:include_blank =>true},{:id=> "department", :onChange=> "select_dept(id)"} %> </td>
+	    <td>Consultant<sup>*</sup></td>
+        <td><%= f.select :consultant_id,' ',{:prompt => false},{:id =>"consultant_id", :onChange => "select_dept(id)"} %></td>
+        <td>OP.Number<sup>*</sup></td>
+		<td><%= f.text_field :op_number, :class =>"text_field", :id => "op_number" %></td>
+	</tr>
+    <tr> 
+        <td>Consultant Fee<sup>*</sup></td>
+        <td><%= f.text_field :consultant_fee, :id => "consultant_fee",:class =>"text_field", :readOnly =>true %> </td>  
+        <td>Bill No<sup>*</sup></td>
+        <td><%= f.text_field :bill_no11, :class =>"text_field", :id => "bill_no11", :readOnly =>true %> </td>
+		<td>Concession Authority</td>
+		<td><%= f.text_field :concession_authority,:id =>"con_aut" ,:class =>"text_field"%></td>
+  	</tr>
+	<tr>
+		<td>Concession</td>
+		<td><%= f.text_field :concession, :id => "conc",:class =>"text_field", :value => "0", :readOnly =>true %></td>
+		<td>Reg.Fee</td>
+		<td><%= f.text_field :reg_fee, :id => "reg_fee", :onKeyUp => "calculate1()",:class =>"text_field", :value=>0 %></td>
+		<td>Paid Amount<sup>*</sup> </td>
+		<td><%= f.text_field :paid_amount, :size =>20, :id =>"pamt" , :onKeyUp => "calculate(id)",:class =>"text_field" %></td>
+	</tr>
+ </table>
+ </fieldset>
+ <br/>
+<div>
+<table align ="center">
+  <tr>
+  	<td><%= submit_tag "", :value => " Save&Print ", :class => "submit_button", :onClick => "this.disabled=true;this.value='Process..';this.form.submit();" %></td>
+	<td><%= submit_tag "", :value => " Reset ", :type => "reset",  :class => "submit_button" %></td>
+	<td valign="middle"><%= link_to "Back",  appointment_payments_path, :class=>"submit_button" %></td>
+  </tr>
+</table>
+</div>
+<table id="calenderTable">
+        <tbody id="calenderTableHead">
+          <tr>
+            <td colspan="4" align="center">
+	          <select onChange="showCalenderBody(createCalender(document.getElementById('selectYear').value,
+	           this.selectedIndex, false));" id="selectMonth">
+	              <option value="0">Jan</option>
+	              <option value="1">Feb</option>
+	              <option value="2">Mar</option>
+	              <option value="3">Apr</option>
+	              <option value="4">May</option>
+	              <option value="5">Jun</option>
+	              <option value="6">Jul</option>
+	              <option value="7">Aug</option>
+	              <option value="8">Sep</option>
+	              <option value="9">Oct</option>
+	              <option value="10">Nov</option>
+	              <option value="11">Dec</option>
+	          </select>
+            </td>
+            <td colspan="2" align="center">
+			    <select onChange="showCalenderBody(createCalender(this.value, 
+				document.getElementById('selectMonth').selectedIndex, false));" id="selectYear">
+				</select>
+			</td>
+         
+		  </tr>
+       </tbody>
+       <tbody id="calenderTableDays">
+         <tr style="">
+           <td>Sun</td><td>Mon</td><td>Tue</td><td>Wed</td><td>Thu</td><td>Fri</td><td>Sat</td>
+         </tr>
+       </tbody>
+       <tbody id="calender"></tbody>
+    </table>
+<% end %>
+</body>
+

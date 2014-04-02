@@ -1,0 +1,66 @@
+<script type="text/javascript"> 
+		
+	function select_medicine_name()
+	{   
+		
+		var from_date=document.getElementById('from_date_').value
+		var to_date=document.getElementById('to_date_').value
+		var org_code=document.getElementById('org_code1').value
+		var medicine_name=document.getElementById('medicine_name').value
+		
+		req = new Ajax.Request('/goodsrecieptnotemasters/find_medicine/1', {
+				method: 'get',
+				parameters: { from_date:from_date, to_date :to_date, medicine_name:medicine_name, org_code:org_code},
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			});
+		function processReqChange(req) 
+		{
+			if(req.responseText=="No Records")
+				document.getElementById("table").value=req.responseText
+			else
+				document.getElementById("table").innerHTML=req.responseText
+		}
+	}
+	function clear_function()
+	{
+		document.getElementById('org_code1').value=""
+		document.getElementById('from_date_').value=""
+		document.getElementById('to_date_').value=""
+		document.getElementById('medicine_name').value=""
+	}
+ </script> 
+<body>
+<font size="3" face="Calibri">
+
+<fieldset>
+<legend><div class="font"><b>Search</b></div></legend>
+<table width="100%"  align="center">
+<tr>
+	<td>Org.Code</td>
+	<td><%= select:org_code1 ,"r",Person.find(:all, :select=> "DISTINCT org_code").collect{|p| [p.org_code]},{:prompt => false},{:id=>"org_code1"}  %></td>
+	
+	<td><label for="item_name">From Date</label></td>
+	<td><%= text_field('from_date', '',:size => 20) %><a href="javascript:void(0)" onClick="setYears(2000, 2050);showCalender(this,'from_date_');" >
+		<img src="/images/cal.gif" ></a></td>
+    <td><label for="item_name">To Date</label></td>
+	<td><%= text_field('to_date', '',:size => 20) %><a href="javascript:void(0)" onClick="setYears(2000, 2050);showCalender(this,'to_date_');" >
+		<img src="/images/cal.gif" ></a></td>
+		
+	<td><label for="item_name">Medicine Name</label></td>
+	<td><%= text_field_tag:medicine_name,"", :id=>"medicine_name", :onkeyup=>"select_medicine_name(id)" %></td>
+</tr>
+
+	
+</table>
+</fieldset>
+
+<div class="font">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Results :</b>
+</div>
+
+<div id="table" align ="center">
+
+</div>
+
+</body>

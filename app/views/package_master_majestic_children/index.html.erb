@@ -1,0 +1,24 @@
+<h1>Listing package_master_majestic_children</h1>
+
+<table>
+  <tr>
+    <th>Package master majestic</th>
+    <th>Ward name</th>
+    <th>Charge</th>
+  </tr>
+
+<% @package_master_majestic_children.each do |package_master_majestic_child| %>
+  <tr>
+    <td><%=h package_master_majestic_child.package_master_majestic %></td>
+    <td><%=h package_master_majestic_child.ward_name %></td>
+    <td><%=h package_master_majestic_child.charge %></td>
+    <td><%= link_to 'Show', package_master_majestic_child %></td>
+    <td><%= link_to 'Edit', edit_package_master_majestic_child_path(package_master_majestic_child) %></td>
+    <td><%= link_to 'Destroy', package_master_majestic_child, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New package_master_majestic_child', new_package_master_majestic_child_path %>

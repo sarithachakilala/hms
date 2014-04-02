@@ -1,0 +1,44 @@
+<h1>Listing test_booking_children</h1>
+
+<table>
+  <tr>
+    <th>Test booking</th>
+    <th>S no</th>
+    <th>Test code</th>
+    <th>Test name</th>
+    <th>Rate</th>
+    <th>Dis ptage</th>
+    <th>Dis amount</th>
+    <th>Amount</th>
+    <th>Department</th>
+    <th>Status</th>
+    <th>Lab type</th>
+    <th>Lab amount</th>
+    <th>Org code</th>
+  </tr>
+
+<% @test_booking_children.each do |test_booking_child| %>
+  <tr>
+    <td><%=h test_booking_child.test_booking_id %></td>
+    <td><%=h test_booking_child.s_no %></td>
+    <td><%=h test_booking_child.test_code %></td>
+    <td><%=h test_booking_child.test_name %></td>
+    <td><%=h test_booking_child.rate %></td>
+    <td><%=h test_booking_child.dis_ptage %></td>
+    <td><%=h test_booking_child.dis_amount %></td>
+    <td><%=h test_booking_child.amount %></td>
+    <td><%=h test_booking_child.department %></td>
+    <td><%=h test_booking_child.status %></td>
+    <td><%=h test_booking_child.lab_type %></td>
+    <td><%=h test_booking_child.lab_amount %></td>
+    <td><%=h test_booking_child.org_code %></td>
+    <td><%= link_to 'Show', test_booking_child %></td>
+    <td><%= link_to 'Edit', edit_test_booking_child_path(test_booking_child) %></td>
+    <td><%= link_to 'Destroy', test_booking_child, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New test_booking_child', new_test_booking_child_path %>

@@ -1,0 +1,62 @@
+<div align="center" width="100%">
+<table align="center" width="90%" border="1" cellspacing=0>
+  <tr bgcolor ="#378bf8">
+		<th>S.No</th>
+		<th>Admn.No</th>
+		<th>Admn.Date</th>
+		<th>Dis.Date</th>
+		<th>Patient Name</th>
+		<th>Age/Gender</th>
+		<th>Ward/Room/Bed/Floor</th>
+		<th>Status</th>
+		<th>Advence</th>
+		<th>Total</th>
+		<th>Due</th>
+	</tr>
+<% i=0 %>
+<% if(@admission) %>
+<% @admission.each do |admission| %>
+<% if((i%2)==0) 
+		id="datacelltwo"
+	else
+		id="datacellone"
+  end %>
+  <% registration=Registration.find_by_mr_no(admission.mr_no,@org_code) %>	
+  <% if(admission.admn_status == 'Discharged') %>
+	<% discharge=DischargeSummary.find_by_admn_no(admission.admn_no) %>	
+  <% end %>  
+  <tr class='<%= id %>' height="30px" >
+        <td><%= i=i+1 %></td>
+		<td><%=h admission.admn_no %></td>
+		<td><%=h admission.admn_date %></td>
+		<td><% if(discharge) %>
+			<%= discharge.discharge_date %>
+		<% else %>
+			<center>------</center>
+        <% end %></td>
+		<td><%=h registration.patient_name %></td>
+		<td><%=h registration.age.to_s+"/"+registration.gender %></td>
+		<td><% if(discharge) %>
+			<center>------</center>
+		<% else %>
+			<%=h admission.ward+"/"+admission.room+"/"+admission.bed+"/"+admission.floor %>
+		<% end %></td>
+		<td><%=h admission.admn_status %></td>
+		<% if(discharge) %>
+			<% final_bill=FinalBill.find_by_admn_no(admission.admn_no) %>
+			<td><%= final_bill.paid_amount %></td>			
+			<td><%= final_bill.remaining_amount %></td>
+			<td><%= final_bill.balance_amount %></td>
+		<% else %>
+			<% advance=AdvancePayment.find_by_admn_no(admission.admn_no) %>
+<% if(advance) %>
+			<% @total_amount,@advance,@due,nurse_charge,ot,bed,consultant,@investigation_charges,@pharmacy=advance.payment_details(admission.admn_no,admission.org_code,'',admission.admn_category) %>
+			<td><%= @advance %></center></td>
+			<td><%= @total_amount %></center></td>
+			<td><%= @due %></center></td>
+	        <% end %>
+<% end %>
+	</tr>
+<% end %>
+<% end %>
+</table>

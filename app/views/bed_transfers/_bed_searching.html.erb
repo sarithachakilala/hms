@@ -1,0 +1,34 @@
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+  <tr>
+  <th>S.NO</th>
+    <th>MR NO</th>
+    <th>Admn NO</th>
+    <th>Transfer date</th>
+    <th>Admn date</th>
+    <th>Amount</th>
+  <th colspan="3" align="center">Permissions</th>
+  </tr>
+</thead>
+<tbody>
+<% @i=0 %>
+<% @bed_transfers.each do |bed_transfer| %>
+<% if((@i % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+  end %>
+ <tr class='<%= id %>'>
+	<td style="background-color: #FFF;"><%= @i+=1 %></td>
+    <td style="background-color: #FFF;"><%=h bed_transfer.mr_no %></td>
+    <td style="background-color: #FFF;"><%=h bed_transfer.admn_no %></td>
+    <td style="background-color: #FFF;"><%=h bed_transfer.transfer_date %></td>
+    <td style="background-color: #FFF;"><%=h bed_transfer.admn_date %></td>
+    <td style="background-color: #FFF;"><%=h bed_transfer.amount %></td>
+	
+   <td align="center" class="submit_button"><%= link_to 'show', bed_transfer %></td>
+	<td align="center"  class="submit_button"><%= link_to 'edit', edit_bed_transfer_path(bed_transfer) %></td>   
+  <td align="center"  class="submit_button"><%= link_to 'delete', bed_transfer, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>

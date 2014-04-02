@@ -1,0 +1,56 @@
+<%= stylesheet_link_tag 'scroll_new1' %>
+<% form_for(@org_master) do |f| %>
+  <%= f.error_messages %>
+<table align="center">
+  <tr>
+    <td>Hospital Name</td>
+    <td><%= f.text_field :hospital_name, :size =>20, :required => true %></td>
+    <td>No.of Branches<br /></td>
+    <td><%= f.text_field :no_of_branches, :size =>20, :required => true %></td>
+    <td>Port Number</td>
+    <td><%= f.text_field :port_number, :size =>20, :required => true %></td>
+  </tr>
+</table>
+<div id="info">
+    <table class="tableone">
+	<caption style="background: url(/images/vertical1_04.jpg) repeat-x top left;text-align:center;" ><font color="#F0FFFF" face="Cambria" ><b>Organizations</b></font></caption>
+    <thead>
+   		<tr>
+			<th class="th1"  style="color:black;">S.No</th>
+			<th class="th2"  style="color:black;">Branch Code</th>
+			<th class="th2"  style="color:black;">Branch Name</th>
+			<th class="th2"  style="color:black;">Address</th>
+			<th class="th2"  style="color:black;">Contact No</th>
+			<th class="th2"  style="color:black;">Email</th>
+		 </tr>
+    </thead>
+    <tbody>
+		<tr><td colspan="6">
+			<div class="innerb">
+			<table class="tabletwo" id="displayTable">
+				<% i=0 %>
+				<% f.fields_for :org_master_child_tables do |a| %>
+					<tr>
+						<td class="td1"><%= i+=1 %></td>
+						<td class="td2"><%= a.text_field :branch_code, :size =>35, :class => "nbb" %></td>
+						<td class="td2"><%= a.text_field :branch_name, :size =>35, :class => "nbb" %></td>
+						<td class="td2"><%= a.text_field :address, :size =>35, :class => "nbb" %></td>
+						<td class="td2"><%= a.text_field :ph_no, :size =>35, :class => "nbb" %></td>
+						<td class="td2"><%= a.text_field :email, :size =>35, :class => "nbb" %></td>
+					</tr>
+				<% end %>
+			</table>
+			</div>
+		</td>
+		</tr>
+	</tbody>
+	</table>
+</div>
+<br/>
+<table align="center">
+<tr>
+	<td><%= submit_tag "", :value => " Save ", :class => "submit_button", :onClick => "this.disabled=true;this.value='Process..';this.form.submit();" %></td>
+	<td valign="middle"><%= link_to "Back",  org_masters_path, :class=>"new1" %></td>
+</tr>
+</table>	
+<% end %>

@@ -1,0 +1,32 @@
+<h1>Editing ward_cost</h1>
+
+<% form_for(@ward_cost) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :consultant_master_id %><br />
+    <%= f.text_field :consultant_master_id %>
+  </p>
+  <p>
+    <%= f.label :ward %><br />
+    <%= f.text_field :ward %>
+  </p>
+  <p>
+    <%= f.label :gcost %><br />
+    <%= f.text_field :gcost %>
+  </p>
+  <p>
+    <%= f.label :night_duty_cost %><br />
+    <%= f.text_field :night_duty_cost %>
+  </p>
+  <p>
+    <%= f.label :emergency_cost %><br />
+    <%= f.text_field :emergency_cost %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @ward_cost %> |
+<%= link_to 'Back', ward_costs_path %>

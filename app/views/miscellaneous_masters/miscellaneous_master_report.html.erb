@@ -1,0 +1,64 @@
+<script type="text/javascript"> 
+		
+	function miscellaneous_search()
+	{   
+		
+		var from_date=document.getElementById('from_date_').value
+		var to_date=document.getElementById('to_date_').value
+		var org_code=document.getElementById('org_codeall').value
+		var service=""
+		
+		req = new Ajax.Request('/miscellaneous_masters/find_report/1', {
+				method: 'get',
+				parameters: { from_date:from_date, to_date :to_date, org_code:org_code,service:service },
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			});
+		function processReqChange(req) 
+		{
+			if(req.responseText=="No Records")
+				document.getElementById("table").value=req.responseText
+			else
+				document.getElementById("table").innerHTML=req.responseText
+		}
+	}
+	function clear_function()
+	{
+		document.getElementById('org_codeall').value=""
+		document.getElementById('from_date_').value=""
+		document.getElementById('to_date_').value=""
+		document.getElementById('name').value=""
+	}
+ </script> 
+<body onLoad="miscellaneous_search()">
+<font size="3" face="Calibri">
+<%= form_tag ({:controller => "miscellaneous_masters", :action => "generate_reports"}, {:method => "post"}) %>
+<% @date=format_date(:sort, Date.today ) %>
+<% @pre_date=format_date(:sort, Date.today-7 ) %>
+<fieldset>
+<legend><div class="font"><b>Search</b></div></legend>
+<table width="50%"  align="center">
+<tr>
+	<td><label for="item_name">From Date</label></td>
+	<td><%= text_field('from_date', '',:size => 20,:value=>"#{@pre_date}") %><a href="javascript:void(0)" onClick="setYears(2000, 2050);showCalender(this,'from_date_');" >
+		<img src="/images/cal.gif" ></a></td>
+    <td><label for="item_name">To Date</label></td>
+	<td><%= text_field('to_date', '',:size => 20,:value=>"#{@date}") %><a href="javascript:void(0)" onClick="setYears(2000, 2050);showCalender(this,'to_date_');" >
+		<img src="/images/cal.gif" ></a></td>
+	<td><%= hidden_field_tag :org_code1,"",:value=>"#{@org_code}", :id => "org_codeall" %></td>
+<td><a href="javascript:void(0);" class="new1" onClick ="miscellaneous_search()">Search</a>
+	<td><%= link_to 'Clear','', :class=>"new1",:onClick => "clear_function()"  %></td>
+	
+</tr>	
+</table>
+</fieldset>
+
+<div class="font">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Results :</b>
+</div>
+
+<div id="table" align ="center">
+</div>
+ 
+ <%= form_tag %>
+</body>

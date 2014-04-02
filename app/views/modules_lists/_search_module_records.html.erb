@@ -1,0 +1,29 @@
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1" width="70%">
+<thead>
+   <tr>
+		<th>S.No</td>
+		<th>Module name</th>
+		<th>Position</th>
+		<th>Path</th>
+		<th colspan="3">Permissions</th>
+  </tr>
+</thead>
+<tbody>
+<% @i=0 %>
+<% @modules_lists.each do |modules_list| %>
+<% if((@i % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+		 end %>
+  <tr>
+	<td><%= @i+=1 %></td>
+    <td><%=h modules_list.module_name %></td>
+    <td><%=h modules_list.position %></td>
+    <td><%=h modules_list.path %></td>
+    <td align="center"><%= link_to image_tag("buttons/display1.png", :class => "info", :border =>"0"), modules_list %></td>
+    <td align="center"><%= link_to image_tag("buttons/modify.png", :class => "info", :border =>"0"), edit_modules_list_path(modules_list) %></td>
+    <td align="center"><%= link_to image_tag("buttons/delete.png", :class => "info", :border =>"0"), modules_list, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>

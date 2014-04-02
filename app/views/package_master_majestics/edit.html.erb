@@ -1,0 +1,129 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Doctor Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/package_master_majestics' class="nav" style="text-decoration:none;">Package Master</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<script type="text/javascript">
+	function add_inclusion(id,list_box_name,text_box_name)
+	{
+		if(id=="add_all")
+		{
+			
+			var selObj = document.getElementById(list_box_name);
+			document.getElementById("exclusion").value=""
+			if(selObj.length!=0)
+			{
+				document.getElementById(text_box_name).value=""
+				for(i=0;i<selObj.length;i++)
+					if(i!=0)
+						document.getElementById(text_box_name).value=document.getElementById(text_box_name).value+","+selObj.options[i].value
+					else
+						document.getElementById(text_box_name).value=selObj.options[i].value
+				document.getElementById(list_box_name).length=0
+			}
+		}
+		else if(id=="add_selected")
+		{
+			var selObj = document.getElementById(list_box_name);
+			for(i=0;i<selObj.length;i++)
+			{
+				if(selObj.options[i].selected)
+				{
+					if(document.getElementById(text_box_name).value=="")
+						document.getElementById(text_box_name).value=selObj.options[i].value
+					else
+						document.getElementById(text_box_name).value=document.getElementById(text_box_name).value+","+selObj.options[i].value	
+				}		
+			}	
+			for(i=0;i<selObj.length;i++)
+			{
+				if(selObj.options[i].selected)
+				{
+					selObj.remove(i);
+					i--;
+				}
+			}
+			selObj = document.getElementById(list_box_name);
+			document.getElementById("exclusion").value=""
+			for(i=0;i<selObj.length;i++)
+			{
+				if(document.getElementById("exclusion").value=="")
+					document.getElementById("exclusion").value=selObj.options[i].value
+				else
+					document.getElementById("exclusion").value=document.getElementById("exclusion").value+","+selObj.options[i].value			
+			}	
+		}
+		else if(id=="remove_all")
+		{
+			var inclusion = document.getElementById(text_box_name).value
+			var inclusion_array=inclusion.split(",");
+			for(i=0;i<inclusion_array.length;i++)
+			{
+				var opt = document.createElement("option");
+				document.getElementById(list_box_name).options.add(opt);
+				opt.text = inclusion_array[i]
+				opt.value = inclusion_array[i]
+			}
+			document.getElementById(text_box_name).value=""
+			document.getElementById("exclusion").value=""
+			var selObj = document.getElementById(list_box_name);
+			for(i=0;i<selObj.length;i++)
+			{
+				if(document.getElementById("exclusion").value=="")
+					document.getElementById("exclusion").value=selObj.options[i].value
+				else
+					document.getElementById("exclusion").value=document.getElementById("exclusion").value+","+selObj.options[i].value			
+			}
+		}
+	}
+	
+</script>
+
+
+<% form_for(@package_master_majestic) do |f| %>
+  <%= f.error_messages %>
+<table align="center">
+ <tr>
+	<td>Org.Code</td>
+	<td><%= f.text_field :org_code, :value => @org_code, :size => 20, :id => "org_code", :required => true, :readonly => true %></td>
+    <td>Org.Location</td>
+    <td><%= f.text_field :org_location, :value => @org_location, :size => 20, :id => "org_location", :required => true, :readonly => true %></td>
+    <td><%= f.label :category %></td> 
+	<td><%= f.select :category,[['Gynaecology'],['General Surgeries'],['Urology'],['Opthamology'],['Dental Surgery'],['E.N.T'],['Orthopedics'],['Paediatric'],['Anaesthesia'],['General Medicine'],['Dermatology'],['D.M.O'],['General Medicine']],{:prompt => true} %></td>
+    <td><%= f.label :sub_category %></td> 
+    <td><%= f.text_field :sub_category, :size => 20 %></td>
+	<td><%= f.label :days %></td> 
+    <td><%= f.text_field :days , :size => 20 %></td>
+ </tr>
+ <tr>
+	<td colspan="4">&nbsp;</td>
+ </tr>
+ <tr>
+	<td colspan="8" align="center">
+		<table border="1" cellspacing="0">
+			<tr class="info">
+				<th>Ward Name</th>
+				<th>Charge</th>
+			</tr>
+			<% f.fields_for :package_master_majestic_children do |w| %>
+			<tr>
+				<td><%=w.text_field :ward_name, :size =>"20", :style=>"border:0; background-color :#ecf3f7;"%></td>
+				<td><%=w.text_field :charge, :size =>"20", :style=>"border:0;" %></td>
+			</tr>
+			<% end %>
+		</table>
+	</td>
+ </tr>
+ <tr>
+
+		<td colspan="8" align="center"><%= submit_tag "", :value => " Update ", :class => "submit_button" %>
+		<%= link_to "back",  package_master_majestics_path, :class=>"new1" %></td>
+    
+ </tr>
+</table>
+<% end %>
+
+

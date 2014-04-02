@@ -1,0 +1,36 @@
+<br>
+
+<% form_for(@state_master) do |f| %>
+  <div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">General Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/state_masters?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">State Masters</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<div align="center">
+  <table>
+ <tr>
+		<td><%= f.label :country_master_id %><sup>*</sup></td>
+		<td><%= select:country,"", CountryMaster.find(:all).collect{|p| [p.name]},{:prompt => true},{:name=> "country_name"} %></td>
+ </tr>
+ <tr>
+		<td><%= f.label :code %></td>
+		<td><%= f.text_field :code, :class => "text_field" %></td>
+ </tr>
+ <tr>
+		<td><%= f.label :name %></td>
+		<td><%= f.text_field :name, :class => "text_field" %></td>
+ </tr>
+ </table>
+ <div>
+<table align="center">
+			<tr>
+					<td><%= submit_tag "", :value => " Update ", :class => "submit_button" %></td>
+				<td valign="middle"><%= link_to "back",  state_masters_path, :class=>"new1" %></td>
+			</tr>
+		</table>
+</table>
+</div>
+<% end %>

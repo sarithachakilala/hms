@@ -1,0 +1,44 @@
+<% @i=0 %>
+<table width="80%" class="sofT">
+<tr bgcolor ="#378bf8" style="color:white;">
+			<th>S.No</th>
+			<th>Org.Code</th>
+			<th>Patient Type</th>
+			<th>Return Date</th> 
+			<th>MR No</th> 
+			<th>Admn.No</th> 
+			<th>Return No</th>
+			<th>Return Amount</th>
+		</tr>
+
+<% @total=0 %>
+	<% @return.each do |issues|%>
+<% @total=@total+issues.return_amount.to_i %>
+<% if((@i % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+  end %>
+	<tr class='<%= id %>'>
+	
+		<td><%= @i=@i+1 %></td>
+		<td><%=h issues.org_code %></td>
+		<td><%=h issues.patient_type %></td>
+		<td><%=h issues.return_date %></td>
+		<td><%=h issues.mr_No %></td>
+		<td><%=h issues.admn_no %></td>
+		<td><%=h issues.return_no %></td>
+	    <td><%=h issues.return_amount %></td>
+
+</tr>
+<% end %>
+
+</table>
+<br/>
+<table align="center">
+	<tr>
+		<td>Total Amount:</td>
+		<td><%= @total %></td>
+	</tr>
+</table>
+<br/>

@@ -1,0 +1,26 @@
+<h1>Listing miscellaneous_children</h1>
+
+<table>
+  <tr>
+    <th>Miscellaneous master</th>
+    <th>Service</th>
+    <th>Service code</th>
+    <th>Amount</th>
+  </tr>
+
+<% @miscellaneous_children.each do |miscellaneous_child| %>
+  <tr>
+    <td><%=h miscellaneous_child.miscellaneous_master_id %></td>
+    <td><%=h miscellaneous_child.service %></td>
+    <td><%=h miscellaneous_child.service_code %></td>
+    <td><%=h miscellaneous_child.amount %></td>
+    <td><%= link_to 'Show', miscellaneous_child %></td>
+    <td><%= link_to 'Edit', edit_miscellaneous_child_path(miscellaneous_child) %></td>
+    <td><%= link_to 'Destroy', miscellaneous_child, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New miscellaneous_child', new_miscellaneous_child_path %>

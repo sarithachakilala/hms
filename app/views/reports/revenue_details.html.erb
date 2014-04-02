@@ -1,0 +1,103 @@
+<br/>
+<div align="center" width="100%">
+<table width="100%" border=1 cellspacing="0">
+<% @i=0 %>
+<% @id=0 %>
+<% if(@revenue_type=="OP" || @revenue_type=="IP" || @revenue_type=="Dues") %>
+	<tr class="info">
+		<th>S.No</th>
+		<th>Date</th>
+		<th>MR No</th>
+		<th>Patient Name</th>
+		<th>Fee</th>
+	</tr>
+	
+	<% if(@revenue_type=="OP") %>
+		<% @appt_payments.each do |appt_payment| %>
+			<% if((@id % 2)==0) 
+				id="datacelltwo"
+			else
+				id="datacellone"
+			end %>
+			<tr class='<%= id %>'>
+				<% registration=Registration.find_by_mr_no_and_org_code(appt_payment.mr_no,appt_payment.org_code) %>
+				<td><%=h @i+=1 %></td>
+				<td><%=h appt_payment.appt_date %></td>
+				<td><%=h appt_payment.mr_no %></td>
+				<td><%=h registration.patient_name %></td>
+				<td><%=h appt_payment.consultant_fee %></td>
+			</tr>
+		<% end %>
+		<% @test_bookings.each do |test_booking| %>
+			<% if((@id % 2)==0) 
+				id="datacelltwo"
+			else
+				id="datacellone"
+			end %>
+			<tr class='<%= id %>'>
+				<% registration=Registration.find_by_mr_no_and_org_code(test_booking.mr_no,test_booking.org_code) %>
+				<td><%=h @i+=1 %></td>
+				<td><%=h test_booking.booking_date %></td>
+				<td><%=h test_booking.mr_no %></td>
+				<td><%=h registration.patient_name %></td>
+				<td><%=h test_booking.paid_amount %></td>
+			</tr>
+		<% end %>
+		<tr><td colspan="6" align="center"><a href="/reports/generate_reports/1?date1=<%= @date1%>&date2=<%= @date2 %>&option=OP&org_code=<%= @org_code%>"><input type="button" value="Save As", class = "new1"></a></td></tr>
+	
+
+<% elsif(@revenue_type=="IP") %>
+	
+	<% @ipadvances.each do |ipadvance| %>
+		<% if((@i % 2)==0) 
+			id="datacelltwo"
+		else
+			id="datacellone"
+		end %>
+	<tr class='<%= id %>'>
+		<% registration=Registration.find_by_mr_no_and_org_code(ipadvance.mr_no,ipadvance.org_code) %>
+		<td><%=h @i+=1 %></td>
+		<td><%=h ipadvance.advance_date %></td>
+		<td><%=h ipadvance.mr_no %></td>
+		<td><%=h registration.patient_name %></td>
+		<td><%=h ipadvance.gross_amount %></td>
+	</tr>
+	<% end %>
+	<% @final_bills.each do |final_bill| %>
+		<% if((final_bill.id % 2)==0) 
+			id="datacellone"
+		else
+			id="datacelltwo"
+		end %>
+	<tr class='<%= id %>'>
+		<% registration=Registration.find_by_mr_no_and_org_code(final_bill.mr_no,final_bill.org_code) %>
+		<td><%=h @i=@i+1 %></td>
+		<td><%=h final_bill.final_bill_date %></td>
+		<td><%=h final_bill.mr_no %></td>
+		<td><%=h registration.patient_name %></td>
+		<td><%=h final_bill.paid_amount %></td> 
+	</tr>
+	<% end %>
+<tr><td colspan="7" align="center"><a href="/reports/generate_reports/1?date1=<%= @date1%>&date2=<%= @date2 %>&option=IP&org_code=<%= @org_code%>"><input type="button" value="Save As", class = "new1"></a></td></tr>
+<% elsif(@revenue_type=="Dues") %>
+		<% @dues.each do |duespagemaster| %>
+			<% if(( @id%2)==0) %>
+				<% id="datacelltwo" %>
+			<% else %>
+				<% id="datacellone" %>
+			<% end %>
+			<tr class='<%= id %>'>
+				<td><%=h @id=@id+1 %></td>
+				<td><%=h duespagemaster.due_date %></td>
+				<td><%=h duespagemaster.mr_no %></td>
+				<td><%=h duespagemaster.patient_name %></td>
+				<td><%=h duespagemaster.gross_amount %></td>
+		<% end %>
+		<tr align="center"><td colspan="6" class="button"><a href="/reports/generate_reports/1?date1=<%= @date1%>&date2=<%= @date2 %>&option=dues&org_code=<%= @org_code%>"><input type="button" value="Save As", class = "new1"></a></td></tr>
+	
+
+	<% end %>
+
+<% end %>
+</table>
+</div>

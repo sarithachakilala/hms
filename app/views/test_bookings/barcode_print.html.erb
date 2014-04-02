@@ -1,0 +1,28 @@
+<html>
+<script type="text/javascript">
+function get_values()
+{
+	
+	var no_of_copies=document.getElementById("barcode_no").value
+	if(no_of_copies)
+		window.open("/test_bookings/barcode_report/1?user_id=<%= @user_id%>&no_of_copies1="+no_of_copies+"&format=pdf", '_parent')
+	else
+		alert("Please Enter Number Of Copies U want To Print")
+
+}
+ </script>
+
+<fieldset>
+<legend><div class="font"><b>Printing BarCode</b></div></legend>
+<table  align="center">
+
+<tr>
+	<td><label for="item_name">Enter No Of Copies</label></td>
+	<td><%= text_field :barcode_no,'',:size => 20, :id=>"barcode_no" %></td>
+	
+	<td class="submit_button"><a href="javascript:void(0);" onClick="get_values()">Print</a></td>
+</tr>
+
+</table>
+</fieldset>
+</html>

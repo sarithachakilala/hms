@@ -1,0 +1,31 @@
+
+
+<%= stylesheet_link_tag 'css' %>
+<%= javascript_include_tag :defaults %>
+<%= stylesheet_link_tag 'buttons' %>
+<script type="text/javascript">  
+	function print_page()
+	{
+		window.print();
+		document.getElementById('print').style.display='none'
+		return false;
+	}
+</script>
+<br/><br/>
+<center><h1><%= @registration.patient_name %> Details </h1></center>
+<center><u><h4><%= @store_test_result_child[0].servce_name %></h4></u></center>
+<table align="center" width="70%" border="1" cellpadding="0" cellspacing="0">
+	<tr bgcolor ="#378bf8">
+		<th>Test name</th>
+		<th>Result</th>
+		<th>Range</th>
+	</tr>
+<% for store_test_result_child in @store_test_result_child %>
+  	<tr>
+		<td align="center"><%=h store_test_result_child.test_name %></td>
+		<td align="center"><%=h store_test_result_child.result %></td>
+		<td align="center"><%=h store_test_result_child.lbound %>)</td>
+	</tr>
+<% end %>
+</table>
+

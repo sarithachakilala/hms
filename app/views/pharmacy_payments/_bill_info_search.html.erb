@@ -1,0 +1,30 @@
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+	<thead>
+	<tr>
+		<th>S.No</th>    
+		<th>Date</th>
+		<th>PO.No</th>
+		<th>Invoice Date</th>
+		<th>Invoice No</th>
+		<th>Amount</th>
+	</tr>
+	</thead>
+	<tbody>
+	<% @i=0 %>
+	<% for goodsrecipt in @goodsrecipt %>
+		<% if((@i % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+		 end %>
+	<tr>
+		<td><%= @i+=1 %></td>
+		<td><%= goodsrecipt.grn_date %></td>
+		<td><%= goodsrecipt.po_number %></td>
+		<td><%= goodsrecipt.invoice_date %></td>
+		<td><%= goodsrecipt.invoice_number %></td>
+		<td><%= goodsrecipt.net_invoice_amount %></td>
+	</tr>
+	<% end %>	
+</tbody>
+</table>

@@ -1,0 +1,33 @@
+<table width="50%" align="center">
+<tr>
+  <td><b>Hospital name:</b></td>
+  <td><%=h @client_list.hospital_name %></td>
+</tr>
+
+<tr>
+  <td><b>Branch code:</b></td>
+  <td><%=h @client_list.branch_code %></td>
+</tr>
+
+<tr>
+  <td><b>Branch name:</b></td>
+  <td><%=h @client_list.branch_name %></td>
+</tr>
+
+<tr>
+  <td><b>No of users:</b></td>
+  <td><%=h @client_list.no_of_users %></td>
+</tr>
+
+<tr>
+  <td><b>Port number:</b></td>
+  <td><%=h @client_list.port_number %></td>
+</tr>
+
+<tr>
+  <td><b>Display name:</b></td>
+  <td><%=h @client_list.display_name %></td>
+</tr>
+<tr></tr><tr></tr>
+<tr colspan="2" align="center"><td><%= link_to "Back",  client_lists_path, :class=>"new1" %></td></tr> 
+</table>

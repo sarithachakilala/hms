@@ -1,0 +1,23 @@
+<p>
+  <b>User:</b>
+  <%=h @bed_management.user_id %>
+</p>
+
+<p>
+  <b>Ward:</b>
+  <%=h @bed_management.ward %>
+</p>
+
+<p>
+  <b>Room:</b>
+  <%=h @bed_management.room %>
+</p>
+
+<p>
+  <b>Bed:</b>
+  <%=h @bed_management.bed %>
+</p>
+
+
+<%= link_to 'Edit', edit_bed_management_path(@bed_management) %> |
+<%= link_to 'Back', bed_managements_path %>

@@ -1,0 +1,39 @@
+<% @i=0 %>
+<table width="80%" colspan=0>
+	<tr style="background-color:blue; color:white;">
+		<th>S.No</th>
+		<th>Date</th> 
+		<th>Total Amount</th>
+		<th>Receipt Amount</th>
+		<th>Due Amount</th>
+		<th>Expenditure</th>
+		<th>Payment</th>
+		<th>Remaining Amount</th>
+	</tr>
+
+<% @total=0 %>
+	<% for date in @date1..@date2 %>
+		<% total=IssuesToOp.sum(:total_amount, :conditions => "issue_date = '#{date}' AND org_code LIKE '#{@org_code}%' AND patient_type LIKE '#{@patient_type}%' AND reg_type!='Arogyasree'") %>
+		<% paid=IssuesToOp.sum(:paid_amt, :conditions => "issue_date = '#{date}' AND org_code LIKE '#{@org_code}%' AND patient_type LIKE '#{@patient_type}%' AND reg_type!='Arogyasree'") %>
+		<% due=IssuesToOp.sum(:due, :conditions => "issue_date = '#{date}' AND org_code LIKE '#{@org_code}%' AND patient_type LIKE '#{@patient_type}%' AND reg_type!='Arogyasree'") %>
+		<% expen=MiscellaneousMaster.sum(:total_amount, :conditions => "date = '#{date}' AND org_code LIKE '#{@org_code}%' AND department LIKE 'Pharmacy%'") %>
+		<% pharmacy_payment = PharmacyPayment.sum(:paid_amount, :conditions => "payment_date = '#{date}' AND org_code LIKE '#{@org_code}%'") %>
+		<% if((@i % 2)==0) 
+			id="datacellone"
+		else
+			id="datacelltwo"
+		end %>
+		<tr class='<%= id %>'>
+			<td><%= @i=@i+1 %></td>
+			<td><%=h date %></td>
+			<td><%=h number_with_precision(total, :precision => 2) %></td>
+			<td><%=h number_with_precision(paid, :precision => 2) %></td>
+			<td><%=h number_with_precision(due, :precision => 2) %></td>
+			<td><%=h number_with_precision(expen, :precision => 2) %></td>
+			<td><%=h number_with_precision(pharmacy_payment, :precision => 2) %></td>
+			<td><%=h number_with_precision((paid-(expen+pharmacy_payment)), :precision => 2) %></td>
+		</tr>
+	<% end %>
+
+</table>
+<br/><br/><br/>

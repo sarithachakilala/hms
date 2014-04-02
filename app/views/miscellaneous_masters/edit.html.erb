@@ -1,0 +1,202 @@
+<%= stylesheet_link_tag 'scroll_new1' %>
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">IP Patients >>&nbsp;&nbsp;&nbsp;<a HREF='/miscellaneous_masters' class="nav" style="text-decoration:none;">Miscellaneous Bills</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<script type="text/javascript">
+var query 
+var selectedid
+var org_code
+var total=0
+	function select_code(id) 
+	{
+		var selObj = document.getElementById(id);
+		query = selObj.options[selObj.selectedIndex].value
+		if(id=="department")
+		{
+		selectedid=id
+		}
+		else
+		{
+		selectedid=id
+		}
+		ajax()
+	}
+	function select_service(id)
+	{
+		var selObj = document.getElementById(id);
+		query = selObj.options[selObj.selectedIndex].value
+		selectedid=id
+		ajax()
+	}
+	function ajax()
+	{
+		org_code = document.getElementById('org_code').value
+		req = new Ajax.Request('/miscellaneous_masters/ajax_buildings/1', 
+			{
+				method: 'get',
+				parameters: { q: query, type: selectedid, org_code: org_code },
+				onComplete: function(transport){
+					processReqChange(transport);
+					}
+			}); // end ajax req
+		function processReqChange(req) 
+		{
+			// request is complete
+			
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				var temp=new Array
+				temp=results.split(",")
+				if(selectedid=="name")
+				{
+						var service_name=document.getElementById("name").value
+						temp=results.split("<Division>")
+						var store=new Array();
+						var add_amount_fields="total_amount";
+						store[0]=temp[0]
+						store[1]=temp[1]
+						add_row('r',4,'displayTable',store,add_amount_fields,4)
+				
+				}
+				
+				
+				else if(selectedid=="department")
+				{
+					document.getElementById('code').disabled=false
+					document.getElementById('code').length=0
+					 var opt = document.createElement("option");
+					document.getElementById('code').options.add(opt);
+					opt.text="";
+					for(i=0;i<temp.length-1;i++)
+					{
+					var opt = document.createElement("option");
+					document.getElementById('code').options.add(opt);
+					opt.text=temp[i]
+					}
+				}
+				else
+				{
+				document.getElementById('ename').disabled=false
+				document.getElementById('ename').value=results
+				}
+			}
+		}
+	}	
+	
+	function select_amount(amount)
+	{
+		var tot=0
+		for(i=0;i<=amount;i++)
+		{
+			if(document.getElementById("r"+i+"c4").value!="")
+				tot=parseFloat(tot)+parseFloat(document.getElementById("r"+i+"c4").value)
+		}
+		document.getElementById('total_amount').value=tot
+	}
+</script>
+<% @date=format_date(:sort, Date.today ) %>
+<% form_for(@miscellaneous_master) do |f| %>
+<%= f.error_messages %>
+<div id="form_data">
+
+<fieldset>
+<legend><div class="font"><b>Miscellaneous Details</b></div></legend>
+<table width="100%">
+ <tr>
+		<%= f.hidden_field :org_code, :value => @org_code, :size => 20, :id => "org_code", :required => true, :readonly => true %></td>
+		<%= f.hidden_field :org_location, :value => @org_location, :size => 20, :id => "org_location", :required => true, :readonly => true %></td>
+		
+	<td>Mis.No</td>
+	<td><%= f.text_field :mis_no, :id=>"mis_no", :size=>"20" , :readOnly => true %></td>
+	<td>Voucher No</td>
+	<td><%= f.text_field :voucher_no, :id=>"voucher_no", :size=>"15" , :readOnly => true %></td>	
+	<td><%= f.label :date %></td>
+	<td><%= f.text_field :date,:size=>"20", :id=>"date", :value => "#{@date}", :readOnly => true  %><a href="javascript:void(0)" onClick="setYears(2000, 2050);showCalender(this,'date'); "  >
+        <img src="/images/cal.gif"></a></td>
+	<td><%= f.label :time %></td>
+	<td><%= f.time_select :time, :default=> Time.new %></td>
+ </tr>
+ <tr> 
+	<td>Department<sup>*<sup></td>
+	<td><%= f.select :department, EmployeeMaster.find(:all, :select => "DISTINCT category").collect{|p|[p.category]},{:prompt => true},{:id => "department", :onchange => "select_code(id)" } %>  </td>
+	<td>Emp.Name<sup>*<sup></td>
+    <td><%= f.text_field :employee, :id => "ename", :size => "20" %></td>
+	<td><%= f.label :authorized_by %><sup>*<sup></td>
+    <td><%= f.text_field :authorized_by, :size => "20" %></td>
+ </tr>
+</table>
+</br>
+<table align="center">
+  <tr>
+	<td colspan="4">
+	<div id="info">
+    <table class="tableone">
+	   <caption style="background: url(/images/vertical1_04.jpg) repeat-x top left;text-align:center;" ><font color="#F0FFFF" face="Cambria" ><b>Miscellaneous Bills</b></font></caption>
+
+      
+      <thead>
+        <tr>
+          <th width="100px" style="color:black;">S.No</th> 
+          <th width="200px" style="color:black;">Service</th> 
+          <th width="200px" style="color:black;">Reason</th> 
+          <th width="200px" style="color:black;">Amount</th> 
+        </tr>
+      </thead>
+		<tbody>
+		<tr><td colspan="4">
+			<div class="innerb">
+			<table class="tabletwo" id="displayTable">
+			<% i=0 %>
+				<% f.fields_for :miscellaneous_child do |a| %>
+					<% if (i%2==0) %>
+					<tr>
+				<% else%>
+					<tr class="dk">
+				<% end %>
+					<td width="100px"><%= a.text_field :s_no, :style=>"width:100%", :id => "r#{i}c1", :class => "nbb" %></td> 
+					<td width="200px"><%= a.text_field :service, :style=>"width:100%", :id => "r#{i}c2", :class => "nbb" %></td> 
+					<td width="200px"><%= a.text_field :reason, :style=>"width:100%", :id => "r#{i}c3", :class => "nbb" %></td> 
+					<td width="200px"><%= a.text_field :amount , :style=>"width:100%", :id => "r#{i}c4", :class => "nbb", :onkeyup => "select_amount('#{i}')" %></td> 
+				</tr>
+				<% i+=1 %>
+			<% end %>
+			</table>
+			</div>
+		</td>
+		</tr>
+	</tbody>
+     </table>
+   </div>
+	</td>
+  </tr>
+ </table>
+
+<table>
+  <tr>
+    <td><%= f.label :total_amount %></td>
+    <td><%= f.text_field :total_amount, :size=>"20", :id=>"total_amount", :value=>"0"  %></td>
+  </tr>
+  <tr>
+	<td><%= f.label :reason %></td>
+	<td colspan="4"><%= f.text_area :reason , :cols =>50, :rows =>2 %></td>
+  </tr>
+  </table>
+</fieldset>
+
+ <table align="center">
+  <tr> 
+  	
+  	<td><%= submit_tag "", :value => " Update ", :class => "submit_button", :onClick => "this.disabled=true;this.value='Process..';this.form.submit();" %>
+	
+	<%= link_to "Back",  miscellaneous_masters_path, :class=>"new1" %></td>
+</tr>
+</table>
+
+<% end %>
+ 

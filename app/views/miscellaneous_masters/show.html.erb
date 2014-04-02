@@ -1,0 +1,82 @@
+<div id="links" class="header">
+&nbsp;&nbsp;&nbsp; Payments >>&nbsp;&nbsp;&nbsp;<a HREF='javascript:void(0)' class="nav" style="text-decoration:none;">Miscellaneous Bills</a>
+</div>
+
+<div class="dateformat"><%= format_date(:short, Date.today ) %></div>
+
+
+ <% if @miscellaneous_master %>
+<% form_for(@miscellaneous_master) do |f| %>
+  <%= f.error_messages %>
+  <% @date=format_date(:sort, Date.today ) %>
+<table width="100%" bgcolor="#B7E2F3">
+  <tr><td colspan="8"><fieldset><legend><div class="font"><b> Miscellaneous Bill Details</b></div></legend>
+
+<%= f.hidden_field :id, :id => "record_id" %>
+<table width="100%"><tr>
+ <tr>
+	 <td><%= f.label :mis_no %></td>
+	<td><%= f.text_field :mis_no, :size =>20, :readonly =>true %></td>
+	 <td><%= f.label :voucher_no %></td>
+	<td><%= f.text_field :voucher_no, :size =>20,:readonly =>true %></td>
+	 <td><%= f.label :date %></td>
+	 <td><%= f.text_field :date, :size =>20, :readonly =>true  %></td>
+
+  <td><%= f.label :time %></td>
+  <td><%= f.text_field :time, :size =>20, :readonly =>true%></td>
+  </tr>
+<tr>
+  <td>Department</td>
+  <td><%= f.text_field :department, :size =>20, :readonly =>true %>  </td>
+   <td>Emp.Code</td>
+   <td><%= f.text_field  :employee_code, :size =>20, :readonly =>true  %>  </td>
+	<td>Emp.Name</td>
+    <td><%= f.text_field :employee, :size =>20, :readonly =>true  %></td>
+
+	<td><%= f.label :authorized_by %></td>
+    <td><%= f.text_field :authorized_by, :size =>20, :readonly =>true %></td>
+	</tr>
+<tr>
+	<td><%= f.label :service %></td>
+	<td> <%= f.text_field  :service, :size =>20, :readonly =>true%>  </td>
+</tr>
+
+</table>
+  </br>
+  	<table align="center" width="40%" border="1" cellsapcing="0">
+<tr bgcolor="#0894b7">
+  
+	
+	<th>Service</th>
+    <th>Service Code</th>
+	<th>Amount</th>
+	</tr>
+	<% @j=0 %>
+			<% f.fields_for :miscellaneous_child do |a| %>
+			<tr>
+			   
+				<td><%= a.text_field :service %></td>
+				<td><%= a.text_field :service_code %></td>
+				<td><%= a.text_field :amount  %></td>
+			<% end %>
+  
+  </tr>
+</table>
+
+
+<table>
+  <tr>
+    <td><%= f.label :total_amount %></td>
+    <td><%= f.text_field :total_amount, :size=>"20", :readonly =>true  %></td>
+ 
+	<td><%= f.label :reason %></td>
+	<td colspan="4"><%= f.text_area :reason , :cols =>50, :rows =>2 %></td>
+  </tr>
+  </table>
+</fieldset>
+</tr></table>
+<% end %>
+
+<center><%= link_to image_tag("buttons/back.png", :class => "info", :border =>"0"), miscellaneous_masters_path(:user_id => @user_id) %></center>
+
+ <% end %>

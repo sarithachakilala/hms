@@ -1,0 +1,62 @@
+<body onload="window.print()">
+
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div align="center">
+<table>
+<tr>
+	<td class='<%= id %>'>Company name</td>
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.company_name %></td>
+	<td class='<%= id %>'>Code</td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.code %></td>
+	<td class='<%= id %>'>Phone</td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.phone %></td>
+	<td class='<%= id %>'>Fax</td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.fax %></td>
+</tr>
+<tr>
+	<td class='<%= id %>'>Address</td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.address %></td>
+	<td class='<%= id %>'>City</td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.city %></td>
+	<td class='<%= id %>'>State</td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.state %></td>
+	<td class='<%= id %>'>Country</td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.country %></td>
+</tr>
+<tr>
+	<td class='<%= id %>'>Zipcode</td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.zipcode %></td>
+	<td class='<%= id %>'>Email</td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.email %></td>
+	<td class='<%= id %>'>Person name</td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.person_name %></td>
+	<td class='<%= id %>'>Mobile</td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.mobile %></td>
+</tr>
+<tr>
+	<td class='<%= id %>'>Person email</td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.person_email %></td>
+	<td class='<%= id %>'>Notes</td>
+		<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @insurance_master.notes %></td>
+</tr>
+</table>
+
+
+<%= link_to image_tag("buttons/modify.png",:class => "info", :border =>"0", :id => "back"), edit_insurance_master_path(@insurance_master) %> 
+<%= link_to image_tag("buttons/back.png",:class => "info", :border =>"0", :id => "back"), insurance_masters_path %>
+</div>

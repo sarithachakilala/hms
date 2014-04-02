@@ -1,0 +1,78 @@
+<%= javascript_include_tag :defaults %>
+<%= stylesheet_link_tag 'css' %>
+<%= javascript_include_tag 'commonFunctionality.js' %>
+<script type="text/javascript"> 
+    	
+	//Ajax Code
+	function Ajax_Code(id,event)
+	{
+		if(event.keyCode!=13)
+			return false;
+		var admn_no=find_admn_no(id,new Array());
+		
+		if(admn_no)
+		{
+			var org_code=document.getElementById('org_code').value
+			req = new Ajax.Request('/final_bills/ajax_function/1', {
+				method: 'get',
+				parameters: { admn_no: admn_no, org_code :org_code, type:"approximate"  },
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+
+			}); 
+			function processReqChange(req) 
+			{
+				// request is complete
+				if (req.readyState == 4) 
+				{
+					var results = req.responseText;
+					if(results=="error")
+						alert("Invalid Admn.No")
+					else
+						document.getElementById("table").innerHTML=req.responseText
+				}
+			}	
+		}	
+		else
+			document.getElementById(id).value=""
+	}
+
+	function search_Admn_No()
+	{
+		window.open('/admissions/search_admn_no/1','open_window','dependent, width=900, height=600, left=0, top=0');
+	}
+
+
+	</script>
+
+<body onload="document.getElementById('admn_no').focus();">
+
+<body style="margin:0px;">
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Final Bills >>&nbsp;&nbsp;&nbsp;<a HREF='javascript:void(0);' class="nav" style="text-decoration:none;">Approximate Bill</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+
+
+<table width="30%" align="center">
+   <div >
+<table align="center">
+  <tr>
+	<td>Admn.No</td>
+    <td><%= text_field_tag('admn_no','',:size =>"20" ,:id => "admn_no", :onKeyUp => "Ajax_Code(id,event)", :placeholder => "Enter Admn.No", :title =>"Enter Admn.No & press Enter") %>
+	<%= link_to image_tag ("search1.png", :border=>0, :height => "20", :width => "22"),"javascript: search_Admn_No()"  %>
+	</td></tr>
+	<%= hidden_field('org_code','',:id => "org_code", :value =>@org_code) %>
+	<br/><br/></table>
+	
+<br/><br/>
+ <div id="table" align="center" style="color:black;font-size:16px;">
+ </div>
+<br/>
+
+</div>

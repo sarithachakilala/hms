@@ -1,0 +1,131 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Payments>> IP >>&nbsp;&nbsp;&nbsp;<a HREF='insurance_payments/new' class="nav" style="text-decoration:none;">Insurance Payments</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<br/>
+<br/>
+
+<center>
+<%= link_to 'New', new_insurance_payment_path, :class=>"new1" %>
+</center>
+<script type="application/javascript">
+var type
+	function clear_file()
+	{
+		document.getElementById("admn_no").value=""
+		document.getElementById("mr_no").value=""
+		document.getElementById("final_bill_date").value=""
+		document.getElementById("receipt_no").value=""
+		document.getElementById("gross_amount").value=""
+		document.getElementById("advance").value=""
+		document.getElementById("due").value=""
+	}
+ </script>
+<div align="center" width="100%">
+<table class="tablesorter" border="0" cellpadding="0" cellspacing="1" >
+<tbody>
+	<tr>
+	<td width="8%">&nbsp;</td>
+
+	
+	<td width="12%"><input type="text" style="width:100%" id="admn_no" onKeyUp = "search_function(id,event)" placeholder="Search Admn.No"></td>
+					<%= javascript_include_tag:defaults %>
+					<%= observe_field 'admn_no', :frequency => 0.01,
+					:update => :name,
+					:url => {:action => :observe_field_ex },
+					:with => "'admn_no='+escape($('admn_no').value)+ '&mr_no=' + escape($('mr_no').value)+ '&final_bill_date=' + escape($('final_bill_date').value)+ '&receipt_no=' + escape($('receipt_no').value)+ '&advance=' + escape($('advance').value)+ '&gross_amount=' + escape($('gross_amount').value)+ '&due=' + escape($('due').value) " %>
+					  
+	<td width="12%"><input type="text" style="width:100%" id="mr_no" onKeyUp = "search_function(id,event)" placeholder="Search MR No"></td>
+					<%= observe_field 'mr_no', :frequency => 0.01,
+					:update => :name,
+					:url => {:action => :observe_field_ex },
+					:with => "'admn_no='+escape($('admn_no').value)+ '&mr_no=' + escape($('mr_no').value)+ '&final_bill_date=' + escape($('final_bill_date').value)+ '&receipt_no=' + escape($('receipt_no').value)+ '&advance=' + escape($('advance').value)+ '&gross_amount=' + escape($('gross_amount').value)+ '&due=' + escape($('due').value) " %>
+	<td width="12%"><input type="text" style="width:100%" id="final_bill_date" onKeyUp = "search_function(id,event)" placeholder="Search Date"></td>
+					<%= observe_field 'final_bill_date', :frequency => 0.01,
+					:update => :name,
+					:url => {:action => :observe_field_ex },
+					:with => "'admn_no='+escape($('admn_no').value)+ '&mr_no=' + escape($('mr_no').value)+ '&final_bill_date=' + escape($('final_bill_date').value)+ '&receipt_no=' + escape($('receipt_no').value)+ '&advance=' + escape($('advance').value)+ '&gross_amount=' + escape($('gross_amount').value)+ '&due=' + escape($('due').value) " %>
+	<td width="12%"><input type="text" style="width:100%" id="receipt_no" onKeyUp = "search_function(id,event)" placeholder="Search Receipt No"></td>
+					<%= observe_field 'receipt_no', :frequency => 0.01,
+					:update => :name,
+					:url => {:action => :observe_field_ex },
+					:with => "'admn_no='+escape($('admn_no').value)+ '&mr_no=' + escape($('mr_no').value)+ '&final_bill_date=' + escape($('final_bill_date').value)+ '&receipt_no=' + escape($('receipt_no').value)+ '&advance=' + escape($('advance').value)+ '&gross_amount=' + escape($('gross_amount').value)+ '&due=' + escape($('due').value) " %>
+	<td width="12%"><input type="text" style="width:100%" id="gross_amount" onKeyUp = "search_function(id,event)" placeholder="Search Gross Amount"></td>
+					<%= observe_field 'gross_amount', :frequency => 0.01,
+					:update => :name,
+					:url => {:action => :observe_field_ex },
+					:with => "'admn_no='+escape($('admn_no').value)+ '&mr_no=' + escape($('mr_no').value)+ '&final_bill_date=' + escape($('final_bill_date').value)+ '&receipt_no=' + escape($('receipt_no').value)+ '&advance=' + escape($('advance').value)+ '&gross_amount=' + escape($('gross_amount').value)+ '&due=' + escape($('due').value) " %>
+	<td width="12%"><input type="text" style="width:100%" id="advance" onKeyUp = "search_function(id,event)" placeholder="Search Advance"></td>
+					<%= observe_field 'advance', :frequency => 0.01,
+					:update => :name,
+					:url => {:action => :observe_field_ex },
+					:with => "'admn_no='+escape($('admn_no').value)+ '&mr_no=' + escape($('mr_no').value)+ '&final_bill_date=' + escape($('final_bill_date').value)+ '&receipt_no=' + escape($('receipt_no').value)+ '&advance=' + escape($('advance').value)+ '&gross_amount=' + escape($('gross_amount').value)+ '&due=' + escape($('due').value) " %>
+	<td width="12%"><input type="text" style="width:100%" id="due" onKeyUp = "search_function(id,event)" placeholder="Search Due"></td>
+					<%= observe_field 'due', :frequency => 0.01,
+					:update => :name,
+					:url => {:action => :observe_field_ex },
+					:with => "'admn_no='+escape($('admn_no').value)+ '&mr_no=' + escape($('mr_no').value)+ '&final_bill_date=' + escape($('final_bill_date').value)+ '&receipt_no=' + escape($('receipt_no').value)+ '&advance=' + escape($('advance').value)+ '&gross_amount=' + escape($('gross_amount').value)+ '&due=' + escape($('due').value) " %>
+	<td colspan="3" align="center" valign="top">
+		<%= link_to 'Clear','', :class=>"new1",:onClick => "clear_file()"  %>
+	</td>
+	
+  </tr>
+ </tbody>
+</table>
+</div>
+
+ 
+ <!-- End of the Code for field search	 -->
+ 
+<div id="name" align="center" width="100%">
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+   <tr class="info">
+     <th>S.No</th>    
+    <th>Ins.no</th>
+    <th>Admn.No</th>
+    <th>MR No</th>
+    <th>Admn.Date</th>
+    <th>Dis.Date</th>
+	<th>Amount</th>
+    <th>Dispatch Date</th>
+    <th>Cheque issue date</th>
+    <th>Cheque submit date</th>
+    <th>Status</th>
+    <th align="center">Permissions</th>
+  </tr>
+ </thead>
+<tbody>
+<% @i=0 %>
+<% @insurance_payments.each do |insurance_payment| %>
+  <% if((@i % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+  end %>
+  <tr class='<%= id %>' style="height:30px">
+<td><%= @i+1 %></td>
+    <td><%=h insurance_payment.ins_no %></td>
+    <td><%=h insurance_payment.admn_no %></td>
+    <td><%=h insurance_payment.mr_no %></td>
+    <td><%=h insurance_payment.admn_date %></td>
+    <td><%=h insurance_payment.dis_date %></td>
+	<td><%=h number_with_precision(insurance_payment.amount, :precision => 2, :separator => '.') %></td>
+    <td><%=h insurance_payment.dispatch %></td>
+    <td><%=h insurance_payment.cheque_issue_date %></td>
+    <td><%=h insurance_payment.cheque_submit_date %></td>
+    <td><%=h insurance_payment.status %></td>
+
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;edit&nbsp;&nbsp;&nbsp;', edit_insurance_payment_path(insurance_payment), :class=>"submit_button" %></td>   
+	
+
+  </tr>
+<% @i=@i+1 %>
+<% end %>
+</table>
+
+<p align="right"><div align="right" class="pagination"><%= will_paginate @insurance_payments,  :style => "font: bold 15px Arial red;" %></p>

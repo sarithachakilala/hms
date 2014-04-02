@@ -1,0 +1,28 @@
+<p>
+  <b>Testmaster:</b>
+  <%=h @testmaster_child.testmaster_id %>
+</p>
+
+<p>
+  <b>Paramaters:</b>
+  <%=h @testmaster_child.paramaters %>
+</p>
+
+<p>
+  <b>Field type:</b>
+  <%=h @testmaster_child.field_type %>
+</p>
+
+<p>
+  <b>Normal range:</b>
+  <%=h @testmaster_child.normal_range %>
+</p>
+
+<p>
+  <b>Unit:</b>
+  <%=h @testmaster_child.unit %>
+</p>
+
+
+<%= link_to 'Edit', edit_testmaster_child_path(@testmaster_child) %> |
+<%= link_to 'Back', testmaster_children_path %>

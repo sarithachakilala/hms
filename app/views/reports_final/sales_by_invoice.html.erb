@@ -1,0 +1,93 @@
+<script type="text/javascript"> 
+	function clear_function()
+	{
+		document.getElementById('to_invoice').value=""		
+		document.getElementById('from_invoice').value=""	
+		
+	}
+	function check()
+	{
+		var from_invoice=document.getElementById('from_invoice').value
+		var to_invoice=document.getElementById('to_invoice').value
+		if(from_invoice !="" && to_invoice!= "")	
+		{
+			document.getElementById("frame").src="/reports/sale_invoice_report/1?to_invoice="+to_invoice+"&from_invoice="+from_invoice
+		}
+		else
+		{
+			alert("Please Enter Invoce Numbers");
+			return true;
+		}
+	}
+	
+	
+</script>
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Reports >> Pharmacy Report >>&nbsp;&nbsp;&nbsp;<a HREF='/reports/sales_by_invoice/1' class="nav" style="text-decoration:none;">Sales Report by Inv.No</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<div id="form_data">
+<fieldset>
+<legend><div class="font"><b>Search</b></div></legend>
+<% @date=Date.today("%Y-%m-%d") %>
+<table width="70%"  align="center">
+<tr>
+	<input type="hidden" id="org_code" %>
+	<td><label for="item_name">Period</label></td>
+	<td><%= select('period','',[['All'],['Today'],['This.Week'],['This.Month'],['This.Year'],['Last Month'],['Last Year'],['Custom']],{:prompt => false},{:id => "period", :disabled=>true, :onChange => "select_period(this.value)"}) %></td>
+	
+<td>From Inv.No</td>
+<td><%= text_field('from_invoice', '',:size => 20,:id => "from_invoice") %></td>
+		
+<td>To Inv.No</td>
+	<td><%= text_field('to_invoice', '',:size => 20,:id => "to_invoice") %></td>
+   
+      <td><a href="javascript:void(0);" class="new1" onClick ="check()">Filter</a></td>
+      <td><%= link_to 'Clear','', :class=>"new1", :onClick => "clear_function()" %></td>
+</tr>
+</table>
+<table id="calenderTable">
+        <tbody id="calenderTableHead">
+          <tr>
+            <td colspan="4" align="center">
+	          <select onChange="showCalenderBody(createCalender(document.getElementById('selectYear').value,
+	           this.selectedIndex, false));" id="selectMonth">
+	              <option value="0">Jan</option>
+	              <option value="1">Feb</option>
+	              <option value="2">Mar</option>
+	              <option value="3">Apr</option>
+	              <option value="4">May</option>
+	              <option value="5">Jun</option>
+	              <option value="6">Jul</option>
+	              <option value="7">Aug</option>
+	              <option value="8">Sep</option>
+	              <option value="9">Oct</option>
+	              <option value="10">Nov</option>
+	              <option value="11">Dec</option>
+	          </select>
+            </td>
+            <td colspan="2" align="center">
+			    <select onChange="showCalenderBody(createCalender(this.value, 
+				document.getElementById('selectMonth').selectedIndex, false));" id="selectYear">
+				</select>
+			</td>
+         
+		  </tr>
+       </tbody>
+       <tbody id="calenderTableDays">
+         <tr style="">
+           <td>Sun</td><td>Mon</td><td>Tue</td><td>Wed</td><td>Thu</td><td>Fri</td><td>Sat</td>
+         </tr>
+       </tbody>
+       <tbody id="calender"></tbody>
+    </table>
+</fieldset>
+<br/><br/>
+ <center>
+   <iframe src="" id="frame" width="100%" height="400px" align="center" style="border:none"/>
+</center>
+</body>

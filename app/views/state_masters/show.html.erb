@@ -1,0 +1,35 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">General Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/state_masters?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">State Masters</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div align="center">
+<table width="30%">
+  <h1><font color="#015a84"><%=h @state_master.name %> Record</font></h1>
+    <tr>
+		<td class='<%= id %>'>Country master</td>
+		<td class='<%= id %>'>:</td>
+		<td class='<%= id1 %>'><%=h @state_master.country_master_id %></td>
+</tr>
+<tr>
+  <td class='<%= id %>'>Code</td>
+		<td class='<%= id %>'>:</td>
+		<td class='<%= id1 %>'><%=h @state_master.code %></td>
+</tr>
+<tr>
+  <td class='<%= id %>'>Name</td>
+		<td class='<%= id %>'>:</td>
+		<td class='<%= id1 %>'><%=h @state_master.name %></td>
+</tr>
+</table>
+<table align="center">
+        <tr>
+		
+			<td valign="middle"><%= link_to "back",  state_masters_path, :class=>"new1" %></td>
+		</tr>
+</table>

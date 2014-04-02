@@ -1,0 +1,110 @@
+<script type="text/javascript"> 
+	var ward=""
+	var selectid;
+	function Select_Ward(id)
+	{
+		var selObj = document.getElementById(id);
+		ward= selObj.options[selObj.selectedIndex].value
+		selectid=id
+		Ajax_Code()
+		
+	}
+	//Ajax Code
+	function Ajax_Code()
+	{
+		req = new Ajax.Request('/bed_masters/ajax_function/1', {
+			method: 'get',
+			parameters: { ward : ward ,type : selectid },
+			onComplete: function(transport) {
+			processReqChange(transport);
+			}
+
+		}); 
+		function processReqChange(req) 
+		{
+			// request is complete
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				var temp=new Array()
+				temp=results.split("<division>")
+				document.getElementById('room').length=0
+				var opt = document.createElement("option");
+				document.getElementById("room").options.add(opt);
+				opt.text = ""
+				opt.value = ""
+				for(i=0;i<temp.length;i++)
+				{
+					var opt = document.createElement("option");
+					document.getElementById("room").options.add(opt);
+					opt.text = temp[i]
+					opt.value = temp[i]
+				}
+			}
+		}		
+	}
+
+	function select_org_code(id)
+	{
+		var org_code=document.getElementById(id).value
+		if(org_code)
+		{
+			req = new Ajax.Request('/registrations/select_org_code/1', {
+				method: 'get',
+				parameters: { org_code: org_code },
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			}); // end ajax req
+		}
+		else
+		{
+			alert("Please Select org_code")
+		}
+	}
+
+</script>
+
+
+<% form_for(@bed_master) do |f| %>
+  <div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">General Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/bed_masters?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Bed Masters</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<div  width="100%">
+<fieldset>
+<legend><div class="font"><b>Bed Information</b></div></legend>
+<table align="center" width="100%">
+  <tr>
+	<td>Org.Code</td>
+    <td><%= f.text_field :org_code, :class => "text_field", :id => "org_code", :value =>@org_code, :readonly =>true %></td>
+	<td>Org.Location</td>
+    <td><%= f.text_field :org_location, :class => "text_field", :id => "org_location", :value =>@org_location, :readonly =>true %></td>
+	<td>Ward Name<sup>*</sup></td>
+	<td><%= select :ward_master,"", WardMaster.find(:all).collect{|p| [p.name]},{:include_blank =>true},{:id=> "ward",:name=>"ward1", :onchange=>"Select_Ward(id)"} %></td>
+	<td>Room Name<sup>*</sup></td>
+	<td><%= select :room_master,"", RoomMaster.find(:all, :conditions =>"org_code LIKE '#{@org_code}%'").collect{|p| [p.name]},{:include_blank =>true},{:id=> "room", :name=>"room1"} %></td>
+</tr>
+<tr>
+	<td>Name</td>
+	<td><%= f.text_field :name, :class =>"text_field" %></td>
+	<td>Code</td>
+	<td><%= f.text_field :code, :class =>"text_field" %></td>
+	<td>Status<sup>*</sup></td>
+	<td><%= f.select :status, [['Available'],['Un-Available']],{:prompt =>true} %>
+	</tr>
+   </table>
+  </fieldset>
+  <table align ="center">
+  <tr>
+  	<td><%= submit_tag "", :value => " Save ", :class => "submit_button" %></td>
+   <td><%= submit_tag "", :value => " Reset ", :class => "submit_button" %></td>
+	<td valign="middle"><%= link_to "Back",  bed_masters_path, :class=>"new1" %></td> 
+  </tr>
+</table>
+<% end %>
+ 

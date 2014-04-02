@@ -1,0 +1,666 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Pharmacy >>&nbsp;&nbsp;&nbsp;<a HREF='/issues_to_ops' class="nav" style="text-decoration:none;">Sales</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<div id="form_data">
+<%= stylesheet_link_tag 'look_up_search/jquery-ui' %>
+<%= javascript_include_tag 'jquery.min.js' %>
+<%= javascript_include_tag 'jquery-ui.min.js' %>  
+  <script>
+  $(document).ready(function() {
+    $("input#service").autocomplete({
+    source: [
+			<% for i in 0...@item_master1.length %>
+				'<%= @item_master1[i] %>',
+			<% end %>
+		]
+	});
+  });
+  </script>	
+<script language="javascript" type="text/javascript">
+	function stopRKey(evt) {
+		
+		var evt  = (evt) ? evt : ((event) ? event : null);
+		var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+	
+if ((evt.keyCode == 13) && (node.type=="text")) { return false; }
+	}
+	document.onkeypress = stopRKey;
+</script>
+<script type="text/javascript"> 
+	var global
+	var global1
+	var query1
+	var org_code
+	var select_patient="OP"
+	var selectedid
+	var dept_type
+	var get_type;
+	var query
+	var selectedid1
+	var dept_code
+	var arr_value=new Array('mr_no','name','age','doctorname')
+	var arr=new Array("dname","hod")
+	var arr1=new Array("dcode","dname","hod")
+	var arr_admn=new Array("admn_no","mr_no","name","age","doctorname","reg_type")
+	var medicine_name		
+	function mrfun(id)
+	{
+		if(select_patient=="OP")
+			selectedid="mr_no"
+		else
+			selectedid="admn_no"
+		query=id
+		if(query)
+			ajax()
+	}
+	function Search_medicine(id,event)
+	{
+
+		if(event.keyCode!=13)
+			return false;
+		selectedid=id
+		query=document.getElementById(id).value
+		medicine_name=query.split(" --> ")[0]
+		document.getElementById(id).value=""
+		window.open('/issues_to_ops/product_info/1?product_name='+medicine_name, 'open_window','status, scrollbars, resizable, dependent, width=640, height=480, left=0, top=0')	
+	
+	
+	}
+
+
+function ajax()
+	{
+		org_code=document.getElementById('org_code').value
+		req = new Ajax.Request('/issues_to_ops/ajax_buildings1/1', 
+			{
+				method: 'get',
+				parameters: {q: query, s: selectedid, org_code: org_code, select_patient: select_patient,get_type:get_type },
+				onComplete: function(transport){
+					processReqChange(transport);
+					}
+			}); // end ajax req
+		function processReqChange(req) 
+		{
+			// request is complete
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				var temp=new Array()
+				var temp_code=new Array()
+				var list=results.split("<code>")
+				if(results=="Invalid item")
+					alert("Please enter valid item");
+				else if(selectedid=="admn_no")
+				{
+					temp=list[0].split(",")
+					for(i=0;i<arr_admn.length;i++)
+					{
+						document.getElementById(arr_admn[i]).value=temp[i]
+						document.getElementById(arr_admn[i]).style.background="#FEF5CA"
+						document.getElementById(arr_admn[i]).readOnly=true
+					}
+					var store=new Array();
+					if(document.getElementById('reg_type').value=="Arogyasree")
+						var add_amount_fields="gross,total";
+					else
+						var add_amount_fields="gross,total,reciept_amount";
+					temp_code=list[1].split("<division>")
+					
+					for(jk=0;jk<temp_code.length-1;jk++)
+					{
+
+						var medicine_info=temp_code[jk].split(",");
+
+						store[0]=medicine_info[0]
+						store[1]=medicine_info[2]
+						store[2]=medicine_info[2]
+						store[3]=medicine_info[3]
+						store[4]=medicine_info[4]
+						store[5]=medicine_info[5]
+						store[6]=medicine_info[6]
+						store[8]=medicine_info[7]
+						store[7]="0"
+						store[9]=medicine_info[8]
+				window.open('/goodsrecieptnotemasters/product_info/1?product_name='+medicine_name);
+						add_row('r',13,'displayTable',store,add_amount_fields,9)
+						add_row('r',11,'displayTable',store,add_amount_fields,11)
+						select_amount();
+					}		
+				}	
+				else if(selectedid=="mr_no")
+				{
+					temp=list[0].split(",")
+					for(i=0;i<arr_admn.length;i++)
+					{
+						document.getElementById(arr_admn[i]).value=temp[i]
+						document.getElementById(arr_admn[i]).style.background="#FEF5CA"
+						document.getElementById(arr_admn[i]).readOnly=true
+					}
+				}
+				
+			} 
+		}
+	}
+	
+	function get_medicine1(medicine_name,batch_no,product_id,quantity,sale_rate,vat,expiry_date)
+
+	{
+					var store=new Array();
+		
+					store[0]=medicine_name
+					store[1]=batch_no
+					store[2]=expiry_date
+					store[3]=quantity
+					store[4]=parseFloat(sale_rate).toFixed(2)
+					store[8]=vat
+					var add_amount_fields="gross,total,reciept_amount";
+					add_row('r',10,'displayTable',store,add_amount_fields,9)
+            
+	}
+		
+	function select_amount()
+	{
+		
+		var amount=0
+		var discount=0
+		var mrp_rate=0
+		var vat_per=0	
+		document.getElementById("fourt_value").value=0
+		document.getElementById("fourt_vat").value=0
+		document.getElementById("five_value").value=0
+		document.getElementById("five_vat").value=0	
+		var table = document.getElementById("displayTable"); 
+		for(i=0;i<=table.rows.length;i++)
+		{
+			if(parseFloat(document.getElementById("r"+i+"c10").value)==5)
+			{
+				document.getElementById("five_value").value=(parseFloat(document.getElementById("five_value").value)+(parseFloat(document.getElementById("r"+i+"c9").value))).toFixed(2)
+				document.getElementById("five_vat").value=(parseFloat(document.getElementById("five_vat").value)+(parseFloat(document.getElementById("r"+i+"c9").value)*5/100)).toFixed(2)
+			}			
+			else if(parseFloat(document.getElementById("r"+i+"c10").value)==14.5)
+			{
+				document.getElementById("fourt_value").value=(parseFloat(document.getElementById("fourt_value").value)+(parseFloat(document.getElementById("r"+i+"c9").value))).toFixed(2)
+				document.getElementById("fourt_vat").value=(parseFloat(document.getElementById("fourt_vat").value)+(parseFloat(document.getElementById("r"+i+"c9").value)*14.5/100)).toFixed(2)
+			}
+			else
+				break;
+		}
+	}
+	
+	function select_quntity(cha,event)
+	{
+	
+		var r;
+		r="r"
+		if(document.getElementById(r+cha+"c5").value!="")
+		{
+			if(event.keyCode==13)
+			{
+				if(document.getElementById(r+(parseInt(cha)+1)+"c5").value!="" && document.getElementById(r+(parseInt(cha)+1)+"c5").value)
+					document.getElementById(r+(parseInt(cha)+1)+"c7").focus();
+				else
+					document.getElementById('submit').focus();
+				return false;
+			}
+			var quantity=parseFloat(document.getElementById(r+cha+"c5").value)
+			var salerate=parseFloat(document.getElementById(r+cha+"c6").value)
+			var issueqt=parseFloat(document.getElementById(r+cha+"c7").value)
+			document.getElementById('new_qty').value=issueqt	
+			var discount;
+			if(document.getElementById(r+cha+"c8").value!="")
+				discount=parseFloat(document.getElementById(r+cha+"c8").value);
+			else
+				discount=0;
+			if(quantity<issueqt)
+			{
+				alert("Enter the Valid Quantity")
+				document.getElementById(r+cha+"c7").value=""
+				document.getElementById(r+cha+"c9").value=""
+			}
+			else
+			{
+
+				result1=salerate*issueqt
+				var con=(result1-(result1*(discount/100)))
+
+				document.getElementById(r+cha+"c9").value=con.toFixed(2)
+				var tot=0
+				var con1
+				var table = document.getElementById("displayTable");
+				for(var k=0;k<table.rows.length;k++)
+				{
+					if(document.getElementById(r+k+"c9").value!="" &&document.getElementById(r+k+"c9").value)
+					{
+						con1=document.getElementById(r+k+"c9").value
+						tot=(tot+parseFloat(con1))
+	
+						document.getElementById('gross').value=tot.toFixed(2)
+						document.getElementById('reciept_amount').value=tot.toFixed(2)
+						document.getElementById('total').value=tot.toFixed(2)
+					}
+				}
+				document.getElementById('fourt_value').value=0
+				document.getElementById('five_value').value=0
+				
+				
+				for(i=0;i<table.rows.length;i++)
+				{	
+					if(document.getElementById(r+i+"c7").value!="" && document.getElementById(r+i+"c7").value)
+					{
+						if(document.getElementById(r+i+"c10").value=="14.5")
+						{
+							var amt=parseFloat(document.getElementById(r+i+"c9").value)
+							document.getElementById('fourt_value').value=(parseFloat(document.getElementById('fourt_value').value)+parseFloat(amt)).toFixed(2)
+							document.getElementById('fourt_vat').value=(parseFloat(document.getElementById('fourt_value').value)*14.5/100).toFixed(2)
+						}
+						else
+						{
+							var amt=parseFloat(document.getElementById(r+i+"c9").value)
+							document.getElementById('five_value').value=(parseFloat(document.getElementById('five_value').value)+parseFloat(amt)).toFixed(2)
+							document.getElementById('five_vat').value=(parseFloat(document.getElementById('five_value').value)*5/100).toFixed(2)
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			alert("Please select an Item")
+			document.getElementById(r+cha+"c7").value=""
+		}
+	}
+	
+	function change_amount_values()
+	{
+		document.getElementById("reciept_amount").value=0
+		document.getElementById("gross").value=0
+		document.getElementById("total").value=0
+	}
+
+	function select_patient_type(id)
+	{
+	
+		var sel_obj=document.getElementById(id)
+		select_patient=sel_obj.options[sel_obj.selectedIndex].value
+		
+		change_amount_values()
+		document.getElementById('title').style.display='none';
+
+		for(i=0;i<arr_admn.length;i++)
+		{
+			
+			document.getElementById(arr_admn[i]).value=""
+			document.getElementById(arr_admn[i]).style.bacselect_quntitykground="white"
+			document.getElementById(arr_admn[i]).readOnly=false
+		}
+		if(select_patient=="OP")
+		{
+			
+			document.getElementById('op1').style.display='block'
+			document.getElementById('ip1').style.display='none'
+			document.getElementById('service').readOnly=false
+			get_type="look_up"
+		}
+		else if(select_patient=="IP")
+		{
+			
+			document.getElementById('op1').style.display='none'
+			document.getElementById('ip1').style.display='block'
+			document.getElementById('service').readOnly=flase
+			get_type="direct"
+
+		}
+		else if(select_patient=="OSP")
+		{
+		
+			document.getElementById('op1').style.display='none'
+			document.getElementById('ip1').style.display='none'
+			document.getElementById('service').readOnly=false
+			get_type="look_up"
+			for(i=0;i<arr_admn.length;i++)
+			{
+				document.getElementById(arr_admn[i]).disabled=true
+			}
+			document.getElementById("name").disabled=false
+			document.getElementById("doctorname").disabled=false
+			document.getElementById("name").focus();
+			document.getElementById('title').style.display='block';
+		}
+		selectedid1="select_patient_type"
+	}
+
+	function cal_concession(id)
+	{
+		if(document.getElementById("doctor1").value!="" && document.getElementById("doctor1").value)
+		{
+			
+			document.getElementById('total').value=(parseFloat(document.getElementById('gross').value)-(document.getElementById('gross').value*document.getElementById(id).value/100)).toFixed(2);
+			document.getElementById('reciept_amount').value=(parseFloat(document.getElementById('gross').value)-(document.getElementById('gross').value*document.getElementById(id).value/100)).toFixed(2);
+			var sub_total_value=document.getElementById('gross').value
+			var discount=document.getElementById(id).value
+			document.getElementById('concession_amount').value=((sub_total_value*discount)/100).toFixed(2);
+
+		}
+		else
+		{
+			alert("Please select Authority Name");
+			document.getElementById(id).value=0;
+		}
+	}
+
+function amount_calculation(amount_type)
+	{ 
+		var sub_total=0,adjust=0;
+		if(document.getElementById('total').value!="")
+			sub_total=parseFloat(document.getElementById('total').value).toFixed(2);
+		
+		if(document.getElementById('adjust').value!="")
+			adjust=document.getElementById('adjust').value;
+
+		if(amount_type=="find_round_amount")
+		{
+			if(document.getElementById('receipt_amt').value!="")
+			{
+				document.getElementById('round').value=(((parseFloat(amount)+parseFloat(cr_note)+parseFloat(adjust))-parseFloat(dr_note))-parseFloat(document.getElementById('net_amount').value)).toFixed(2);
+			}
+			else
+			{
+				document.getElementById('round').value=((parseFloat(amount)+parseFloat(cr_note)+parseFloat(adjust))-parseFloat(dr_note)).toFixed(2);	
+			}	
+		}
+		else
+		{
+select_quntity
+			var net_amount =(parseFloat(sub_total)+parseFloat(adjust)).toFixed(2);
+			var round_value=Math.round(net_amount)
+			document.getElementById('reciept_amount').value=parseFloat(round_value).toFixed(2);
+			document.getElementById('round').value=(parseFloat(net_amount)-parseFloat(round_value)).toFixed(2);
+			
+		}
+	}
+	
+	
+</script>
+
+ <% form_for(@issues_to_op) do |f| %>
+
+<%= hidden_field :user_id, :value => @person.id %>
+<%= f.hidden_field :issue_time, :value => Time.now %>
+<%= hidden_field('form_name','', :value => "new") %>
+  <% @date=format_date(:sort, Date.today ) %>
+
+<div class="right">
+<fieldset>
+<legend><div class="font"><b>Issue Details</b></div></legend>
+
+<table width="100%">
+	<tr>
+
+`		
+		<%= f.hidden_field :org_code, :value => @org_code, :class =>"text_field", :id => "org_code", :readonly => true %>
+		<%= f.hidden_field :org_location, :value => @org_location, :class =>"text_field", :id => "org_location", :readonly => true %>
+		<td>Patient Type<sup>*</sup></td>
+		<td><%= f.select :patient_type,[['OP'],['IP'],['OSP']],{:prompt=>false}, {:id=>"type", :required=>true, :onchange=>"select_patient_type(id)"} %></td>
+		<td>MR No<sup>*</sup></td>
+		<td><%= f.text_field :mr_no, :class =>"text_field",:id => "mr_no",:placeholder => "Select right panel", :onKeyPress => "alert('Please select right panel');return false;" %></td> 
+		<td>Admn.No<sup>*</sup></td>
+		<td><%= f.text_field :admn_no, :class =>"text_field",:id => "admn_no",:placeholder => "Select right panel", :onKeyPress => "alert('Please select right panel');return false;" %></td> 
+		<%= f.hidden_field :treatment_date, :class =>"text_field", :id => "treatment_date"   %>
+	<tr>
+			<td>Patient Name<sup>*</sup></td>
+		<td><table><tr><td style="display:none;" id="title"><%= f.select :title,[['Mr'],['Mrs'],['Miss'],['Ms']], :id =>"name_title" %></td>
+		<td><%= f.text_field :patient_name,:size => "17", :id => "name"  %></td></tr></table></td>
+		<td>Age</td>
+		<td><%= f.text_field :age, :class =>"text_field", :id => "age" %></td>		
+		<td>Consultant</td>
+		<td><%= f.text_field :consultant, :id => "doctorname", :class =>"text_field" %></td> 
+		<%= f.hidden_field :reg_type, :class =>"text_field",:id => "reg_type" %>
+	
+	</tr>
+<TR>
+		<td>Type</td>
+		<td><%= f.select :pay_type,[['Cash'],['Credit']],{:prompt=>false}, {:id=>"type"} %></td>
+		<td>Inv No</td>
+		<td> <%= f.text_field :receipt_no, :class =>"text_field", :id => "issue_no", :readOnly => true %></td>
+		<td> Inv Date</td>
+		<td><%= f.text_field :issue_date, :value => "#{@date}", :class =>"text_field",  :readOnly => true, :id =>"issue_date" %> <a href="javascript:void(0)" onClick="setYears(1900, 2050);showCalender(this,'issue_date');" >
+		<img src="/images/cal.gif" ></a></td>
+
+</TR>
+	<tr>
+		
+  </tr>
+</table>
+
+
+<table>
+	<tr>
+		<td>&nbsp&nbsp&nbsp&nbsp</td>
+		<td>Product Name</td>
+		<td><%= f.text_field :item_name, :id => "service", :onKeyUp => "Search_medicine(id,event)", :style=>"width:850px;" %> </td>
+    </tr>
+	</table>
+</fieldset>
+	<div id="ops">
+
+<table width="100%" align="center">
+  <tr>
+	<td colspan="11">
+	<table class="tableone">
+	<caption style="background: url(/images/vertical1_04.jpg) repeat-x top left;text-align:center;" >
+	<font color="#F0FFFF" face="Cambria" ><b>Sales Invoice</b></font></caption>
+   
+     <thead>
+        <tr>
+        <th  width="50" style="color:black;">S.No</th>
+		<th width="125px" style="color:black;">Prod.Name</th>
+      	<th width="100px" style="color:black;">Bat.No</th>
+		<th width="100px" style="color:black;">Exp.Dt</th>
+		<th width="100px" style="color:black;">Avail.Qty</th>
+		<th width="100px" style="color:black;">Rate</th>
+		<th  width="100px" style="color:black;">Sale.Qty</th>
+		<th width="100px" style="color:black;">Dis(%)</th>
+		<th width="100px" style="color:black;">Amount</th>
+		<th  width="100px" style="color:black;">Vat(%)</th>
+		<th width="50px" style="color:black;">DEL</th>
+	</tr>
+      </thead>
+     <tbody>
+		<tr><td colspan="11">
+			<div class="innerb">
+			<table class="tabletwo" id="displayTable">
+			<% i=0 %>
+			<% f.fields_for :issue_op_child do |a| %>
+				<% if (i%2==0) %>
+					<tr>
+				<% else%>
+					<tr class="dk">
+				<% end %>
+<%= a.hidden_field :new_qty, :id=>"new_qty", :style=>"width:100%", :class => "nbb" %>
+
+					<td width="50px"><%= a.text_field :s_no, :style=>"width:100%", :id => "r#{i}c1", :class => "nbb", :readonly=>"true" %></td> 
+					<td  width="125px"><%= a.text_field :item_name, :style=>"width:100%", :id => "r#{i}c2", :class => "nbb", :readonly=>"true" %></td> 
+					<td  width="100px"><%= a.text_field :batch_no, :style=>"width:100%", :id => "r#{i}c3", :class => "nbb", :readonly=>"true" %></td> 
+					<td  width="100px"><%= a.text_field :expiry_date, :style=>"width:100%", :id => "r#{i}c4", :class => "nbb" , :readonly=>"true"%></td> 
+					<td  width="100px"><%= a.text_field :quantity, :style=>"width:100%", :id => "r#{i}c5", :class => "nbb" , :readonly=>"true"%></td> 
+					<td  width="100px"><%= a.text_field :sale_rate, :style=>"width:100%", :id => "r#{i}c6", :class => "nbb", :readonly=>"true" %></td> 
+					<td width="100px"><%= a.text_field :issue_qty, :style=>"width:100%", :id => "r#{i}c7", :class => "nbb", :onkeyup=>"select_quntity('#{i}',event)" %></td> 
+					<td width="100px"><%= a.text_field :discount, :style=>"width:100%", :id => "r#{i}c8", :class => "nbb", :onkeyup=>"select_quntity('#{i}',event)" %></td> 
+					<td width="100px"><%= a.text_field :total, :style=>"width:100%", :id => "r#{i}c9", :class => "nbb", :readonly=>"true" %></td> 
+					<td width="100px"><%= a.text_field :vat, :style=>"width:100%", :id => "r#{i}c10", :class => "nbb", :readonly=>"true" %></td> 
+					<td width="50px" id="r<%= i %>c11"></td>
+				</tr>
+				<% i+=1 %>
+				
+					
+			<% end %>
+			</table>
+			
+		</td>
+		</tr>
+	</tbody>
+     </table>
+   </div>
+	</td>
+  </tr>
+ </table>
+</div>
+<fieldset>
+<legend><div class="font"><b>Receipt Details</b></div></legend>
+<table width="100%" align="center" >
+
+<!--	<tr>
+			 <td>5% Value </td> 
+             <td><%= f.text_field :five_value, :size =>"20", :id => "five_value", :readOnly => true %>
+             <td>5% Vat</td>
+             <td><%= f.text_field :five_vat,:size =>"20", :id => "five_vat",  :readOnly => true %>
+			 <td>14.5% value</td>
+             <td><%= f.text_field :fourt_value,:id => "fourt_value",:readOnly => true, :size =>"20" %></td>
+			<td>14.5% Vat</td>
+			<td><%= f.text_field :fourt_vat,:id =>"fourt_vat", :readOnly => true, :size =>"20" %></td>
+    </tr>
+-->
+	<tr> 
+		
+		<td>Sub Total</td>
+		<td><%= f.text_field :total_amount, :class =>"text_field",:id => "gross", :readOnly => true %></td>
+		<td>Discount(%)</td>
+		<td><%= f.text_field :discount_percentage, :class =>"text_field" ,:id => "concession", :onkeyup => "cal_concession(id)"  %></td>
+		<td>Discount Amount</td>
+		<td><%= f.text_field :concession_amount, :class =>"text_field" ,:id => "concession_amount", :readonly=>true  %></td>
+</tr>
+<tr>
+		<td>Dis.Authority </td>
+		<td><%= f.text_field :ref,:id => "doctor1",:size => 20  %><br/>
+		<td>Gross</td>
+		<td><%= f.text_field :due_amount, :class =>"text_field" ,:id => "total", :readOnly => true %></td>
+		<td>Adjust</td>
+		<td><%= f.text_field :adjust, :id=>"adjust", :class =>"text_field", :onKeyup => "amount_calculation('find_net_amount')" %><br/>
+	</tr>
+	 <tr> 
+		
+		<td> Round</td>
+		<td><%= f.text_field :round, :class =>"text_field",:id => "round", :onKeyup => "amount_calculation('find_net_amount')" %></td>
+		<td>Net.Amt </td>
+		<td><%= f.text_field :paid_amt, :class =>"text_field",:id => "reciept_amount", :readOnly => true %></td>
+	</tr>
+	<tr>
+    <td colspan=5>Payment Mode&nbsp;&nbsp;&nbsp;&nbsp;
+	<%= f.radio_button :payment_type, "Cash", :checked => true, :id => "button17" , :onchange => "checked_payment_type(id,'reciept_amount')" %>Cash
+		<%= f.radio_button :payment_type, "Cheque", :id => "button18" ,:onchange => "checked_payment_type(id,'reciept_amount')" %>Cheque
+		<%= f.radio_button :payment_type, "Card", :id => "button19" ,:onchange => "checked_payment_type(id,'reciept_amount')"%>Card
+              <%= f.radio_button :payment_type, "Both", :id => "button14" ,:onchange => "checked_payment_type(id,'reciept_amount')"%>Both</td>
+  </tr>
+<tr style="display:none;" id="bank_det">
+		<td>Bank Name </td> 
+		<td><%= f.text_field :bank_name, :class =>"text_field" , :id => "bank" %></td>
+		<td>Acc No </td>
+		<td><%= f.text_field :acc_no, :class =>"text_field" , :id => "accno" %></td>		
+		<td>Cheque No </td>
+		<td><%= f.text_field :cheque_number, :class =>"text_field", :id => "cheqno" %></td>
+    </tr>
+		<tr style="display:none;" id="card_det">
+			<td>Card No</td>
+			<td><%= f.text_field :card_number, :id => "cardno", :class =>"text_field"   %></td>
+			<td>Card Type</td>
+			<td><%= f.select :card_type,[['Mastro'],['Visa'],['Master Card']],{:include_blank => true}, {:id => "cardtype"}  %></td>
+			<td>Expiry Date</td>
+			<td><%= f.date_select :c_expiry_date, :prompt => {:month => 'Month', :year => 'Year' },:start_year => 2010, :order => [:month,:year] %></td>
+		</tr>
+		<tr style="display:none;"  id="cheque_amount_det"> 
+  		    	<td>Cheque Amount</td>
+		    	<td><%= f.text_field :cheque_amount, :id => "cheque_amount", :class =>"text_field" %></td>
+		</tr>
+		<tr style="display:none;"  id="card_amount_det">
+   		       <td>Card Amount</td>
+		       <td><%= f.text_field :card_amount, :id => "card_amount", :class =>"text_field" %></td>
+        </tr> 
+ </table>
+</fieldset>
+<table align="center">
+			<tr>
+				<td><%= submit_tag "", :value => " Save&Print ", :class => "submit_button" , :onclick => "store_child()", :onClick => "this.disabled=true;this.value='Process..';this.form.submit();" %></td>
+				<td><%= submit_tag "", :value => " Reset ", :type => "reset",  :class => "submit_button" %></td>
+				<td valign="middle"><%= link_to "Back",  issues_to_ops_path, :class=>"new1" %></td>
+			</tr>
+</table>
+
+<% end %>
+</div>
+<div class="left">
+<div id="ip1" style="display:none">
+	<table border=1 cellspacing="0" cellpadding="0"  width="100%">
+		<tr>
+			<td id="side_panel"><input type="text" style="width:96%; id="admn_no_search" placeholder="Search By Admn.No" onkeyUp="search_field_mr_no(id,'issues_to_ip','admn_no')"></td>
+			<td id="side_pane2"><input type="text" style="width:96%; id="name_search" placeholder="Search By Name" onkeyUp="search_field_mr_no(id,'issues_to_ip','admn_no')" ></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<div  id="field_search_div">
+				<table border=1 cellspacing="0" cellpadding="0" width="100%">
+				<tr>
+					<th id="side_panel">Admn.NO</th>
+					<th id="side_pane2">Name</th>
+				</tr>
+				<% for admission in  @admission %>
+					<% reg=Registration.find_by_mr_no_and_org_code(admission.mr_no,@org_code) %>
+
+					<tr>
+						<% if(reg.reg_type=="Arogyasree") %>
+							<td class="cursor_point" onclick="mrfun('<%= admission.id %>')" bgcolor="blue" style="color:white;"><%= admission.admn_no %></td>
+							<td class="cursor_point" onclick="mrfun('<%= admission.id %>')" bgcolor="blue" style="color:white;"><%= reg.patient_name %></td>
+						<% else %>
+							<td class="cursor_point" onclick="mrfun('<%= admission.id %>')"><%= admission.admn_no %></td>
+							<td class="cursor_point" onclick="mrfun('<%= admission.id %>')"><%= reg.patient_name %></td>
+						<% end %>
+					</tr>
+				<% end %>
+				</table>
+				</div>
+			</td>
+		</tr>		
+	</table>
+</div>
+
+<div id="op1" style="display:block">
+	<table border=1 cellspacing="0" cellpadding="0"  width="100%">
+		<tr>
+			<td id="side_panel"><input type="text" style="width:96%; id="mr_no_search" placeholder="Search MR No" onkeyUp="search_field_mr_no('mr_no_search','issues_to_op','mr_no')"></td>
+			<td id="side_pane2"><input type="text" style="width:96%; id="name_search" placeholder="Search By Name" onkeyUp="search_field_mr_no(id,'issues_to_op','mr_no')" ></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<div  id="field_search_div">
+				<table border=1 cellspacing="0" cellpadding="0" width="100%">
+				<tr>
+					<th id="side_panel">MR NO</th>
+					<th id="side_pane2">Name</th>
+				</tr>
+				<% for appt_payment in @appt_payment %>
+					<% admission=Admission.find_by_mr_no_and_org_code_and_admn_status(appt_payment.mr_no,appt_payment.org_code,'Admitted') %>
+					<% if(!admission) %>
+						<% reg=Registration.find_by_mr_no_and_org_code(appt_payment.mr_no,appt_payment.org_code) %>
+						<% obj=IssuesToOp.find_by_mr_no_and_org_code(reg.mr_no,reg.org_code) %>
+						<% if(!obj) %>
+						<tr>
+							<td class="cursor_point" onclick="mrfun('<%= appt_payment.id %>')"><%=  appt_payment.mr_no %></td>
+							<td class="cursor_point" onclick="mrfun('<%= appt_payment.id %>')"><%= reg.patient_name %></td>
+						</tr>
+						<% end %>
+					<% end %>
+				<% end %>
+				
+				</table>
+				</div>
+			</td>
+		</tr>		
+	</table>	
+</div>
+</div>
+
+

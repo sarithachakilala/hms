@@ -1,0 +1,72 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">IP Patients >>&nbsp;&nbsp;&nbsp;<a HREF='/advance_payments' class="nav" style="text-decoration:none;"> Advance Payments</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div  width="100%">
+<h4 align=center>Adavnace Payment Details</h4><br/>
+<table align="center" width="70%" border="0" cellspacing="2" cellpadding="4">
+<tr>
+  <td class='<%= id %>'><b>Admn.No</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @advance_payment.admn_no %>
+  <td class='<%= id %>'><b>MR NO</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @advance_payment.mr_no %>
+  <td class='<%= id %>'><b>Advance Date</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @advance_payment.advance_date %>
+</tr>
+<tr>
+   <td class='<%= id %>'><b>Receipt No</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @advance_payment.receipt_no %>
+  <td class='<%= id %>'><b>Gross Amount</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @advance_payment.gross_amount %>
+  <td class='<%= id %>'><b>Already Paid Amount</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @advance_payment.already_paid_amount %>
+  </tr>
+  <tr>
+  <td class='<%= id %>'><b>Payment Mode</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @advance_payment.payment_mode %>
+  <td class='<%= id %>'><b>Bank Name</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @advance_payment.bank_name %>
+  <td class='<%= id %>'><b>Cheque No</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @advance_payment.cheque_no %>
+  </tr>
+<tr>
+  <td class='<%= id %>'><b>Acc.No</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @advance_payment.acc_no %>
+  <td class='<%= id %>'><b>Cheque Amount</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @advance_payment.cheque_amount %>
+  <td class='<%= id %>'><b>Card No</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @advance_payment.card_no %>
+ </tr>
+<tr>
+  <td class='<%= id %>'><b>Type</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @advance_payment.type %>
+  <td class='<%= id %>'><b>Expiry Date</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @advance_payment.expiry_date %>
+  <td class='<%= id %>'><b>Amount</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @advance_payment.card_amount %>
+</tr>
+</table>
+</div>
+<br/>
+<center><%= link_to "Back",  advance_payments_path, :class=>"new1" %></center>

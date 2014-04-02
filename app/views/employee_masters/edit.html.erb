@@ -1,0 +1,155 @@
+<script type="application/javascript"> 
+function selection_process(id)
+	{
+		var selObj = document.getElementById(id);
+		category = selObj.options[selObj.selectedIndex].value
+		if(category=="Consultant")
+		{
+			
+			req = new Ajax.Request('/employee_masters/ajax_buildings/1', {
+			method: 'get',
+			parameters: {category: category },
+			onComplete: function(transport) {
+			processReqChange(transport);
+			}
+		}); // end ajax req
+		}				
+		function processReqChange(req) 
+		{
+			// request is complete
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				var temp=new Array()
+					
+					temp=results.split("<division>")
+					document.getElementById('dept').length=0
+					var opt = document.createElement("option");
+					document.getElementById("dept").options.add(opt);
+					opt.text = ""
+					opt.value = ""
+						for(i=0;i<temp.length-1;i++)
+						{
+							var opt = document.createElement("option");
+							document.getElementById("dept").options.add(opt);
+							opt.text = temp[i]
+							opt.value = temp[i]
+						}
+
+			}
+		}
+		
+	}
+	
+function checked_val1(el)
+	{		
+	
+		document.getElementById('bname').value=""
+		document.getElementById('accno').value=""
+		document.getElementById('branch').value=""
+        
+
+		document.getElementById('bname').disabled=true
+		document.getElementById('accno').disabled=true
+		document.getElementById('branch').disabled=true
+       
+
+		if(document.getElementById(el).value=="bank")
+		{
+		
+			document.getElementById('bname').disabled=false
+			document.getElementById('accno').disabled=false
+			document.getElementById('branch').disabled=false
+                    
+
+		}
+		
+	}
+</script>
+<% form_for(@employee_master) do |f| %>
+  <div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Doctor Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/employee_masters?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Employee Masters</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+ <fieldset>
+	<table width="100%">
+	 <legend><div class="font"><b>Employee Masters</b></legend>
+		
+		<tr>
+		<td>Org.code</td>
+		<td><%= f.text_field :org_code, :class => "text_field"%></td>
+		<td>Org.location</td>
+		<td><%= f.text_field :org_location, :class => "text_field" %></td>
+		<td><%= f.label :empid %><sup>*</sup></td>
+		<td> <%= f.text_field :empid, :class => "text_field" %></td>
+		<td><%= f.label :name %><sup>*</sup></td>
+		<td><%= f.text_field :name, :class => "text_field" %></td>
+	  </tr>
+  <tr>
+		<td><%= f.label :category %></td>
+		<td><%= f.select :category, [['Pharmacuy'],['Lab'],['Reception'],['Nurse'],['Consultant'],['Sweeper'],['Management']],{:prompt  => true},{:id =>"category_code", :onchange => "selection_process(id)"} %></td> 
+		<td> <%= f.label :department %></td>
+		<td><%= f.select :department, DepartmentMaster.find(:all, :conditions =>"org_code ='#{@org_code}%'").collect{|p| [p.name]},{:prompt =>true},{:id=> "dept"} %></td>
+    <td><%= f.label :designation %><sup>*</sup></td>
+    <td><%= f.text_field :designation, :class => "text_field" %></td>
+    <td>DOB<sup>*</sup></td>
+	<td><%= f.text_field :dob, :id => "dob", :class => "text_field" %><a href="javascript:void(0)" onClick="setYears(1947,"text_field""text_field");showCalender(this,'dob'); "  >
+      		<img src="/images/cal.gif" onblur = "alert('hai')"></a></td>
+  </tr>
+  <tr>
+    <td>Join Date<sup>*</sup></td>
+	<td><%= f.text_field :join_date, :id =>"job", :class =>"text_field" %><a href="javascript:void(0)" onClick="setYears(1947, "text_field""text_field");showCalender(this,'job');">
+	   	<img src="/images/cal.gif" onblur = "alert('hai')"></a></td>
+   <td>Payment Type<sup>*</sup> </td>
+   <td>
+		<%= f.radio_button :payment_type, "cash", :checked =>true, :id => "button1", :onchange => "checked_val1(id)" %>Cash
+	    <%= f.radio_button :payment_type, "bank", :id =>"button2", :onchange => "checked_val1(id)" %>Bank
+  	</td>
+ </tr>
+ <tr>
+    <td>Bank Name</td>
+    <td><%= f.text_field :bank_name, :class => "text_field", :id =>"bname", :disabled =>"true" %></td>
+    <td>Acc.No</td>
+    <td><%= f.text_field :acc_no, :class => "text_field", :id =>"accno", :disabled =>"true" %></td>
+    <td>Branch Name</td>
+    <td><%= f.text_field :branch_name, :class => "text_field", :id =>"branch", :disabled =>"true" %></td>
+</tr><tr>
+    <td>Address</td>
+    <td colspan="3"><%= f.text_area :address, :rows =>3,:cols =>"47", :placeholder =>"Please Enter Your Permanent Address" %></td>
+	 </tr>
+  <tr>
+    <td><%= f.label :city %></td>
+    <td><%= f.text_field :city, :class => "text_field" %></td>
+    <td><%= f.label :state %></td>
+    <td><%= f.text_field :state, :class => "text_field" %></td>
+    <td><%= f.label :country %></td>
+    <td><%= f.text_field :country, :class => "text_field" %></td>
+    <td><%= f.label :zipcode %></td>
+    <td><%= f.text_field :zipcode, :class => "text_field" , :placeholder=>"Enter 6 Digits"%></td>
+		  </tr>
+  <tr>
+   <td> <%= f.label :phno %><sup>*</sup></td>
+    <td><%= f.text_field :phno, :class => "text_field" %></td>
+    <td>Email</td>
+    <td><%= f.text_field :email_id, :class => "text_field", :placeholder=>"exleaz@gmail.com" %></td>
+    <td>From Time<sup>*</sup></td>
+    <td><%= f.time_select :from_time, :class => "text_field" %></td>
+    <td>To Time<sup>*</sup></td>
+    <td><%= f.time_select :to_time, :class => "text_field" %></td>
+  </tr>
+ </table>
+  </fieldset>
+  <table align ="center">
+  <tr>
+  <center>
+  	<td><%= submit_tag "", :value => " Update ", :class => "submit_button" %></td>
+				<td valign="middle"><%= link_to "back",  employee_masters_path, :class=>"new1" %></td>
+  </tr>
+</table>
+<% end %>
+<!-- <%= link_to 'Show', @employee_master %> |
+<%= link_to 'Back', employee_masters_path %> -->

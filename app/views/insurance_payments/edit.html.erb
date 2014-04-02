@@ -1,0 +1,74 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Payments >>&nbsp;&nbsp;&nbsp;>> Insurance Bills >>&nbsp;&nbsp;&nbsp;<a HREF='/insurance_payments?user_id=<%= @user_id %>' class="nav" style="text-decoration:none;">Insurance Payments</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+
+<div id="form_data">
+
+<%= javascript_include_tag 'calendar.js' %>
+<% form_for(@insurance_payment) do |f| %>
+  <%= f.error_messages %>
+<% @date=format_date(:sort, Date.today ) %>
+<%= hidden_field('user_id','', :value => @user_id) %> 
+<br>
+<table width="100%">
+<tr><td>
+<fieldset><legend>Insurance Payment Details</legend>
+<table width="100%">
+  <tr>
+    <td>Org.Code</td>
+	<td><%= f.text_field :org_code, :size => 20, :id => "org_code", :required => true, :readonly => true %></td>
+	<td>Org.Location</td>
+	<td><%= f.text_field :org_location, :size => 20, :id => "org_location", :required => true, :readonly => true %></td>
+    <td>Ins.No</td>
+    <td><%= f.text_field :ins_no,:size => 20, :id => "ins_no", :readOnly =>true %></td>
+  </tr>
+  <tr>	
+	<td>Admn.No</td>
+    <td><%= f.text_field :admn_no,:size => 20, :id => "admn_no", :readOnly =>true %></td>
+    <td>MR No</td>
+    <td><%= f.text_field :mr_no,:size => 20, :id => "mr_no", :readOnly =>true %></td>
+	<td>Patient Name</td>
+	<td><%= text_field_tag ('patient','',:size =>20, :value => @registration.patient_name, :readOnly =>true) %></td>
+  </tr>
+  <tr>
+    <td>Admn.Date</td>
+    <td><%= f.text_field :admn_date,:size => 20, :id => "admn_date" %></td>
+    <td>Discharge Date</td>
+    <td><%= f.text_field :dis_date,:size => 20, :id => "dis_date" %></td>
+	<td>Amount</td>
+    <td><%= f.text_field :amount,:size => 20, :id => "amount", :readOnly =>true %></td>
+  </tr>
+  <tr>
+    <td>Dispatch Date</td>
+    <td><%= f.text_field :dispatch,:size => 16, :id => "dispatch", :value => @date %><a href="javascript:void(0)" onClick="setYears(2011, 2030);showCalender(this,'dispatch');" >
+      <img src="/images/cal.gif" ></a></td>
+    <td>Cheque Issue Date</td>
+    <td><%= f.text_field :cheque_issue_date,:size => 16, :id => "cheque_issue_date", :value => @date %><a href="javascript:void(0)" onClick="setYears(2011, 2030);showCalender(this,'cheque_issue_date');" >
+      <img src="/images/cal.gif" ></a></td>
+    <td>Cheque Submit Date</td>
+    <td><%= f.text_field :cheque_submit_date,:size => 16, :id => "cheque_submit_date", :value => @date %><a href="javascript:void(0)" onClick="setYears(2011, 2030);showCalender(this,'cheque_submit_date');" >
+      <img src="/images/cal.gif" ></a></td>
+ </tr>
+  <tr>	
+ 	<td><%= f.label :status %></td>
+    <td><%= f.text_field :status,:size => 20 %></td>
+  </tr>
+ </table>
+</fieldset></td>
+</tr></table>
+<table width="100%">
+	<tr>
+  	
+  	<td colspan=8 align="center"><%= submit_tag "", :value => " Update ", :class => "submit_button", :onClick => "this.disabled=true;this.value='Process..';this.form.submit();" %>
+	
+	<%= link_to "Back",  insurance_payments_path, :class=>"new1" %></td>
+  </tr>
+  </table>
+<% end %>
+</div>
+</body>

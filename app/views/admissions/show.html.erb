@@ -1,0 +1,118 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">IP Patients >>&nbsp;&nbsp;&nbsp;<a HREF='/admissions?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Admission</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div  width="100%">
+<h4 align=center>Appointment Payment Details</h4><br/>
+<table align="center" width="70%" border="0" cellspacing="2" cellpadding="4">
+<tr>
+  <td class='<%= id %>'><b>Admn Category</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @admission.admn_category %>
+  <td class='<%= id %>'><b>Org Code</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @admission.org_code %>
+  <td class='<%= id %>'><b>Org Location</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @admission.org_location %>
+</tr>
+<tr>
+   <td class='<%= id %>'><b>Registration</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @admission.registration_id %>
+  <td class='<%= id %>'><b>Admn Date</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @admission.admn_date %>
+  <td class='<%= id %>'><b>Mr no</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @admission.mr_no %>
+</tr>
+<tr>
+  <td class='<%= id %>'><b>Admn no</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @admission.admn_no %>
+  <td class='<%= id %>'><b>Patient Name</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @admission.patient_name %>
+  <td class='<%= id %>'><b>Age</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @admission.age %>
+</tr>
+<tr>
+  <td class='<%= id %>'><b>Gender</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @admission.gender %>
+  <td class='<%= id %>'><b>Admn Type</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @admission.admn_type %>
+  <td class='<%= id %>'><b>Department</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @admission.department %>
+  
+</tr>
+
+<tr>
+  <td class='<%= id %>'><b>Consultant:</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @admission.consultant_id %>
+  <td class='<%= id %>'><b>Consultant Name</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @admission.consultant_name %>
+  <td class='<%= id %>'><b>Ward</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @admission.ward %>
+</tr>
+<tr>
+  <td class='<%= id %>'><b>Room</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @admission.room %>
+  <td class='<%= id %>'><b>Bed</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @admission.bed %>
+  <td class='<%= id %>'><b>Floor</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @admission.floor %>
+</tr>
+<tr>
+  <td class='<%= id %>'><b>Attendant Name</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @admission.attendant_name %>
+  <td class='<%= id %>'><b>Attendant Phno</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @admission.attendant_ph_no %>
+  <td class='<%= id %>'><b>Package Category</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @admission.package_category %>
+</tr>
+<tr>
+  <td class='<%= id %>'><b>Sub Category</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @admission.sub_category %>
+  <td class='<%= id %>'><b>Days</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @admission.days %>
+  <td class='<%= id %>'><b>Amount</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @admission.amount %> 
+</tr>
+<tr>
+  <td class='<%= id %>'><b>Advance</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @admission.advance %>
+  <td class='<%= id %>'><b>Bill NO</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @admission.bill_no1 %>
+  <td class='<%= id %>'><b>Comments</b></td>
+  <td class='<%= id %>'>:</td>
+  <td class='<%= id %>'><%=h @admission.comments %>
+</tr>
+</table>
+</div>
+<br/>
+<center><%= link_to "Back",  admissions_path, :class=>"new1" %></center>

@@ -1,0 +1,193 @@
+
+<%= javascript_include_tag 'calendar.js' %>
+<script type="text/javascript"> 
+	
+	function mrfun(id)
+	{
+	   	var org_code=document.getElementById('org_code').value
+		if(org_code=="")
+		{
+			alert("Please select Organization Code")
+			return false;
+		}
+		req = new Ajax.Request('/pakage_transfers/ajax_buildings/1', {
+			method: 'get',
+			parameters: { record_id:id },
+			onComplete: function(transport) {
+			processReqChange(transport);
+			}
+		}); 
+		function processReqChange(req) 
+		{
+			// request is complete
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				var store_data_ip=new Array("admn_no","mr_no","patient_name","father_name","age","gender","mobile","e_cat","e_subcat","days","amount");
+				var temp=new Array()
+				temp=results.split("<division>")
+				for(i=0;i<store_data_ip.length;i++)
+				{
+					document.getElementById(store_data_ip[i]).value=temp[i]
+					document.getElementById(store_data_ip[i]).style.background="#FEF5CA"
+					document.getElementById(store_data_ip[i]).readOnly=true
+				}
+			}
+		}
+	}
+			
+       function select_category(id)
+	{
+
+		var org_code=document.getElementById("org_code").value
+		var category=document.getElementById(id).value
+		req = new Ajax.Request('/pakage_transfers/select_pack_category_code/1', {
+			method: 'get',
+			parameters: { category:category,org_code:org_code },
+			onComplete: function(transport) {
+			processReqChange(transport);
+			}
+		}); 
+		function processReqChange(req) 
+		{
+			// request is complete
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				var temp=new Array()
+				temp=results.split("<division>")
+				document.getElementById('trans_subcat').length=0
+				var opt = document.createElement("option");
+				document.getElementById("trans_subcat").options.add(opt);
+				opt.text = "Please select"
+				opt.value = ""
+				for(i=0;i<temp.length-1;i++)
+				{
+					var opt = document.createElement("option");
+					document.getElementById("trans_subcat").options.add(opt);
+					opt.text = temp[i]
+					opt.value = temp[i]
+				}
+			}
+		}
+
+	}
+
+</script>
+<% form_for(@pakage_transfer) do |f| %>
+
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">IP Patients >>&nbsp;&nbsp;&nbsp;<a HREF='/pakage_transfers' class="nav" style="text-decoration:none;">Package Transfer</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><BR/>
+<%= f.hidden_field :user_id, :value => @people.id, :size => 20, :readonly => true %>
+<%= f.hidden_field :org_code, :value => @org_code, :size => 20, :id => "org_code", :readonly => true %>
+<%= f.hidden_field :org_location, :value => @org_location, :size => 20, :id => "org_location", :readonly => true %>
+<div class="right">
+<% @date=format_date(:sort, Date.today ) %>
+ <fieldset>
+<legend><div class="font"><b>Package Details</b></div></legend>
+<table width="100%">
+  <tr>	
+		<td>Admn.No<sup>*</sup></td>
+		<td> <%= f.text_field :admn_no, :id => "admn_no", :class=>"text_field", :readonly =>"true" %></td>
+		<td>MR No<sup>*</sup></td>
+		<td><%= f.text_field :mr_no, :size => "20", :id => "mr_no" %></td>
+ 		<td>Patient Name </td>
+<td><%= text_field_tag ('patient_name','',:class =>"text_field", :id=>"patient_name", :readonly=>true ,:class =>"text_field", :value=>@patient_name) %></td>
+
+		
+	</tr>
+	<tr>
+		<td>Father Name </td>
+		
+<td><%= text_field_tag ('father_name','',:class =>"text_field", :id=>"father_name", :readonly=>true ,:class =>"text_field", :value=>@father_name) %></td>
+		<td>Age</td>
+
+<td><%= text_field_tag ('age','',:class =>"text_field", :id=>"age", :readonly=>true ,:class =>"text_field", :value=>@age) %></td>
+		<td>Gender</td>
+
+<td><%= text_field_tag ('gender','',:class =>"text_field", :id=>"gender", :readonly=>true ,:class =>"text_field", :value=>@gender) %></td>
+	</tr>
+	<tr>
+		<td>Contact No</td>
+		
+<td><%= text_field_tag ('mobile','',:class =>"text_field", :id=>"mobile", :readonly=>true ,:class =>"text_field", :value=>@contact) %></td>
+		<td>Date<sup>*</sup></td>
+		<td> <%= f.text_field :today_date, :class=>"text_field", :value => @date, :readonly =>true  %></td>
+		<td>Time<sup>*</sup></td>
+		<td><%= f.time_select :present_time, :default => Time.new, :class=>"text_field" %></td>
+   </tr>
+	<tr>	
+		<td><sup>Existitng</sup>category</td>
+		<td> <%= f.text_field :e_cat, :id =>"e_cat", :size => 20 %></td>
+		<td>Sub Category</td>
+		<td colspan="4"><%= f.text_field :e_subcat, :id =>"e_subcat", :size => 20 %></td>
+	 </tr>
+	<tr>
+		<td > Days </td>
+		<td><%= f.text_field :days, :id =>"days", :size => 20 %></td>
+		<td>Amount </td>
+		<td><%= f.text_field :amount, :id =>"amount", :size => 20 %></td >
+	</tr>
+	<tr>
+		<td ><sup>Trans</sup>category</td>
+		<td><%= f.select :trans_cat,  PackageMasterMajestic.find(:all, :select =>"Distinct category", :conditions => "org_code = '#{@org_code}'").collect{|p| [p.category]}, {:prompt => true},{:id => "trans_cat", :onChange => "select_category(id)"}%></td >
+		<td > Sub Category</td><td colspan="4">
+		<%= f.select :trans_subcat, '', {:prompt => true},{:id => "trans_subcat", :onChange => "select_category1(id,'sub')"}%></td >
+	 </tr>
+	<tr>
+		<td > Days </td><td>
+		<%= f.text_field :t_days , :id =>"days", :size => 20%></td ><td >
+		Amount </td><td>
+		<%= f.text_field :t_amount, :id =>"amount", :size => 20 %>
+		</td >
+	</tr>
+  </table>
+ </fieldset>
+ 
+<table align="center">
+<tr>
+	<td><%= submit_tag "", :value => " Save&Process ", :class => "submit_button" , :onClick => "this.disabled=true;this.value='Process..';this.form.submit();" %></td>
+	<td><%= submit_tag "", :value => " Reset ", :type => "reset",  :class => "submit_button" %></td>
+	<td valign="middle"><%= link_to "Back",  pakage_transfers_path, :class=>"new1" %></td>
+</tr>
+</table>
+      
+<% end %>
+</body>
+</div>
+<div class="left">
+	<table border=1 cellspacing="0" cellpadding="0">
+		<tr>
+			<td><input type="text" size=15 id="admn_no_search" placeholder="Search By Admn.No" onkeyUp="search_field_mr_no(id,'package_transfer','admn_no')"></td>
+			<td><input type="text" size=15 id="name_search" placeholder="Search By Name" onkeyUp="search_field_mr_no(id,'package_transfer','admn_no')" ></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<div  id="field_search_div">
+				<table border=1 cellspacing="0" cellpadding="0" width="100%">
+				<tr>
+					<th width="50%">Admn.NO</th>
+					<th width="50%">Name</th>
+				</tr>
+				<% @pack_admission=Admission.find(:all,:conditions => "admn_status= 'Admitted' and org_code='#{@people.org_code}' and admn_category='Package'") %>
+				
+				<% for admission in @pack_admission %>
+					<% registration=Registration.find_by_mr_no_and_org_code(admission.mr_no,admission.org_code) %>
+					<tr>
+						<td class="cursor_point" onclick="mrfun('<%= admission.id %>')"><%= admission.admn_no %></td>
+						<td class="cursor_point" onclick="mrfun('<%= admission.id %>')"><%= registration.patient_name %></td>
+					</tr>
+				<% end %>	
+				</table>
+				</div>
+			</td>
+		</tr>		
+	</table>
+</div>
+</body>

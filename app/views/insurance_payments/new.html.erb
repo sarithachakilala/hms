@@ -1,0 +1,164 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Payments >>&nbsp;&nbsp;&nbsp;>> Insurance Bills >>&nbsp;&nbsp;&nbsp;<a HREF='/insurance_payments?user_id=<%= @user_id %>' class="nav" style="text-decoration:none;">Insurance Payments</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+
+<div id="form_data">
+
+<%= javascript_include_tag 'calendar.js' %>
+<script type="text/javascript"> 
+
+	function Ajax_Code(reg_id,admn_id)
+	{
+		var org_code=document.getElementById('org_code').value
+		if(org_code=="")
+		{
+			alert("Please select Organization Code")
+		}
+		req = new Ajax.Request('/insurance_payments/ajax_buildings/1', {
+			method: 'get',
+			parameters: { org_code: org_code, reg_id: reg_id, admn_id :admn_id },
+			onComplete: function(transport) {
+			processReqChange(transport);
+			}
+		}); 
+		function processReqChange(req) 
+		{
+			// request is complete
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				
+				var temp=new Array();
+				var field_names=new Array('ins_no','admn_no','mr_no','patient','dis_date','admn_date');
+				temp=results.split("<division>")
+				for(i=0;i<field_names.length;i++)
+				{
+					document.getElementById(field_names[i]).disabled=false
+					document.getElementById(field_names[i]).value=temp[i]
+					document.getElementById(field_names[i]).style.background="#FEF5CA"
+					document.getElementById(field_names[i]).readOnly=true
+				}		
+			}
+		}
+	}
+</script>
+
+
+
+<% form_for(@insurance_payment) do |f| %>
+  <%= f.error_messages %>
+<div class="right">
+<% @date=format_date(:sort, Date.today ) %>
+
+<br>
+<table width="100%">
+<tr><td>
+<fieldset><legend>Insurance Payment Details</legend>
+<table width="100%">
+  <tr>
+    <td>Org.Code</td>
+	
+		<td><%= f.text_field :org_code, :value => @org_code, :size => 20, :id => "org_code", :required => true, :readonly => true %></td>
+	
+	<td>Org.Location</td>
+	<td><%= f.text_field :org_location, :value => @org_location, :size => 20, :id => "org_location", :required => true, :readonly => true %></td>
+    <td>Ins.No</td>
+    <td><%= f.text_field :ins_no,:size => 20, :id => "ins_no" %></td>
+  </tr>
+  <tr>	
+	<td>Admn.No</td>
+    <td><%= f.text_field :admn_no,:size => 20, :id => "admn_no" %></td>
+    <td>MR No</td>
+    <td><%= f.text_field :mr_no,:size => 20, :id => "mr_no" %></td>
+	<td>Patient Name</td>
+	<td><%= text_field_tag ('patient','',:size =>20) %></td>
+  </tr>
+  <tr>
+    <td>Admn.Date</td>
+    <td><%= f.text_field :admn_date,:size => 20, :id => "admn_date" %></td>
+    <td>Discharge Date</td>
+    <td><%= f.text_field :dis_date,:size => 20, :id => "dis_date" %></td>
+	<td>Amount</td>
+    <td><%= f.text_field :amount,:size => 20, :id => "amount" %></td>
+  </tr>
+  <tr>
+    <td>Dispatch Date</td>
+    <td><%= f.text_field :dispatch,:size => 16, :id => "dispatch", :value => @date %><a href="javascript:void(0)" onClick="setYears(2011, 2030);showCalender(this,'dispatch');" >
+      <img src="/images/cal.gif" ></a></td>
+    <td>Cheque Issue Date</td>
+    <td><%= f.text_field :cheque_issue_date,:size => 16, :id => "cheque_issue_date", :value => @date %><a href="javascript:void(0)" onClick="setYears(2011, 2030);showCalender(this,'cheque_issue_date');" >
+      <img src="/images/cal.gif" ></a></td>
+    <td>Cheque Submit Date</td>
+    <td><%= f.text_field :cheque_submit_date,:size => 16, :id => "cheque_submit_date", :value => @date %><a href="javascript:void(0)" onClick="setYears(2011, 2030);showCalender(this,'cheque_submit_date');" >
+      <img src="/images/cal.gif" ></a></td>
+ </tr>
+  <tr>	
+ 	<td><%= f.label :status %></td>
+    <td><%= f.text_field :status,:size => 20 %></td>
+  </tr>
+ </table>
+</fieldset></td>
+</tr></table>
+<% end %>
+<table width="100%">
+	<tr>
+  	
+  	<td colspan=8 align="center"><%= submit_tag "", :value => " Save&Process ", :class => "submit_button", :onClick => "this.disabled=true;this.value='Process..';this.form.submit();" %>
+	<%= submit_tag "", :value => " Reset ", :type => "reset",  :class => "submit_button" %>
+	<%= link_to "Back",  insurance_payments_path, :class=>"new1" %></td>
+  </tr>
+  </table>
+</div>
+<div class="left">
+	<table border=1 cellspacing="0" cellpadding="0">
+		<tr>
+			<td><input type="text" size=15 id="ins_no_search" onkeyUp="search_field_ins_no(id)"></td>
+			<td><input type="text" size=15 id="name_search" onkeyUp="search_field_mr_no(id)" ></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<div  id="field_search_div">
+				<table border=1 cellspacing="0" cellpadding="0" width="100%">
+				<tr>
+					<th width="50%">Ins.NO</th>
+					<th width="50%">Name</th>
+				</tr>
+				<% for registration in @registration %>
+
+				<% admission = Admission.last(:conditions =>"mr_no ='#{registration.mr_no}' and org_code ='#{registration.org_code}'")%>
+
+				<% if(admission) %>
+
+					<% insurance_payment = InsurancePayment.last(:conditions => "ins_no ='#{registration.ins_company_name}' and org_code ='#{registration.org_code}' and admn_no= '#{admission.admn_no}'")%>
+					<% if(registration.reg_type == "Arogyasree") %>
+					<% if (!insurance_payment) %>
+					<tr>
+						<td class="cursor_point" onclick="Ajax_Code('<%= registration.id %>','<%= admission.id %>')" bgcolor="green" style="color:white;"><%=  admission.admn_no %></td>
+						<td class="cursor_point" onclick="Ajax_Code('<%= registration.id %>','<%= admission.id %>')" bgcolor="green" style="color:white;"><%= registration.patient_name %></td>
+					</tr>
+					<% end %>
+				<%elsif(registration.reg_type == "Insurance")%>
+					<% if (!insurance_payment) %>
+					<tr>
+						<td class="cursor_point" onclick="Ajax_Code('<%= registration.id %>','<%= admission.id %>')" bgcolor="blue" style="color:white;"><%=  admission.admn_no %></td>
+						<td class="cursor_point" onclick="Ajax_Code('<%= registration.id %>','<%= admission.id %>')" bgcolor="blue" style="color:white;"><%= registration.patient_name %></td>
+					</tr>
+					<% end %>
+
+
+
+				<% end %>
+			<% end %>
+				<% end %>
+				</table>
+				</div>
+			</td>
+		</tr>		
+	</table>	
+</div>
+</body>

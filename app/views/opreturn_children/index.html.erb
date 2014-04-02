@@ -1,0 +1,42 @@
+<h1>Listing opreturn_children</h1>
+
+<table>
+  <tr>
+    <th>Op patient return</th>
+    <th>Item code</th>
+    <th>Item name</th>
+    <th>Batch no</th>
+    <th>Expiry date</th>
+    <th>Issue qty</th>
+    <th>Sale rate</th>
+    <th>Discount</th>
+    <th>Sale amount</th>
+    <th>Return qty</th>
+    <th>Return rate</th>
+    <th>Return amt</th>
+  </tr>
+
+<% @opreturn_children.each do |opreturn_child| %>
+  <tr>
+    <td><%=h opreturn_child.op_patient_return_id %></td>
+    <td><%=h opreturn_child.item_code %></td>
+    <td><%=h opreturn_child.item_name %></td>
+    <td><%=h opreturn_child.batch_no %></td>
+    <td><%=h opreturn_child.expiry_date %></td>
+    <td><%=h opreturn_child.issue_qty %></td>
+    <td><%=h opreturn_child.sale_rate %></td>
+    <td><%=h opreturn_child.discount %></td>
+    <td><%=h opreturn_child.sale_amount %></td>
+    <td><%=h opreturn_child.return_qty %></td>
+    <td><%=h opreturn_child.return_rate %></td>
+    <td><%=h opreturn_child.return_amt %></td>
+    <td><%= link_to 'Show', opreturn_child %></td>
+    <td><%= link_to 'Edit', edit_opreturn_child_path(opreturn_child) %></td>
+    <td><%= link_to 'Destroy', opreturn_child, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New opreturn_child', new_opreturn_child_path %>

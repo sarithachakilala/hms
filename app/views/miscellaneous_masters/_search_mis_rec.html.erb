@@ -1,0 +1,34 @@
+<div id="name" align="center" width="100%">
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+  <tr>
+    <th>S.No</th>    
+    <th>Mis No</th>
+	<th>Voucher No</th>
+	<th>Department</th>
+	<th>Employee Code</th>
+	<th>Total Amount</th>
+    <th colspan="2">Permissions</th>
+  </tr>
+  </thead>
+<tbody>
+<% @i=0 %>
+<% @miscellaneous_master.each do |miscellaneous_master| %>
+<% if((@i % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+		 end %>
+  <tr class='<%= id %>'>
+	<td><%= @i+=1 %></td>
+    <td><%=h miscellaneous_master.mis_no %></td>
+    <td><%=h miscellaneous_master.voucher_no %></td>
+    <td><%=h miscellaneous_master.department %></td>
+    <td><%=h miscellaneous_master.employee %></td>
+    <td><%=h miscellaneous_master.total_amount %></td>
+	<td align="center" class="submit_button"><%= link_to 'show', miscellaneous_master %></td>
+	<td align="center"  class="submit_button"><%= link_to 'edit', edit_miscellaneous_master_path(miscellaneous_master) %></td>   
+  
+ </tr>
+<% end %>
+</table>

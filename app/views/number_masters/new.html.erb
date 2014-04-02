@@ -1,0 +1,88 @@
+<script type="text/javascript">
+	function print_prev(prefix,next_number,suffix,prev)
+	{
+		document.getElementById(prev).value=document.getElementById(prefix).value+""+document.getElementById(next_number).value+""+document.getElementById(suffix).value;
+	}
+
+</script>
+<style type="text/css">
+<!--
+.allcaps {
+font-variant: small-caps;
+text-transform: uppercase;
+}
+-->
+</style>
+<% form_for(@number_master) do |f| %>
+<div align="center" ></br>
+<table width="70%"><br/>
+  <tr>
+  		<th align="center">   Number</th>
+  		<th align="center">   Prefix</th>
+  		<th align="center">   Next Number</th>
+  		<th align="center">  Suffix</th>
+		<th align="center">   Preview</th>	
+  </tr>	
+  <tr>
+		<td>MR No</td>
+		<td align="center"><%= f.text_field :mr_no, :class =>"text_field", :id => "mr_no", :onKeyup => "print_prev('mr_no','mr_no_length','mr_suffix','mr_prev')" %></td>
+		<td align="center"><%= f.text_field :mr_no_length, :class =>"text_field", :id => "mr_no_length", :onKeyup => "print_prev('mr_no','mr_no_length','mr_suffix','mr_prev')" %></td>
+		<td align="center"><%= f.text_field :mr_suffix,  :id => "mr_suffix", :class =>"text_field", :onKeyup => "print_prev('mr_no','mr_no_length','mr_suffix','mr_prev')" %></td>
+		<td align="center"><%= text_field_tag('mr_prev','',:id => "mr_prev", :class =>"text_field", :readOnly => true) %></td>
+		
+ </tr>   
+ <tr>
+		<td>Reg.No</td>
+		<td align="center"><%= f.text_field :reg_no, :class =>"text_field", :id => "reg_no", :onKeyup => "print_prev('reg_no','reg_no_length','reg_suffix','reg_prev')" %></td>
+		<td align="center"><%= f.text_field :reg_no_length, :class =>"text_field", :id => "reg_no_length", :onKeyup => "print_prev('reg_no','reg_no_length','reg_suffix','reg_prev')" %></td>
+		<td align="center"><%= f.text_field :reg_suffix,  :id => "reg_suffix", :class =>"text_field", :onKeyup => "print_prev('reg_no','reg_no_length','reg_suffix','reg_prev')" %></td>
+		<td align="center"><%= text_field_tag('reg_prev','',:id => "reg_prev", :class =>"text_field", :readOnly => true) %></td>
+ </tr>   
+ <tr>
+		<td>Ins.No</td>
+		<td align="center"><%= f.text_field :ins_no, :class =>"text_field", :id => "ins_no", :onKeyup => "print_prev('ins_no','ins_no_length','ins_suffix','ins_prev')" %></td>
+		<td align="center"><%= f.text_field :ins_no_length, :class =>"text_field", :id => "ins_no_length", :onKeyup => "print_prev('ins_no','ins_no_length','ins_suffix','ins_prev')" %></td>
+		<td align="center"><%= f.text_field :ins_suffix,  :id => "ins_suffix", :class =>"text_field", :onKeyup => "print_prev('ins_no','ins_no_length','ins_suffix','ins_prev')" %></td>
+		<td align="center"><%= text_field_tag('ins_prev','',:id => "ins_prev", :class =>"text_field", :readOnly => true) %></td>
+ </tr>   
+ <tr>
+		<td>Casuality No</td>
+		<td align="center"><%= f.text_field :cas_no, :class =>"text_field", :id => "cas_no", :onKeyup => "print_prev('cas_no','cas_no_length','cas_suffix','cas_prev')" %></td>
+		<td align="center"><%= f.text_field :cas_no_length, :class =>"text_field", :id => "cas_no_length" , :onKeyup => "print_prev('cas_no','cas_no_length','cas_suffix','cas_prev')" %></td>
+		<td align="center"><%= f.text_field :cas_suffix,  :id => "cas_suffix", :class =>"text_field", :onKeyup => "print_prev('cas_no','cas_no_length','cas_suffix','cas_prev')" %></td>
+		<td align="center"><%= text_field_tag('cas_prev','',:id => "cas_prev", :class =>"text_field", :readOnly => true) %></td>
+ </tr>  
+ <tr>
+		<td>IP No</td>
+		<td align="center"><%= f.text_field :ip_no, :class =>"text_field", :id => "ip_no", :onKeyup => "print_prev('ip_no','ip_no_length','ip_suffix','ip_prev')" %></td>
+		<td align="center"><%= f.text_field :ip_no_length, :class =>"text_field", :id => "ip_no_length", :onKeyup => "print_prev('ip_no','ip_no_length','ip_suffix','ip_prev')" %></td>
+		<td align="center"><%= f.text_field :ip_suffix,  :id => "ip_suffix", :class =>"text_field", :onKeyup => "print_prev('ip_no','ip_no_length','ip_suffix','ip_prev')" %></td>
+		<td align="center"><%= text_field_tag('ip_prev','',:id => "ip_prev", :class =>"text_field", :readOnly => true) %></td>
+ </tr>  
+ <tr>
+		<td>MIS.No</td>
+		<td align="center"><%= f.text_field :mis_voucher_no, :class =>"text_field", :id => "mis_voucher_no", :onKeyup => "print_prev('mis_voucher_no','mis_no_length','mis_suffix','mis_prev')" %></td>
+		<td align="center"><%= f.text_field :mis_no_length, :class =>"text_field", :id => "mis_no_length", :onKeyup => "print_prev('mis_voucher_no','mis_no_length','mis_suffix','mis_prev')" %></td>
+		<td align="center"><%= f.text_field :mis_suffix,  :id => "mis_suffix", :class =>"text_field", :onKeyup => "print_prev('mis_voucher_no','mis_no_length','mis_suffix','mis_prev')" %></td>
+		<td align="center"><%= text_field_tag('mis_prev','',:id => "mis_prev", :class =>"text_field", :readOnly => true) %></td>
+ </tr>  
+<tr>
+		<td>Entry.No</td>
+		<td align="center"><%= f.text_field :entry_no, :class =>"text_field", :id => "mis_voucher_no", :onKeyup => "print_prev('mis_voucher_no','mis_no_length','mis_suffix','mis_prev')" %></td>
+		<td align="center"><%= f.text_field :entry_no_length, :class =>"text_field", :id => "mis_no_length", :onKeyup => "print_prev('mis_voucher_no','mis_no_length','mis_suffix','mis_prev')" %></td>
+		<td align="center"><%= f.text_field :entry_suffix,  :id => "mis_suffix", :class =>"text_field", :onKeyup => "print_prev('mis_voucher_no','mis_no_length','mis_suffix','mis_prev')" %></td>
+		<td align="center"><%= text_field_tag('entry_prev','',:id => "mis_prev", :class =>"text_field", :readOnly => true) %></td>
+ </tr>  
+</table>
+</div>
+<table align="center">
+    <tr>
+		<td><%= submit_tag "", :value => " Save ", :class => "submit_button" %></td>
+		<td><%= submit_tag "", :value => " Reset ", :type =>"reset", :class => "submit_button" %></td>
+		<td valign="middle"><%= link_to "Back",  number_masters_path, :class=>"new1" %></td> 
+	</tr>
+</table>
+<% end %>
+   
+
+ 

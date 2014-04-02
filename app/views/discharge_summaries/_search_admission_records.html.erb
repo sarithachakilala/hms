@@ -1,0 +1,30 @@
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+  <tr>
+    <th>S.No</th>
+    <th>Admn.No</th>
+    <th>MR No</th>
+    <th>Discharge Date</th>
+	<th colspan="2">Permissions</th>
+</thead>
+<tbody>
+<% @id=0 %>
+<% @discharge_summary.each do |discharge_summary| %>
+<% if((discharge_summary.id % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+  end %>
+  <tr class='<%= id %>'>
+    <td><%= @id=@id+1 %>
+    <td><%=h discharge_summary.admn_no %></td>
+    <td><%=h discharge_summary.mr_no %></td>
+    <td><%=h discharge_summary.discharge_date %></td>
+ 	<td  align="center"><a href="discharge_summaries/<%= discharge_summary.id %>?user_id=<%= @user_id %>"><image src="images/buttons/display1.png" size = "54x21" border ="0" /></a></td>
+	<td  align="center"><a href="discharge_summaries/<%= discharge_summary.id %>/edit?user_id=<%= @user_id %>"><image src="images/buttons/modify.png" size = "54x21" border ="0" /></a></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+<br />
+</div>

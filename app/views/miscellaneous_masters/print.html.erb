@@ -1,0 +1,98 @@
+
+<script type="text/javascript"> 
+function printing()
+{
+
+var word1=toWords(<%=h @miscellaneous_master.total_amount %>)
+document.getElementById('total_amount').innerHTML=word1+"Only"
+
+window.print();
+}
+</script>
+<body onload="printing()" style="background:url(/images/watermark.png) no-repeat center">
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div align="center">
+ <table width="70%" border="0" cellspacing="2" cellpadding="4">
+		<tr>
+		<td class="button" colspan="9"><center><b>Details of Miscellaneous</b></center></td> 
+		</tr>
+
+	<td class='<%= id %>'><b>Voucher No</b></td>
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @miscellaneous_master.voucher_no %>
+	
+	
+	<td class='<%= id %>'> <b>Voucher Date</b></td>
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @miscellaneous_master.date %>
+	</td>
+</tr>
+
+<tr>
+	
+	
+	<td class='<%= id %>'><b>Employee Name</b></td>
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @miscellaneous_master.employee %></td>
+	<td class='<%= id %>'><b>Department</b></td>
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @miscellaneous_master.department %></td>
+	
+</tr>
+<tr>
+	
+	<td class='<%= id %>'><b>Authorized by</b></td>
+	<td class='<%= id %>'>:</td>
+	<td class='<%= id1 %>'><%=h @miscellaneous_master.authorized_by %></td>
+	</tr>
+ </table>
+ <table border="1" cellspacing="0"  class="sofT" cellpadding="4" width="60%">
+  <tr class="info">
+    <td class='<%= id %>'>S.No</th>
+	<td class='<%= id %>'>service Name</th>
+	<td class='<%= id %>'>service_code</th>
+	<td class='<%= id %>'>Amount</th>
+
+</tr>
+<% @i=0 %>
+<% for store in @miscellaneous_master.miscellaneous_child %>
+<tr>
+<td class='<%= id1 %>'><%=h @i+1 %></td>
+<td class='<%= id1 %>'><%=h store.service %></td>
+<td class='<%= id1 %>'><%=h store.service_code %></td>
+<td class='<%= id1 %>'><%=h store.amount %></td>
+<% end %>
+
+  </table>
+
+
+<table align="right">
+<tr><td>Total Amount</td>
+	<td><%=  @amt= h @miscellaneous_master.total_amount  %></td>
+  </tr>
+</table>
+
+<br/><br/>
+  <table align="left">
+<tr><td colspan="4">Cash Amount</td>
+  <td colspn="2"><%= @amt %></td></tr></table>
+  <br/><br/>
+
+
+  <table align="left" width="70%">
+  <tr>
+  <td >	In Words: Received
+				<%= image_tag("buttons/rupee.png", :size=>"20x18") %>
+				<span id="total_amount"></span></td>
+ </tr>
+ </table>
+ <br/><br/>
+ <table  align="right" >
+  <tr>
+<td>(Authorized Signature)</td>
+</tr>                             
+
+ </table> 
+</div>
+	

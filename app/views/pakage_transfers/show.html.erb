@@ -1,0 +1,157 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">IP Patients >>&nbsp;&nbsp;&nbsp;<a HREF='/pakage_transfers' class="nav" style="text-decoration:none;">Package Transfer</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<%= javascript_include_tag 'calendar.js' %>
+<script type="text/javascript"> 
+	
+	function mrfun(id)
+	{
+	   	var org_code=document.getElementById('org_code').value
+		if(org_code=="")
+		{
+			alert("Please select Organization Code")
+			return false;
+		}
+		req = new Ajax.Request('/pakage_transfers/ajax_buildings/1', {
+			method: 'get',
+			parameters: { record_id:id },
+			onComplete: function(transport) {
+			processReqChange(transport);
+			}
+		}); 
+		function processReqChange(req) 
+		{
+			// request is complete
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				
+				var temp=new Array()
+				var store_data_ip=new Array("admn_no","mr_no","patient_name","father_name","age","gender","mobile","e_cat","e_subcat","days","amount");
+				temp=results.split("<division>")
+				for(i=0;i<store_data_ip.length;i++)
+				{
+					document.getElementById(store_data_ip[i]).value=temp[i]
+					document.getElementById(store_data_ip[i]).style.background="#FEF5CA"
+					document.getElementById(store_data_ip[i]).readOnly=true
+				}
+			}
+		}
+	}
+			
+       function select_category(id)
+	{
+
+		var org_code=document.getElementById("org_code").value
+		var category=document.getElementById(id).value
+		req = new Ajax.Request('/pakage_transfers/select_pack_category_code/1', {
+			method: 'get',
+			parameters: { category:category,org_code:org_code },
+			onComplete: function(transport) {
+			processReqChange(transport);
+			}
+		}); 
+		function processReqChange(req) 
+		{
+			// request is complete
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				var temp=new Array()
+				temp=results.split("<division>")
+				document.getElementById('trans_subcat').length=0
+				var opt = document.createElement("option");
+				document.getElementById("trans_subcat").options.add(opt);
+				opt.text = "Please select"
+				opt.value = ""
+				for(i=0;i<temp.length-1;i++)
+				{
+					var opt = document.createElement("option");
+					document.getElementById("trans_subcat").options.add(opt);
+					opt.text = temp[i]
+					opt.value = temp[i]
+				}
+			}
+		}
+
+	}
+
+</script>
+<% form_for(@pakage_transfer) do |f| %>
+  <%= f.error_messages %>
+  <div>
+<%= f.hidden_field :org_code, :value => @org_code, :size => 20, :id => "org_code", :readonly => true %>
+<%= f.hidden_field :org_location, :value => @org_location, :size => 20, :id => "org_location", :readonly => true %>
+<%= f.hidden_field :user_id, :value => @people.id, :size => 20, :readonly => true %>
+<fieldset>
+<legend><div class="font"><b>Package Details</b></div></legend>
+<table width="100%">
+<tr>
+		<td>Admn.No<sup>*</sup></td>
+		<td> <%= f.text_field :admn_no, :id => "admn_no", :class=>"text_field", :readonly =>"true" %></td>
+		<td>MR No<sup>*</sup></td>
+		<td><%= f.text_field :mr_no, :size => "20", :id => "mr_no" %></td>
+ 		<td>Patient Name </td>
+		<td><input type="text",  size="20" value='<%= @patient_name %>' id = "patient_name" > </td>
+		
+	</tr>
+	<tr>
+		<td>Father Name </td>
+		<td><input type="text", size = "20", value='<%= @father_name %>', id = "father_name" ></td>
+		<td>Age</td>
+		<td><input type="text", size = "20", value='<%= @age %>', id ="age"  ></td>
+		<td>Gender</td>
+		<td><input type="text", size="20" ,  value='<%= @gender %>', id ="gender"  ></td>
+	</tr>
+	<tr>
+		<td>Contact No</td>
+		<td><input type="text", size="20", id ="mobile", value='<%= @mobile %>' , size = 20></td>
+		<td>Date<sup>*</sup></td>
+		<td> <%= f.text_field :today_date, :class=>"text_field", :value => @date, :readonly =>true  %></td>
+		<td>Time<sup>*</sup></td>
+		<td><%= f.time_select :present_time, :default => Time.new, :class=>"text_field" %></td>
+   </tr>
+	<tr>	
+		<td><sup>Existitng</sup>&nbsp;&nbsp;category</td>
+		<td> <%= f.text_field :e_cat, :id =>"e_cat", :size => 20 %></td>
+		<td>Sub Category</td>
+		<td colspan="3"><%= f.text_field :e_subcat, :id =>"e_subcat", :size => 20 %></td>
+		
+</tr>
+<tr>
+	<td><%= f.label :days %></td>
+		<td><%= f.text_field :days, :id =>"room", :size => 20 %></td>
+		<td><%= f.label :amount %></td>
+		<td><%= f.text_field :amount, :id =>"room", :size => 20 %></td >
+</tr>
+  <tr>
+	<td ><sup>Trans</sup>&nbsp;&nbsp;category</td>
+	<td><%= f.select :trans_cat,  PackageMasterMajestic.find(:all, :select =>"Distinct category", :conditions => "org_code = '#{@org_code}'").collect{|p| [p.category]}, {:prompt => true},{:id => "trans_cat", :onChange => "select_category(id)"}%></td >
+	<td > Sub Category</td><td colspan="3">
+       <%= f.select :trans_subcat, '', {:prompt => true},{:id => "trans_subcat", :onChange => "select_category1(id,'sub')"}%></td >
+
+
+</tr>
+<tr>
+  <td > Days </td><td>
+    <%= f.text_field :t_days , :id =>"room", :size => 20%>
+  </td ><td >
+    Amount </td><td>
+    <%= f.text_field :t_amount, :id =>"room", :size => 20 %>
+  </td ></tr>
+  </table>
+</fieldset>
+		<table align="center">
+		<tr>
+			<td><%= submit_tag "", :value => " Update ", :class => "submit_button" %></td>
+			<td valign="middle"><%= link_to "Back",  pakage_transfers_path, :class=>"new1" %></td>
+		</tr>
+		</table>
+<% end %>
+</body>
+</div>

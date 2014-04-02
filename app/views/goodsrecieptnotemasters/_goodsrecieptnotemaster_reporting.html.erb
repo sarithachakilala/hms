@@ -1,0 +1,40 @@
+
+  <%= stylesheet_link_tag 'css' %>
+  <%= stylesheet_link_tag 'table_style' %>
+<br/>
+<div align="center">
+<table width="80%" class="sofT">
+<thead>
+<tr bgcolor ="#378bf8" style="color:white;">
+   <th>S.No</th>
+    <th>Invoice.No</th>
+    <th>Invoice.Date</th>
+    <th>Vendor Name</th>
+      <th>Batch No</th>
+	  <th>Expiry Date</th>
+    <th>Medicine Name</th>
+  </tr>
+<% @i=0 %>
+<% @store_child.each do |store_child| %>
+<% @goods=Goodsrecieptnotemaster.find_by_id(store_child.goodsrecieptnotemaster_id) %>
+
+  
+  <% if((@i%2)==0) 
+		id="datacelltwo"
+	else
+		id="datacellone"
+  end %>
+  <tr class='<%= id %>'>
+    <td><%= @i=@i+1 %></td>
+	<td><%= @goods.invoice_number %></td>
+     <td><%= @goods.invoice_date %></td>
+	<td><%= @goods.agency_name%></td>
+    <td><%=h store_child.batch_no %></td>
+    <td><%=h store_child.expiry_date %></td>
+    <td><%=h store_child.item_name %></td>
+	
+	</tr>  
+    
+  
+<% end %>
+</table>

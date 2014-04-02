@@ -1,0 +1,36 @@
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+  <tr class="info">
+    <th>S.No</th>
+	<th>Admn.No</th>
+    <th>MR No</th>
+    <th>Date</th>
+	<th>Receipt no</th>
+    <th>Gross amount</th>
+    <th>Already paid amount</th>
+    <th colspan="2">Permissions</th>
+  </tr>
+</thead>
+<tbody>
+<% @i=0 %>
+<% @advance_payment.each do |advance_payment| %>
+  <% if((@i%2)==0) 
+		id="datacelltwo"
+	else
+		id="datacellone"
+  end %>
+  <tr class='<%= id %>'>
+    <td><%= @i=@i+1 %></td>
+	<td><%=h advance_payment.admn_no %></td>
+    <td><%=h advance_payment.mr_no %></td>
+    <td><%=h advance_payment.advance_date %></td>
+	<td><%=h advance_payment.receipt_no %></td>
+    <td><%=h advance_payment.gross_amount %></td>
+    <td><%=h advance_payment.already_paid_amount %></td>
+    <td align="center"><a href="advance_payments/<%= advance_payment.id %>?user_id=<%= @user_id %>"><image src="images/buttons/display1.png" size = "54x21" border ="0" /></a> </td>
+    <td align="center"><a href="advance_payments/<%= advance_payment.id %>/edit?user_id=<%= @user_id %>"><image src="images/buttons/modify.png" size = "54x21" border ="0" /></a> </td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+<br />

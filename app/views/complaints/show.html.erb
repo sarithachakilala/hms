@@ -1,0 +1,23 @@
+<p>
+  <b>Name:</b>
+  <%=h @complaint.name %>
+</p>
+
+<p>
+  <b>Pdate:</b>
+  <%=h @complaint.pdate %>
+</p>
+
+<p>
+  <b>Ptime:</b>
+  <%=h @complaint.ptime %>
+</p>
+
+<p>
+  <b>About:</b>
+  <%=h @complaint.about %>
+</p>
+
+
+<%= link_to 'Edit', edit_complaint_path(@complaint) %> |
+<%= link_to 'Back', complaints_path %>

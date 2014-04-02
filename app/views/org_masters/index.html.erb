@@ -1,0 +1,32 @@
+<br/>
+<%= image_tag("add.png")%><font size="4"><%= link_to 'New Organization', new_org_master_path %></font>
+<div align="center" width="100%">
+<table width="70%" cellpadding="2" cellspacing="2">
+  <tr bgcolor ="#378bf8" style="color:white">
+  <th width="25px">S.No</th>
+    <th>Hospital Name</th>
+    <th>No of branches</th>
+    <th>Port Number</th>
+	<th colspan="3">Permissions</th>
+  </tr>
+<% @i=0 %>
+<% @org_masters.each do |org_master| %>
+  <% if((@i % 2)==0) 
+		id="datacelltwo"
+	else
+		id="datacellone"
+	end %>
+	<tr class='<%= id %>'>
+	<td><%=h @i=@i+1 %></td>
+    <td><%=h org_master.hospital_name %></td>
+    <td><%=h org_master.no_of_branches %></td>
+    <td><%=h org_master.port_number %></td>
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;show&nbsp;&nbsp;&nbsp;', org_master, :class=>"submit_button" %></td>
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;edit&nbsp;&nbsp;&nbsp;', edit_org_master_path(org_master), :class=>"submit_button" %></td> 
+      </tr>
+    
+  </tr>
+<% end %>
+</table>
+
+<br />

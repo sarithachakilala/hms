@@ -1,0 +1,137 @@
+
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Pharmacy >>&nbsp;&nbsp;&nbsp;<a HREF='/op_patient_returns' class="nav" style="text-decoration:none;">Sale Returns</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<% if @op_patient_return %>	
+<% form_for(@op_patient_return) do |f| %>
+  <%= f.error_messages %>
+   
+
+<table width="100%" bgcolor="#87CEEB">
+
+  <tr><td colspan="8"><fieldset><legend><div class="font"><b><%=h @op_patient_return.mr_No %>  Details</b></div></legend>
+   <%= f.hidden_field :id, :id => "record_id" %>
+
+	 <table width="100%">
+  <tr>
+			<td>Org.Code</td>
+	
+		<td><%= f.text_field :org_code, :value => @org_code, :size => 20, :id => "org_code", :readonly => true %></td>
+	
+			<td>Org.Location</td>
+			<td><%= f.text_field :org_location, :value => @org_location, :size => 20, :id => "org_location", :readonly => true %></td>
+			<td>Return No</td>
+			<td><%= f.text_field:return_no, :size => 20, :readonly => true %></td>
+			<td>Return Dt</td>
+			<td><%= f.text_field:return_date, :size => 20, :id => "date", :readonly => true %></td>
+		</tr>
+		<tr>		
+			<td> Dept.Code </td>
+			<td><%= f.text_field :dep_code, :id => "dcode", :size => 20, :readonly => true %></td> 
+			<td> Dept.Name </td>
+			<td><%= f.text_field :dep_name, :size => "20", :id => "dname", :readonly => true  %></td>
+			<td>HOD</td>
+			<td><%= f.text_field :hod, :size => "20", :id => "hod", :readonly => true    %></td>
+			<td>Receipt No</td>
+			<td><%= f.text_field:receipt_no, :size => 20, :id => "no", :readonly => true  %>
+		</tr>
+		<tr>		
+			<td>MR No</td>
+			<td><%= f.text_field:mr_No, :size => 20, :id => "mrno" , :readonly => true %></td>
+			<td>Issue No</td>
+			<td><%= f.text_field:issue_No, :size => 20, :id =>"ino", :readonly => true  %></td>
+			<td>Age</td>
+			<td><%= text_field_tag :age,"", :value=>@age, :readonly=>true %></td>
+			<td>Issue Dt </td>
+			<td><%= text_field_tag :issue_date,"", :value=>@issue_date, :readonly=>true %></td>
+		</tr>
+		<tr>
+			<td>Patient Name</td>
+			<td><%= text_field_tag :name,"", :value=>@first_name, :readonly=>true %></td>
+			<td>Gender</td>
+			<td><%= text_field_tag :gender,"", :value=>@gender, :readonly=>true %></td>
+
+			<td>Consultant</td>
+			<td><%= text_field_tag :cons,"", :value=>@consultant_id, :readonly=>true %></td>
+		</tr>
+</table>
+</fieldset>
+<br />
+<fieldset><legend><div class="font"><b>OP-Patient Details</b></div></legend>
+	<table width="90%" align="center" border=1 cellspacing="0">
+	<tr class="info">
+	<th class='<%= id %>'>S.No</th>
+	<th class='<%= id %>'>Product Code</th>
+	<th class='<%= id %>'>Product Name</th>
+	<th class='<%= id %>'>MFR</th>
+	<th class='<%= id %>'>Batch No</th>
+	<th class='<%= id %>'>Expiry Dt</th>
+	<th class='<%= id %>'>Sale Qty</th>
+	<th class='<%= id %>'>Sale Rate</th>
+	<th class='<%= id %>'>Discount(%)</th>
+	<th class='<%= id %>'>Return Qty</th>
+	<th class='<%= id %>'>Return Rate</th>
+	<th class='<%= id %>'>Return Amt</th>
+	<th class='<%= id %>'>Vat(%)</th>
+	</tr>
+<% for store in @op_patient_return.opreturn_child  %>
+<tr>
+<td><%=h store.s_no %></td>
+<td><%=h store.item_code %></td>
+<td><%=h store.item_name %></td>
+<td><%=h store.mfr %></td>
+<td><%=h store.batch_no %></td>
+<td><%=h store.expiry_date %></td>
+<td><%=h store.issue_qty %></td>
+<td><%=h store.sale_rate %></td>
+<td><%=h store.discount %></td>
+<td><%=h store.return_qty %></td>
+<td><%=h store.return_rate %></td>
+<td><%=h store.return_amt %></td>
+<td><%=h store.vat %></td>
+</tr>
+<% end %>
+ </table>
+</fieldset>
+<br />
+<fieldset>
+<legend><div class="font"><b>Payment Details</b></div></legend>
+ <table width="100%">
+		<tr>
+			<td>Return Amount
+			<%= f.text_field:return_amount, :size => 20, :id => "amount", :readOnly => true %></td>
+		 </tr>
+		 <tr>
+		 <td>Payment Mode
+     			<%= f.radio_button :payment_mode, "cash", :id => "button1"  %>Cash
+			<%= f.radio_button :payment_mode, "cheque", :id => "button2" %>Cheque</td>
+		</tr>
+		<tr>
+
+			<td>Bank Name
+			<%= f.text_field :bank_name, {:readonly => "true", :size => 20 , :id => "bank"} %></td>
+			<td>Acc No
+			<%= f.text_field :acc_no, {:readonly => "true" , :size => 20, :id => "acc_no"}%></td>
+			
+			<td>Cheque No
+			<%= f.text_field :cheque_number, {:readonly => "true" , :size => 20, :id => "cheqno"}%></td>
+			<td>Cheque Amount
+			<%= f.text_field :cheque_amount, {:readonly => "true" , :size => 20, :id => "cheque_amount"}%></td>
+		 </tr></table></fieldset></td>
+  </tr>
+ 
+ </table>
+<% end %>
+</div>
+</body>
+<br>
+<center>
+<center><%= link_to "back",  op_patient_returns_path, :class=>"new1" %></center>
+
+</center>
+<% end%>

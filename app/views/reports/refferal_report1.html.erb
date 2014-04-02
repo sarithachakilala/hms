@@ -1,0 +1,183 @@
+<html>
+<head>
+<script type="text/javascript">
+	$(function() {
+		var currentDate = new Date(); 
+		$( "#from_date" ).datepicker({changeMonth: true,changeYear: true,showButtonPanel: true});
+		var dateFormat = $( "#appt_date" ).datepicker( "option", "dateFormat" );
+		$( "#from_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+		$("#from_date").datepicker("setDate",currentDate);
+
+		$( "#to_date" ).datepicker({changeMonth: true,changeYear: true,showButtonPanel: true});
+		var dateFormat = $( "#appt_date" ).datepicker( "option", "dateFormat" );
+		$( "#to_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+		$("#to_date").datepicker("setDate",currentDate);
+	});
+	</script>
+	<script type="text/javascript">
+    
+	function select_period(period)
+	{
+		var today = new Date();
+		var dd = today.getDate();
+		var datearray={"01" :"31","02" :"28","03" :"31","04" :"30","05" :"31","06" :"30","07" :"31","08" :"31","09" :"30","10" :"31","11" :"30","12" :"31"}
+			
+		var mm = today.getMonth()+1;
+		if(mm<10)
+		{
+			mm="0"+mm
+		}
+		var yyyy=today.getFullYear();
+		var year=yyyy+"-"+mm+"-"+dd	
+		var revenue_type=period
+		document.getElementById('from_date').readOnly= true
+		document.getElementById('to_date').readOnly= true
+		
+		if(revenue_type=="Custom")
+		{
+			
+			document.getElementById('from_date').readOnly = false
+			document.getElementById('to_date').readOnly = false
+			
+		}
+		else if(revenue_type=="Today")
+		{
+		 	document.getElementById('from_date').value=yyyy+"-"+mm+"-"+dd
+			document.getElementById('to_date').value=yyyy+"-"+mm+"-"+dd
+		}
+		else if(revenue_type=="This.Week")
+		{
+		 	document.getElementById('from_date').value='<%= (Date.today-7).strftime("%Y-%m-%d") %>'
+			document.getElementById('to_date').value=yyyy+"-"+mm+"-"+dd
+		}
+		else if(revenue_type=="This.Month")
+		{
+		 
+			document.getElementById('from_date').value=yyyy+"-"+mm+"-01"
+			document.getElementById('to_date').value=yyyy+"-"+mm+"-"+dd
+		}
+		else if(revenue_type=="This.Year")
+		{
+		 
+			document.getElementById('from_date').value=yyyy+"-01-01"
+			document.getElementById('to_date').value=yyyy+"-12-31"
+		}
+		else if(revenue_type=="Last Month")
+		{
+		 	mm=mm-1
+		 	if(mm<10)
+		 	{
+		 		mm="0"+mm
+		 	}
+			document.getElementById('from_date').value=yyyy+"-"+mm+"-01"
+			document.getElementById('to_date').value=yyyy+"-"+mm+"-"+datearray[mm]
+		}
+		else if(revenue_type=="Last Year")
+		{
+			var yyy=parseInt(yyyy)-1;
+			document.getElementById('from_date').value=yyy+"-01-01"
+			document.getElementById('to_date').value=yyy+"-12-31"
+		}
+		
+	}
+	</script>
+	<script type="text/javascript">
+	function clear_function()
+	{
+		
+		document.getElementById('from_date').value=""
+		document.getElementById('to_date').value=""
+		document.getElementById('refferal').value=""	
+	}
+    
+    function check()
+	{
+		var from_date=document.getElementById('from_date').value
+		var to_date=document.getElementById('to_date').value
+		var refferal=document.getElementById('refferal').value
+		
+		
+		document.getElementById("frame").src="/reports/refferal_report2/1?to_date="+to_date+"&from_date="+from_date+"&refferal="+refferal
+	}
+	</script>
+</head>
+
+<body style="margin:0px;">	
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">&nbsp;&nbsp;Report>>&nbsp; <a HREF='/reports/refferal_report1/1' class="nav" style="text-decoration:none;">Referral Registrations</a></td>
+    		<td align="right" width="30%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<% @date=Date.today("%Y-%m-%d") %>
+<div id="form_data">
+<fieldset>
+<legend><div class="font"><b>Search</b></div></legend>
+<% @date=Date.today("%Y-%m-%d") %>
+<table width="90%"  align="center">
+	<tr>
+	<input type="hidden" id="org_code" %>
+	<td>Period</td>
+	
+
+		<td><%= select('period','',[['All'],['Today'],['This.Week'],['This.Month'],['This.Year'],['Last Month'],['Last Year'],['Custom']],{:prompt => false},{:id => "period",:onChange => "select_period(this.value)"}) %></td>
+		
+<td><%= text_field('from_date', '',:size => 20,:id => "from_date",:value=>"#{@date-7}") %><a href="javascript:void(0)" onClick="setYears(1947, 2015);showCalender(this,'from_date');" >
+		<img src="/images/cal.gif" ></a>
+
+		<td>To</td>
+		<td><input type=text id="to_date" name="date" size="17" value='<%= @date %>'><a href="javascript:void(0)" onClick="setYears(2011, 2012);showCalender(this,'to_date');" >
+      <img src="/images/cal.gif" ></a></td>
+      
+		<td>Refferal Consultant</td><td><%= select :refferal_name, '', RefferalMaster.find(:all).collect{|p| [p.refferal_name]},{:prompt =>true},{:id=> "refferal"} %> </td>
+		
+      <td><a href="javascript:void(0);" class="new1" onClick ="check()">Filter</a></td>
+      <td><%= link_to 'Clear','', :class=>"new1", :onClick => "clear_function()" %></td>
+</tr>	
+</table>
+<table id="calenderTable">
+        <tbody id="calenderTableHead">
+          <tr>
+            <td colspan="4" align="center">
+	          <select onChange="showCalenderBody(createCalender(document.getElementById('selectYear').value,
+	           this.selectedIndex, false));" id="selectMonth">
+	              <option value="0">Jan</option>
+	              <option value="1">Feb</option>
+	              <option value="2">Mar</option>
+	              <option value="3">Apr</option>
+	              <option value="4">May</option>
+	              <option value="5">Jun</option>
+	              <option value="6">Jul</option>
+	              <option value="7">Aug</option>
+	              <option value="8">Sep</option>
+	              <option value="9">Oct</option>
+	              <option value="10">Nov</option>
+	              <option value="11">Dec</option>
+	          </select>
+            </td>
+            <td colspan="2" align="center">
+			    <select onChange="showCalenderBody(createCalender(this.value, 
+				document.getElementById('selectMonth').selectedIndex, false));" id="selectYear">
+				</select>
+			</td>
+         
+		  </tr>
+       </tbody>
+       <tbody id="calenderTableDays">
+         <tr style="">
+           <td>Sun</td><td>Mon</td><td>Tue</td><td>Wed</td><td>Thu</td><td>Fri</td><td>Sat</td>
+         </tr>
+       </tbody>
+       <tbody id="calender"></tbody>
+    </table>
+</fieldset>
+<br/><br/>
+ <center>
+   <iframe src="" id="frame" width="100%" height="400px" align="center" style="border:none"/>
+</center>
+</body>
+
+	
+	</html>

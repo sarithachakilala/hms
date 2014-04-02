@@ -1,0 +1,117 @@
+<div id="form_name_display">
+<div class="dateformat"><%= format_date(:short, Date.today ) %></div>
+<%= form_tag ({:controller => "admissions", :action => "generate_reports"}, {:method => "post"}) %>
+	
+</div><BR/>
+
+<%= stylesheet_link_tag 'css' %>
+<%= stylesheet_link_tag 'buttons' %>
+<%= stylesheet_link_tag 'calendar' %>
+<%= javascript_include_tag :defaults %>
+<%= javascript_include_tag 'calendar.js' %>
+
+<script type="text/javascript">
+
+	function date_range()
+	{
+	
+	    var selObj = document.getElementById('patient_type')
+		var patient_type= selObj.options[selObj.selectedIndex].value
+		 var selObj = document.getElementById('org_code_c')
+		var org_code= selObj.options[selObj.selectedIndex].value
+		 if(patient_type =="")
+		 {
+		  alert("Please Select patient type")
+		  return false
+		 }
+		 
+		req = new Ajax.Request('/reports/getdata/1', {
+				method: 'get',
+				parameters: {  patient_type: patient_type, org_code : org_code },
+				onComplete: function(transport) {
+				processReqChange(transport);
+				
+				}
+				
+				
+			});
+		function processReqChange(req) 
+		{
+			document.getElementById("table").innerHTML=req.responseText
+		}
+	
+	}
+	
+
+function clear_function()
+	{
+		document.getElementById('type').value=""
+		document.getElementById('name').value=""
+		document.getElementById('age').value=""
+		document.getElementById('date1').value=""
+	}
+</script>
+
+<body style="margin:0px;" onload="date_range()">
+
+
+<fieldset>
+<legend>Search</legend>
+
+<div align="center" width="100%">
+<table align="center" width="50%">
+
+<tr>
+    <td>Org.Code</td>
+	<td><%= select :org_code,"c", Person.find(:all, :select =>"DISTINCT org_code").collect{|p| [p.org_code]},{:prompt =>'All'}  %>
+	<td><label for="item_name">Patient Type</label></td>
+	<td><select id="patient_type"><option>Both</option><option>OP</option><option>IP</option></select></td>
+	<td><a href="javascript:void(0);" class="new1" onClick ="date_range()">Search</a>
+	</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= link_to 'Clear','', :class=>"new1",:onClick => "clear_function()"  %></td>
+</tr>
+</table>
+</div>
+</body>
+</fieldset>
+<div id="table" align="center">
+</div>
+ <%= form_tag %>
+ 
+<table id="calenderTable">
+        <tbody id="calenderTableHead">
+          <tr>
+            <td colspan="4" align="center">
+	          <select onChange="showCalenderBody(createCalender(document.getElementById('selectYear').value,
+	           this.selectedIndex, false));" id="selectMonth">
+	              <option value="0">Jan</option>
+	              <option value="1">Feb</option>
+	              <option value="2">Mar</option>
+	              <option value="3">Apr</option>
+	              <option value="4">May</option>
+	              <option value="5">Jun</option>
+	              <option value="6">Jul</option>
+	              <option value="7">Aug</option>
+	              <option value="8">Sep</option>
+	              <option value="9">Oct</option>
+	              <option value="10">Nov</option>
+	              <option value="11">Dec</option>
+	          </select>
+            </td>
+            <td colspan="2" align="center">
+			    <select onChange="showCalenderBody(createCalender(this.value, 
+				document.getElementById('selectMonth').selectedIndex, false));" id="selectYear">
+				</select>
+			</td>
+            
+		  </tr>
+       </tbody>
+       <tbody id="calenderTableDays">
+         <tr style="">
+           <td>Sun</td><td>Mon</td><td>Tue</td><td>Wed</td><td>Thu</td><td>Fri</td><td>Sat</td>
+         </tr>
+       </tbody>
+       <tbody id="calender"></tbody>
+    </table>
+	<%= yield %>
+	<div id="table">
+	</div>

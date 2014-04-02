@@ -1,0 +1,28 @@
+<br/>
+<% @i=0 %>
+<table align="center" width="50%" border="1" cellspacing=0>
+	<tr bgcolor ="#378bf8">
+		<th>S.No</th>
+		<th>Cancel Date</th>
+		<th>Lab Name</th>
+		<th>Dept Name</th>
+		<th>Test Name</th>
+		
+	</tr>
+
+<% @amt=0 %>
+<% @amt1=0 %>
+<% for  test_cancel in  @test_cancel %>
+
+	<tr>
+		<td><%= @i+1 %></td>
+		<td><%= test_cancel.created_at %></td>
+		<td><%= test_cancel.lab_id%></td>
+		<td><%= test_cancel.department_name%></td>
+		<td><%=test_cancel.service_name %></td>
+		
+	
+	
+<% end %>
+	
+</table>

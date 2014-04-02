@@ -1,0 +1,26 @@
+<h1>Listing module_list_children</h1>
+
+<table>
+  <tr>
+    <th>Form name</th>
+    <th>Field type</th>
+    <th>Path</th>
+    <th>Module list</th>
+  </tr>
+
+<% @module_list_children.each do |module_list_child| %>
+  <tr>
+    <td><%=h module_list_child.form_name %></td>
+    <td><%=h module_list_child.field_type %></td>
+    <td><%=h module_list_child.path %></td>
+    <td><%=h module_list_child.module_list_id %></td>
+    <td><%= link_to 'Show', module_list_child %></td>
+    <td><%= link_to 'Edit', edit_module_list_child_path(module_list_child) %></td>
+    <td><%= link_to 'Destroy', module_list_child, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New module_list_child', new_module_list_child_path %>

@@ -1,0 +1,49 @@
+<div id="name" align="center" width="100%">
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+   <tr class="info">
+    <th>S.No</th>    
+    <th>Admn.No</th>
+    <th>MR No</th>
+    <th>Date</th>
+    <th>Gross amount</th>
+    <th>Advance</th>
+<th>Sub Total</th>
+<th>Concession(%)</th>
+<th>Net Amount</th>
+<th>Due Amount</th>
+<th>Paid Amount</th>
+	<th colspan="2" align="center">Permissions</th>
+  </tr>
+ 
+ </tr>
+</thead>
+<tbody>
+<% @i=0 %>
+<% @final_bill.each do |final_bill| %>
+  <% if((@i%2)==0) 
+		id="datacelltwo"
+	else
+		id="datacellone"
+  end %>
+  <tr class='<%= id %>' style="height:30px">
+    <td><%= @i=@i+1 %></td>
+	<td><%=h final_bill.admn_no %></td>
+    <td><%=h final_bill.mr_no %></td>
+    <td><%=h final_bill.final_bill_date %></td>
+    <td><%=h final_bill.gross_amount %></td>
+    <td><%=h final_bill.advance %></td>
+    <td><%=h final_bill.due %></td>
+  <td><%=h final_bill.concession %></td>
+  <td><%=h final_bill.remaining_amount %></td>
+  <td><%=h final_bill.balance_amount %></td>
+  <td><%=h final_bill.paid_amount %></td>
+
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Edit&nbsp;&nbsp;&nbsp;', edit_final_bill_path(final_bill), :class=>"submit_button" %></td>   
+	<td  align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Print&nbsp;&nbsp;&nbsp;', {:action => 'report1', :id => final_bill.id, :format => "pdf",:print_type=>"duplicate"}, :class=>"submit_button" %></td>
+<% end %>
+</tbody>
+</table>
+<br />
+</div>
+

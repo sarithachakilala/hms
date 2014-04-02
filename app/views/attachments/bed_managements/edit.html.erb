@@ -1,0 +1,28 @@
+<h1>Editing bed_management</h1>
+
+<% form_for(@bed_management) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :user_id %><br />
+    <%= f.text_field :user_id %>
+  </p>
+  <p>
+    <%= f.label :ward %><br />
+    <%= f.text_field :ward %>
+  </p>
+  <p>
+    <%= f.label :room %><br />
+    <%= f.text_field :room %>
+  </p>
+  <p>
+    <%= f.label :bed %><br />
+    <%= f.text_field :bed %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @bed_management %> |
+<%= link_to 'Back', bed_managements_path %>

@@ -1,0 +1,32 @@
+<div height="300px" >
+
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+<tr>
+	<th><b>S.No</b></th>
+	<th><b>Admn.No</b></th>	
+	<th><b>MR No</b></th>
+	<th><b>Patient Name</b></th>
+ </tr>
+</thead>
+<% @i=0 %>
+<tbody>
+<% @patientregistration.each do |patientregistration| %>
+	<% if((@i % 2)==0) 
+		id="normalRow"
+	else
+		id="alternateRow"
+	end %>
+	<tr>
+		<% admission=Admission.last(:conditions => "mr_no = '#{patientregistration.mr_no}' and admn_status='Admitted'") %>
+		<% if admission %>
+			<td><%=h @i+=1 %></td>
+			<td onclick="Ajax_Code('admn_no','<%=h admission.admn_no %>')"><p class="cursor"><%=h admission.admn_no %> <font color='red'>(click here)</font></p></td>
+			<td><%=h patientregistration.mr_no %></td>
+			<td><%=h patientregistration.patient_name %></td>
+		<% end %>
+	</tr>
+<% end %>
+</tbody>
+</table>
+</div>

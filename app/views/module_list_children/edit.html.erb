@@ -1,0 +1,28 @@
+<h1>Editing module_list_child</h1>
+
+<% form_for(@module_list_child) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :form_name %><br />
+    <%= f.text_field :form_name %>
+  </p>
+  <p>
+    <%= f.label :field_type %><br />
+    <%= f.text_field :field_type %>
+  </p>
+  <p>
+    <%= f.label :path %><br />
+    <%= f.text_field :path %>
+  </p>
+  <p>
+    <%= f.label :module_list_id %><br />
+    <%= f.text_field :module_list_id %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @module_list_child %> |
+<%= link_to 'Back', module_list_children_path %>

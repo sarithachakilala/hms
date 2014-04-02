@@ -1,0 +1,310 @@
+
+
+ <%= javascript_include_tag 'webcam/webcam' %>
+<%= javascript_include_tag :defaults %>
+<%= javascript_include_tag 'jquery-1.7.1.min.js' %>
+<script type="text/javascript">
+    jQuery.noConflict();
+    var $j = jQuery;
+</script>
+
+
+<script type="text/javascript">
+	function select_city(id)
+	{
+		var city_name=document.getElementById(id).value
+		var field_names=new Array('state','country');
+		if(city_name)
+		{
+			req = new Ajax.Request('/registrations/select_city/1', {
+				method: 'get',
+				parameters: { city_name: city_name },
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			}); // end ajax req
+		}
+		else
+		{
+			alert("Please Select city")
+			for(var i=0;i<2;i++)
+			{
+				document.getElementById(field_names[i]).style.background='white'
+				document.getElementById(field_names[i]).readOnly=false
+				document.getElementById(field_names[i]).value=""
+			}
+		}
+	}
+	function select_referral(id)
+	{
+
+		var refferal_name=document.getElementById(id).value
+		var field_names=new Array('contact_no');
+		if(refferal_name)
+		{
+			req = new Ajax.Request('/registrations/select_refferal/1', {
+				method: 'get',
+				parameters: {refferal_name: refferal_name },
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			}); // end ajax req
+		}
+		else
+		{
+			alert("Please Select city")
+			
+		}
+	}
+	
+	function check_image_upload_option()
+	{
+		var upload_image1=document.getElementById('upload_image1');
+		var upload_image2=document.getElementById('upload_image2');
+		var webcam_image=document.getElementById('webcam_image');
+
+			upload_image1.style.display='none';
+			upload_image2.style.display='none';
+			webcam_image.style.display='';
+		
+		
+	}
+	
+	function check_referal_type(id)
+	{
+		var referal=document.getElementById(id).value
+		if (referal=="Referral")
+		{
+			document.getElementById('refferal_name').disabled=false
+			document.getElementById('referral_contact_no').disabled=false
+		}
+		else
+		{
+			document.getElementById('refferal_name').disabled=true
+			document.getElementById('referral_contact_no').disabled=true
+		}
+	
+	}
+
+	function check_ins_comp_code(id)
+	{
+		var ins_comp_name=document.getElementById(id).value
+		if(ins_comp_name)
+		{
+			req = new Ajax.Request('/registrations/select_ins_company_name/1', {
+				method: 'get',
+				parameters: {ins_comp_name: ins_comp_name },
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			}); // end ajax req
+		}
+		else
+			alert("Please select Ins.company name");
+	}
+
+function onlyNumbers(evt)
+{
+	var e = event || evt; // for trans-browser compatibility
+	var charCode = e.which || e.keyCode;
+
+	if (charCode > 31 && (charCode < 48 || charCode > 57))
+		return false;
+
+	return true;
+
+}
+</script>
+<% form_for(:registration, @registration, :url=>{:action=>'create'}, :html=>{:multipart=>true}) do |f| %>
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">IP Patients >>&nbsp;&nbsp;&nbsp;<a HREF='/registrations?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Registrations</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<body onLoad="select_admn_category();check_image_upload_option();">
+<div id="form_data">
+<%= hidden_field :registration, :image_path %>
+	<table width="100%">
+	  <tr><td colspan="8"><fieldset><legend><div class="font"><b>Registration Information</b></div></legend>
+		<table width="100%"><tr>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td rowspan="6" colspan="4" align="right" width="10%">
+				<table>
+					
+					<tr id="upload_image1">
+						<td><img id="blah" src="/images/useraccountsicon.png" alt="your image" border="1" width="150px" height="150px;" /></td>
+					</tr>
+					<tr id="upload_image2">
+						<td><%= file_field :registration,:uploaded_file, :onChange => "return readURL(this);" %></td>
+					</tr>
+					<tr id="webcam_image" style="display:none;">
+						<td><div id="webcam"></div>
+							<script type="text/javascript">
+								webcam.set_swf_url('/webcam.swf');
+								webcam.set_api_url('<%= upload_new_registration_path %>');
+								webcam.set_quality(90);
+								webcam.set_shutter_sound(true, '/shutter.mp3');
+								webcam.set_hook('onComplete', 'upload_complete');
+								$('webcam').innerHTML = webcam.get_html(260, 160);
+							</script>
+							<input type="button" value="Take picture" onclick="webcam.snap()";document.getElementById('image_file_name').value='not_empty';"/>
+						</td>
+					</tr>
+				</table>
+			</td> 
+		</tr>
+		<tr>
+			<td>Org.Code<sup>*</sup></td>
+			<td><%= f.text_field :org_code, :value => @org_code, :class=>"text_field", :id => "org_code", :readonly => true %></td>
+			<td>Org.Location<sup>*</sup></td>
+			<td><%= f.text_field :org_location, :value => @org_location, :class=>"text_field", :id => "org_location", :readonly => true %></td>
+			<td><%= t:mr_no %><sup>*</sup></td>
+			<td><%= f.text_field :mr_no, :id => "mr_no", :class=>"text_field" %>
+		</tr>
+		<tr>
+			<td><%= t:reg_no %></td>
+			<td><%= f.text_field :reg_no, :id => "reg_no", :class=>"text_field" %></td>
+			<% @date=Date.today %>
+			<td><%= t:reg_date %><sup>*</sup></td>
+			<td><%= f.text_field :reg_date, :id => "reg_date", :class=>"text_field", :readonly => true, :value => "#{@date}" %></td>
+			<td><%= t:patient_name %><sup>*</sup></td>
+			<td colspn="4"><%= f.select :title,[['Mr'],['Mrs'],['Miss'],['Ms']], :id =>"title" %>
+			<%= f.text_field :patient_name, :id => "patient_name", :class=>"text_field", :autofocus => true %></td>
+		</tr>
+		<tr>
+			<td><%= t:age %><sup>*</sup></td>
+			<td><%= f.text_field :age, :id => "age", :size => 5 %>
+			<%= f.select :age_in,[['Years'],['Months'],['Days']],{:include_blank=>false},{:id=>"age_in" }%></td>
+			<td><%= t:gender %><sup>*</sup></td>
+			<td><%= f.select :gender, [['Male'],['Female']],{:prompt =>true},{ :id => "gender", :style=>"width:158px;"} %></td>
+			<td>Marital Status<sup>*</sup></td>
+			<td><%= f.select :martial_status, [['Single'],['Married'],['Divorced'],['Seperated'],['Widow'],['Widower']], {:prompt =>true},{ :id => "martial_status", :style=>"width:158px;"} %></td>
+		</tr>
+		<tr>
+			<td>Father/Husband<sup>*</sup></td>
+			<td><%= f.text_field :father_name, :id => "father_name", :class=>"text_field"%></td>
+		</tr>
+		</table>
+	</fieldset>
+	<tr><td colspan="8"><fieldset><legend><div class="font"><b>Contact Information</b></div></legend>
+		<table width="100%">
+		<tr>
+			<td>Address<sup>*</sup>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td><%= f.text_field :address,:id => "address", :class=>"text_field" %></td>
+			<td>City <sup>*</sup></td>
+			<td><%= f.select :city, CityMaster.find(:all, :order => "name ASC").collect{|p| [p.name]},{:prompt => true},{:id => "city", :onchange => "select_city(id)"} %></td>
+			<td>State</td>
+			<td><%= f.text_field :state, :class=>"text_field", :id => "state" %></td>
+			<td>Country</td>
+			<td><%= f.text_field :country, :id => "country", :class=>"text_field" %></td>
+			
+		</tr>
+		<tr>
+			<td>Mobile No<sup>*</sup></td>
+			<td><%= f.text_field :mobile_no, :class=>"text_field", :id => "mobile_no", :placeholder =>"Enter 10 Digits", :onkeypress=>"return onlyNumbers();" %></td>
+			<td>Ph.No<sup>*</sup></td>
+			<td><%= f.text_field :ph_no, :class=>"text_field", :id=>"ph_no1" , :onkeypress=>"return onlyNumbers();"%></td>
+		</tr>
+		<tr>
+		</table>
+		<table>
+		<tr>
+		<td align="center" width="200" >Reg.Type<sup>*</sup></td>
+			<td align="center">
+				<%= f.radio_button :reg_type, "General", :checked => true, :id => "btn1" ,:onchange => "select_admn_category()" %>General
+				<%= f.radio_button :reg_type, "Insurance", :id => "btn2", :onchange => "select_admn_category()" %>Insurance
+				<%= f.radio_button :reg_type, "Arogyasree", :id => "btn3", :onchange => "select_admn_category()" %>Arogyasree
+			</td>
+		</tr>
+		</table>
+		<table width="100%">
+		<tr id="General" style="display:block">
+			<td>Referral<sup>*</sup></td>
+			<td><%= f.select :referral,[['Walk-In'],['Referral']],{:include_blank=> false}, {:id => "referral", :onchange =>"check_referal_type(id)" , :style=>"width:158px;"} %></td>
+			<td width="40"></td>
+			<td>Referral Name<sup>*</sup></td>
+			<td><%= f.select :referral_name, RefferalMaster.find(:all, :order => "refferal_name ASC").collect{|p| [p.refferal_name]},{:prompt => true},{:id => "refferal_name", :disabled=>true, :onchange => "select_referral(id)"} %></td>
+			<td><a href="javascript:void(0)" onClick="window.open('/refferal_masters/new?call_from=registrations','open','width=900px,height=500px')">New</a></td>
+			<td width="40"></td>
+			<td>ContactNo<sup>*</sup></td>
+			<td><%= f.text_field :referral_contact_no, :class=>"text_field", :id => "referral_contact_no", :disabled=>true %></td>
+			<td width="40"></td>
+		</tr>
+		<%= f.hidden_field :userid, :size => 20, :id => "userid" %>
+		<tr class="left" id="Insurance" style="display:none">
+			<td>Ins.Company Name<sup>*</sup></td>
+			<td><%= f.select :ins_company_name, InsuranceMaster.find(:all).collect{|p| [p.company_name]},{:prompt => true},{:id => "ins_company_name"} %></td>
+			<td><a href="javascript:void(0)" onClick="window.open('/insurance_masters/new?call_from=registrations','open','width=900px,height=500px')">New</a></td>
+			<td>Policy No<sup>*</sup></td>
+			<td><%= f.text_field :policy_no, :class=>"text_field", :id => "policy_no"  %></td>
+			<td width="40"></td>
+			<td>Relation to Insurance<sup>*</sup></td>
+			<td><%= f.select :relation_to_insurence,[['Self'],['Mother'],['Father'],['Child'],['Wife'],['Others']],{:prompt => true},{:id => "relation_to_insurence"} %></td>
+			<td width="40"></td>
+			<td>Plan Name<sup>*</sup></td>
+			<td><%= f.text_field :plan_name, :class=>"text_field", :id => "plan_name" %></td> 
+		</tr>
+		<tr class="left" id="Arogyasree" style="display:none">
+			<td>Arogyasree Card No<sup>*</sup></td>
+			<td><%= f.text_field :arogyasree_card_no, :class=>"text_field", :id => "arogyasree_card_no" %></td>
+		</tr>
+		</table>
+		</fieldset>
+		<table align="center">
+			<tr>
+				<td><%= submit_tag "", :value => " Save&Process ", :class => "submit_button", :onClick => "if(document.getElementById('mobile_no').value=='' && document.getElementById('ph_no1').value==''){alert('Please enter Mobile No or Phone Number');return false;}else if(document.getElementById('mobile_no').value!='' && (document.getElementById('mobile_no').value).length!=10){alert('Please enter Mobile No 10 Digits');return false;}this.disabled=true;this.value='Process..';this.form.submit();" %></td>
+				<td><%= submit_tag "", :value => " Reset ", :type => "reset",  :class => "submit_button" %></td>
+				<td valign="middle"><%= link_to "Back",  registrations_path, :class=>"new1" %></td>
+			</tr>
+		</table>
+	</table>
+
+	<script type="text/javascript">
+		function readURL(input)
+		{
+		
+			if(!/(\.bmp|\.gif|\.jpg|\.jpeg|\.png)$/i.test(input.value)) {
+				alert("Invalid image file type.");
+				document.getElementById('registration_uploaded_file').value="";
+				input.focus();
+				return false;
+			}
+			if(input.files[0].size > 102400)
+			{
+				alert("upload less than 100  kb")
+				document.getElementById('registration_uploaded_file').value="";
+				input.focus();
+				return false;
+			}
+			if (input.files && input.files[0])
+            {
+		        var reader = new FileReader();
+				reader.onload = function (e)
+				{
+					$('#blah').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+			var image_path=document.getElementById("registration_uploaded_file").value;
+			if(image_path!="")
+			{
+				var temp=new Array();
+				temp=image_path.split("\\")
+				document.getElementById("registration_image_path").value="/patient_photos/<%= Date.today.strftime("%d.%m.%Y").to_s %>/"+temp[temp.length-1];
+			}
+	    }
+		
+</script>
+</div>
+<% end %>
+</body>
+</html>

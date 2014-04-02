@@ -1,0 +1,28 @@
+<p>
+  <b>Consultant master:</b>
+  <%=h @ward_cost.consultant_master_id %>
+</p>
+
+<p>
+  <b>Ward:</b>
+  <%=h @ward_cost.ward %>
+</p>
+
+<p>
+  <b>Gcost:</b>
+  <%=h @ward_cost.gcost %>
+</p>
+
+<p>
+  <b>Night duty cost:</b>
+  <%=h @ward_cost.night_duty_cost %>
+</p>
+
+<p>
+  <b>Emergency cost:</b>
+  <%=h @ward_cost.emergency_cost %>
+</p>
+
+
+<%= link_to 'Edit', edit_ward_cost_path(@ward_cost) %> |
+<%= link_to 'Back', ward_costs_path %>

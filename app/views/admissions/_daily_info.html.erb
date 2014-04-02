@@ -1,0 +1,208 @@
+<%= stylesheet_link_tag 'scroll_daily' %>
+<% if(@admission.admn_status=="Admitted") %>
+	<% date_value=Date.today %>
+<% else %>
+	<% discharge=DischargeSummary.find_by_admn_no_and_org_code(@admission.admn_no,@admission.org_code) %>
+	<% date_value=discharge.discharge_date %>
+<% end %>
+<br/><br/>
+<% registration=Registration.last(:conditions => "mr_no = '#{@admission.mr_no}' and org_code = '#{@admission.org_code}'") %>
+<table width="50%" align="center">
+	<tr>
+		<td><b>MR No  :</b></td>
+		<td><%= @admission.mr_no %></td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td><b>Patient Name  :</b></td>
+		<td><%= registration.first_name+"."+registration.last_name %></td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td><b>Admn.Date  :</b></td>
+		<td><%= @admission.admn_date %></td>
+
+
+	</tr>
+</table>
+<br/>
+<hr>
+<% while(date_value >= @admission.admn_date) %>
+	<table width="100%">
+		<tr>
+			<td align="center"><u><b><%= date_value %></b></u></td>
+		</tr>
+	</table>
+	<% @consultant_visits=ConsultantVisit.find(:all,:conditions => "admn_no = '#{@admission.admn_no}' and date_of_visit = '#{date_value}'") %>
+	<% if(@consultant_visits[0]) %>
+		<table align="center">
+		<tr>
+			<td colspan="5">
+			<div id="info">
+				<table class="tableone">
+					<caption style="background: url(/images/vertical1_04.jpg) repeat-x top left;text-align:center;" ><font color="#F0FFFF" face="Cambria" ><b>Consultant Visits</b></font></caption>
+					<thead>
+						<tr>
+							<th width="150px"  style="color:black;">S.No</th> 
+							<th width="200px" style="color:black;">Department</th>
+							<th width="200px" style="color:black;">Consultant</th>
+							<th width="200px" style="color:black;">Date of visit</th>
+							<th width="200px" style="color:black;">Time of visit</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td colspan="5">
+							<div class="innerb">
+							<table class="tabletwo" id="displayTable">
+							<% i=0 %>
+								<% for consultant_visit in @consultant_visits  %>
+									<% if (i%2==0) %>
+										<tr>
+									<% else%>
+										<tr class="dk">
+									<% end %>
+									<td width="150px"><%= i+=1 %></td>
+									<td width="200px"><%=h consultant_visit.department %></td>
+									<% doctor_master=ConsultantMaster.find_by_consultant_id_and_org_code(consultant_visit.consultant,consultant_visit.org_code) %>
+									<td width="200px"><%=h doctor_master.name %></td>
+									<td width="200px"><%=h consultant_visit.date_of_visit.strftime("%Y-%m-%d") %></td>
+									<td width="200px"><%=h consultant_visit.time_of_visit.strftime("%H:%M:%S") %></td>
+								</tr>
+							<% end %>
+						</table>
+						</div>
+						</td>
+					</tr>
+				</tbody>
+     			</table>
+   		</div>
+		</td>
+	</tr>
+ 	</table>
+	<% end %>
+
+	<br>
+	<% @medicine_issues=MedicineIssue.find(:all,:conditions => "admn_no = '#{@admission.admn_no}' and issue_date = '#{date_value}'") %>
+	<% if(@medicine_issues[0]) %>
+		<table align="center">
+		<tr>
+			<td colspan="7">
+			<div id="info">
+				<table class="tableone">
+					<caption style="background: url(/images/vertical1_04.jpg) repeat-x top left;text-align:center;" ><font color="#F0FFFF" face="Cambria" ><b>Medicines</b></font></caption>
+					<thead>
+						<tr>
+							<th width="150px"  style="color:black;">S.No</th> 
+	          					<th width="170px" style="color:black;">Medicine Name</th> 
+	          					<th width="170px" style="color:black;">Dose</th>
+							<th width="170px" style="color:black;">Frequency</th>
+		  				       <th width="170px" style="color:black;">Date & Time</th>
+		  					<th width="170px" style="color:black;">Comments</th>
+				 	 		<th width="170px" style="color:black;">Nurse Name</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td colspan="7">
+							<div class="innerb">
+							<table class="tabletwo" id="displayTable">
+							<% i=0 %>
+								<% for medicine_issue in @medicine_issues  %>
+									<% for medicine_issues_child in medicine_issue.medicine_issues_child %>
+										<% if (i%2==0) %>
+											<tr>
+										<% else%>
+											<tr class="dk">
+										<% end %>
+										<td width="150px"><%= i+=1 %></td>
+										<td width="170px"><%=h medicine_issues_child.name %></td>
+										<td width="170px"><%=h medicine_issues_child.quantity %></td>
+										<td width="170px"><%=h medicine_issues_child.frequency %></td>
+										<td width="170px"><%=h medicine_issues_child.medicine_time.strftime("%Y-%m-%d %H:%M:%S") %></td>
+										<td width="170px"><%=h medicine_issues_child.comments %></td>
+										<% nurse_master=NurseMaster.find_by_nurse_id_and_org_code(medicine_issues_child.nurse_name,medicine_issue.org_code) %>
+										<td width="170px"><%=h nurse_master.name %></td>
+									</tr>
+									<% end %>
+							<% end %>
+						</table>
+						</div>
+						</td>
+					</tr>
+				</tbody>
+     			</table>
+   		</div>
+		</td>
+	</tr>
+ 	</table>
+	<% end %>
+	<br/>
+	<% @vital_observations=VitalObservation.find(:all,:conditions => "admn_no = '#{@admission.admn_no}' and collection_date = '#{date_value}'") %>
+	<% if(@vital_observations[0]) %>
+		<table align="center">
+		<tr>
+			<td colspan="12">
+			<div id="info">
+				<table class="tableone">
+					<caption style="background: url(/images/vertical1_04.jpg) repeat-x top left;text-align:center;" ><font color="#F0FFFF" face="Cambria" ><b>Vitals</b></font></caption>
+					<thead>
+						<tr>
+							<th width="50px"  style="color:black;">S.No</th> 
+							<th width="130px" style="color:black;">Date & Time</th>
+							<th width="70px" style="color:black;">Weight</th> 
+							<th width="70px" style="color:black;">Height</th>
+							<th width="70px" style="color:black;">Pulse</th>
+							<th width="70px" style="color:black;">Temperature</th>
+							<th width="70px" style="color:black;">BP Systolic</th>
+							<th width="70px" style="color:black;">BP Diastolic</th>
+							<th width="70px" style="color:black;">Respirations</th>
+							<th width="70px" style="color:black;">Oxygen Saturations</th>
+							<th width="200px" style="color:black;">Examination Findings</th>
+							<th width="100px" style="color:black;">Nurse</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td colspan="12">
+							<div class="innerb">
+							<table class="tabletwo" id="displayTable">
+							<% i=0 %>
+								<% for vital_observation in @vital_observations  %>
+									<% if (i%2==0) %>
+										<tr>
+									<% else%>
+										<tr class="dk">
+									<% end %>
+									<td width="50px"><%= i+=1 %></td>
+									<td width="130px"><%=h vital_observation.collection_date.strftime("%Y-%m-%d")+"  "+vital_observation.collection_time.strftime("%H:%M:%S") %></td>
+									<td width="70px"><%=h vital_observation.weight %></td>
+									<td width="70px"><%=h vital_observation.height %></td>
+									<td width="70px"><%=h vital_observation.temperature %></td>
+									<td width="70px"><%=h vital_observation.pulse %></td>
+									<td width="70px"><%=h vital_observation.bp_systolic %></td>
+									<td width="70px"><%=h vital_observation.bp_diastolic %></td>
+									<td width="70px"><%=h vital_observation.respirations %></td>
+									<td width="70px"><%=h vital_observation.oxygen_saturations %></td>
+									<td width="200px"><%=h vital_observation.examination_findings %></td>
+									<% doctor_master=ConsultantMaster.find_by_consultant_id_and_org_code(vital_observation.consultant,vital_observation.org_code) %>
+									<% if(doctor_master) %>
+										<td width="100px">Dr.<%=h doctor_master.name %></td>
+									<% else %>
+										<% nurse_master=NurseMaster.find_by_nurse_id_and_org_code(vital_observation.consultant,vital_observation.org_code) %>
+										<td width="100px"><%=h nurse_master.name %></td>
+									<% end %>
+								</tr>
+							<% end %>
+						</table>
+						</div>
+						</td>
+					</tr>
+				</tbody>
+     			</table>
+   		</div>
+		</td>
+	</tr>
+ 	</table>
+	<% end %>
+	<% date_value-=1 %>
+	<br>
+<% end %>

@@ -1,0 +1,58 @@
+
+<br/>
+<div align="center" width="100%">
+<table align="center" width="90%" border="1" cellspacing=0>
+	<tr bgcolor ="#378bf8">
+		<th>S.No</th>
+		<th>Date</th>
+		<th>Lab No</th>
+		<th>Patient Name</th>
+		<th>MR No</th>
+		<th>Reffered By</th>
+		<th>Department</th>
+		<th>Test Name</th>
+		<th>Amount</th>
+  </tr>
+<% @i=0 %>
+<% j=0 %>
+<% @total=0 %>
+<% @testbooking.each do |testbooking| %>
+<% if(@testbooking) %>
+<% @total=@total.to_f+testbooking.paid_amount.to_f %>
+ <% if((@i%2)==0) 
+		id="datacelltwo"
+	else
+		id="datacellone"
+  end %>
+	<% j=1 %>
+	<tr class='<%= id %>'>
+		<td><%= @i=@i+1 %>
+		<td><%=h testbooking.booking_date %></td>
+		<td><%=h testbooking.lab_no %></td>
+		<td><%=h testbooking.patient_name %> </td>
+		<td><%=h testbooking.mr_no %></td>
+		<td><%=h testbooking.refferal_doctor %></td>
+	<% for testname in testbooking.test_booking_child %>
+		<% if(j==0) %>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		<% end %>
+			<td><%= testname.department %></td>
+			<td><%= testname.test_name %></td>
+			<td><%= testname.amount %></td>
+			<% if(j==1) %>
+				<%=  %>
+			<% end %>
+			<% j=0 %>
+ 		</tr>  
+	<% end %>
+ <% end %>
+<% end %>
+<tr bgcolor ="yellow"><td colspan="8" align="right">Total:</td>
+<td><%= @total %></td></tr>
+</table>
+

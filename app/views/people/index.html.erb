@@ -1,0 +1,53 @@
+
+<%= stylesheet_link_tag 'css' %>
+<script type="text/javascript">
+	function show_results(name)
+	{
+		
+		window.open('/people/display/1?name='+name,'open_window','menubar=0, toolbar=0, scrollbars=1location, width=640, height=480, left=0, top=0')
+	}
+</script>
+<%= image_tag("add.png")%><font size="4"><%= link_to 'New User', new_person_path %></font>
+<br />
+<div align="center" width="100%">
+<%  client_list=ClientList.sum(:no_of_users) %>
+<table width="60%" cellpadding="2" cellspacing="2">
+	<tr>
+		<td><b>Total Users</b></td>
+		<td><%=  client_list %></td>
+		<td><b>Created Users</b></td>
+		<td><%= @people.length %></td>
+		<td><b>Available Users</b></td>
+		<td><%= client_list-@people.length %></td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+  <tr bgcolor =" #378bf8" style="color:white">
+	<th>S.No</th>
+	<th>User Name</th>
+	<th>Profile</th>
+	<th>Display Name</th>
+	<th>Client Name</th>
+<th>Permissions</th>
+	
+</tr>
+<% @i=0 %>
+<% for person in @people %>
+	<% if((@i % 2)==0) 
+		id="datacelltwo"
+	else
+		id="datacellone"
+	end %>
+	<tr class='<%= id %>'>
+		<td><%=h @i=@i+1 %></td>
+		<td><%= person.name %></td>
+		<td><%=h person.profile %></td>
+		<td><%=h person.display_name %></td>
+		<td><%=h person.client_name %></td>
+		<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Edit&nbsp;&nbsp;&nbsp;', { :action => 'edit_user', :id=> person.id } , :class=>"submit_button" %></td>   
+	</tr>
+
+<% end %>
+</table>
+</div>

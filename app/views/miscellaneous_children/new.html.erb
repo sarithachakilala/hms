@@ -1,0 +1,27 @@
+<h1>New miscellaneous_child</h1>
+
+<% form_for(@miscellaneous_child) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :miscellaneous_master_id %><br />
+    <%= f.text_field :miscellaneous_master_id %>
+  </p>
+  <p>
+    <%= f.label :service %><br />
+    <%= f.text_field :service %>
+  </p>
+  <p>
+    <%= f.label :service_code %><br />
+    <%= f.text_field :service_code %>
+  </p>
+  <p>
+    <%= f.label :amount %><br />
+    <%= f.text_field :amount %>
+  </p>
+  <p>
+    <%= f.submit 'Create' %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', miscellaneous_children_path %>

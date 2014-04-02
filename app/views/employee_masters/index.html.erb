@@ -1,0 +1,106 @@
+<center><h3><font color="#015a84">EmployeeMaster</font></h3>
+ <%= link_to 'New', new_employee_master_path, :class=>"new1" %>
+</center>
+
+<script type="application/javascript">
+var name
+  	function date_range(event)
+	{
+	 
+		if(event.keyCode==13)
+		{
+			name=document.getElementById('search_field').value
+			req = new Ajax.Request('/employee_masters/search/1', {
+				method: 'get',
+				parameters: {name: name },
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			});
+			function processReqChange(req) 
+			{
+				document.getElementById("tablesorter-demo").innerHTML=req.responseText
+			}
+		}
+	}
+
+
+	function click_search()
+	{
+		name=document.getElementById('search_field').value
+		req = new Ajax.Request('/employee_masters/search/1', {
+			method: 'get',
+			parameters: {name: name},
+			onComplete: function(transport) {
+			processReqChange(transport);
+			}
+		});
+		function processReqChange(req) 
+		{
+			document.getElementById("tablesorter-demo").innerHTML=req.responseText
+		}
+	}
+  
+
+ </script>
+ <div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Doctor Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/employee_masters' class="nav" style="text-decoration:none;">Employee Masters</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+
+<table align ="right">
+  <tr>
+	<td><%= text_field_tag :search, params[:search], :id => 'search_field', :Placeholder => "Enter Name", :onKeyUp =>"date_range(event)" %></td>
+    <td><a href='javascript:void(0)'  onclick = "click_search()" ><img src="/images/buttons/search.png" class="info"/> </a></td>
+    </td>
+  </tr>
+</table>
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+   <tr>
+	 <th>S.No</th> 
+    <th>Org.Code</th>
+    <th>Org.Location</th>
+    <th>Emp.Id</th>
+    <th>Name</th>
+    <th>Department</th>
+    <th>Designation</th>
+    <th>Dob</th>
+    <th>Join Date</th>
+    <th>City</th>
+    <th>Phno</th>
+	<th colspan="2" align="center">Permissions</th>
+  </tr>
+</thead>
+<tbody>
+<% @i=0 %>
+<% @employee_masters.each do |employee_master| %>
+<% if((employee_master.id % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+		 end %>
+ <tr class='<%= id %>' style="height:30px">
+	<td><%= @i+=1 %></td>
+    <td><%=h employee_master.org_code %></td>
+    <td><%=h employee_master.org_location %></td>
+    <td><%=h employee_master.empid %></td>
+    <td><%=h employee_master.name %></td>
+    <td><%=h employee_master.department %></td>
+    <td><%=h employee_master.designation %></td>
+    <td><%=h employee_master.dob %></td>
+    <td><%=h employee_master.join_date %></td>
+    <td><%=h employee_master.city %></td>
+    <td><%=h employee_master.phno %></td>
+	
+
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Edit&nbsp;&nbsp;&nbsp;', edit_employee_master_path(employee_master), :class=>"submit_button" %></td>   
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Delete&nbsp;&nbsp;&nbsp;', employee_master, :confirm => 'Are you sure?', :method => :delete, :class=>"submit_button" %></td>
+  </tr>
+<% end %>
+</table>
+<p align="right"><div align="right" class="pagination"><%= will_paginate @employee_masters,  :style => "font: bold 15px Arial red;" %></p>

@@ -1,0 +1,34 @@
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+  <tr>
+	<th>S.No</th>
+    <th>Org code</th>
+    <th>Org location</th>
+    <th>Service group name</th>
+    <th>Service name</th>
+    <th>Service code</th>
+    <th colspan="3">Permissions</th>
+  </tr>
+</thead>
+<tbody>
+ <% @i=0 %>
+<% @servicemasters.each do |servicemaster| %>
+ <% if((@i%2)==0) 
+		id="datacelltwo"
+	else
+		id="datacellone"
+  end %>
+  <tr class='<%= id %>'>
+    <td><%= @i=@i+1 %></td>
+    <td><%=h servicemaster.org_code %></td>
+    <td><%=h servicemaster.org_location %></td>
+    <td><%=h servicemaster.service_group_code %></td>
+    <td><%=h servicemaster.service_name %></td>
+    <td><%=h servicemaster.service_code %></td>
+	<td align="center"><%= link_to image_tag("buttons/display1.png", :class => "info", :border =>"0"), servicemaster %></td>
+	<td align="center"><%= link_to image_tag("buttons/modify.png", :class => "info", :border =>"0"), edit_servicemaster_path(servicemaster) %></td>
+    <!-- <td><%= link_to 'Destroy', servicemaster, :confirm => 'Are you sure?', :method => :delete %></td> -->
+  </tr>
+<% end %>
+</tbody>
+</table>

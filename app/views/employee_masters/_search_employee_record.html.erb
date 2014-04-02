@@ -1,0 +1,43 @@
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+   <tr>
+	 <th>S.No</th> 
+    <th>OrgCode</th>
+    <th>OrgLocation</th>
+    <th>EmpId</th>
+    <th>Name</th>
+    <th>Department</th>
+    <th>Designation</th>
+    <th>Dob</th>
+    <th>Join Date</th>
+    <th>City</th>
+    <th>Phno</th>
+	<th colspan="3">Permissions</th>
+  </tr>
+</thead>
+<tbody>
+<% @i=0 %>
+<% @employee_masters.each do |employee_master| %>
+<% if((employee_master.id % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+		 end %>
+  <tr class='<%= id %>'>
+	<td><%= @i+=1 %></td>
+    <td><%=h employee_master.org_code %></td>
+    <td><%=h employee_master.org_location %></td>
+    <td><%=h employee_master.empid %></td>
+    <td><%=h employee_master.name %></td>
+    <td><%=h employee_master.department %></td>
+    <td><%=h employee_master.designation %></td>
+    <td><%=h employee_master.dob %></td>
+    <td><%=h employee_master.join_date %></td>
+    <td><%=h employee_master.city %></td>
+    <td><%=h employee_master.phno %></td>
+	<td align="center"><%= link_to image_tag("buttons/display1.png", :class => "info", :border =>"0"), employee_master %></td>
+	<td align="center"><%= link_to image_tag("buttons/modify.png", :class => "info", :border =>"0"), edit_employee_master_path(employee_master) %></td>
+	<td align="center"><%= link_to image_tag("buttons/delete.png", :class => "info", :border =>"0"),employee_master, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>

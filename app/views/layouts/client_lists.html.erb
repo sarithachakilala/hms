@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <title>ClientLists: <%= controller.action_name %></title>
+   <%= stylesheet_link_tag 'scaffold' %>
+  <%= stylesheet_link_tag 'css' %>
+  <%= javascript_include_tag :defaults %>
+  <%= javascript_include_tag 'calendar.js' %>
+</head>
+<body oncontextmenu="return false">
+<script type="text/javascript">var v='<%= notice %>';if(v!="")alert('<%= notice %>');</script>
+
+<p style="color: green"><%= notice %></p>
+
+<%= yield %>
+
+</body>
+</html>

@@ -1,0 +1,102 @@
+<h3><center><font color="#015a84">Department Master</font></center></h3>
+<center>
+<%= link_to 'New', new_department_master_path, :class=>"new1" %></td>
+</center>
+<script type="application/javascript">
+var deptname
+  	function date_range(event)
+	{
+		
+		if(event.keyCode==13)
+		{
+		deptname=document.getElementById('search_field').value
+			req = new Ajax.Request('/department_masters/search/1', {
+				method: 'get',
+				parameters: {deptname: deptname },
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			});
+			function processReqChange(req) 
+			{
+				document.getElementById("tablesorter-demo").innerHTML=req.responseText
+			}
+		}
+	}
+
+
+	function click_search()
+	{
+		
+		deptname=document.getElementById('search_field').value
+		req = new Ajax.Request('/department_masters/search/1', {
+			method: 'get',
+			parameters: {deptname: deptname},
+			onComplete: function(transport) {
+			processReqChange(transport);
+			}
+		});
+		function processReqChange(req) 
+		{
+			document.getElementById("tablesorter-demo").innerHTML=req.responseText
+		}
+	}
+
+ </script>
+ <div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Doctor Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/department_masters?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Depatrment Masters</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+
+<table align ="right">
+  <tr>
+	<td><%= text_field_tag :search, params[:search], :id => 'search_field', :Placeholder => "Enter DepartmentName", :onKeyUp =>"date_range(event)" %></td>
+    <td><a href='javascript:void(0)'  onclick = "click_search()" ><img src="/images/buttons/search.png" class="info"/> </a></td>
+    </td>
+  </tr>
+</table>
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+	<tr>
+    <th>S.No</th>
+    <th>Org Code</th>
+    <th>Org Location</th>
+    <th>Category</th>
+    <th>Department</th>
+    <th>Status</th>
+    <th>HOD</th>
+    <th>Ph.No.Hod</th>
+	<th colspan="2" align="center">Permissions</th>
+  </tr>
+</thead>
+<tbody>
+<% @id=0 %>
+<% @department_masters.each do |department_master| %>
+<% if((@id % 2)==0)
+		 id="datacellone"
+else
+		id="datacelltwo" 
+	
+ end %>
+	<tr class='<%= id %>' style="height:30px">
+	<td><%= @id+=1 %></td>
+	
+    <td><%=h department_master.org_code %></td>
+    <td><%=h department_master.org_location %></td>
+    <td><%=h department_master.category %></td>
+    <td><%=h department_master.department %></td>
+    <td><%=h department_master.status %></td>
+    <td><%=h department_master.hod %></td>
+    <td><%=h department_master.ph_no_hod %></td>
+
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Edit&nbsp;&nbsp;&nbsp;', edit_department_master_path(department_master), :class=>"submit_button" %></td>   
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Delete&nbsp;&nbsp;&nbsp;', department_master, :confirm => 'Are you sure?', :method => :delete, :class=>"submit_button" %></td>
+  
+  </tr>
+<% end %>
+</table>
+<p align="right"><div align="right" class="pagination"><%= will_paginate @department_masters,  :style => "font: bold 15px Arial red;" %></p>

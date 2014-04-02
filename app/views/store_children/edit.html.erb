@@ -1,0 +1,58 @@
+<br/><br/>
+<% form_for(@store_child) do |f| %>
+  <%= f.error_messages %>
+  <div width="90%" align="center">
+<fieldset>
+<legend><div class="font"><b>Medicine Search Editing</b></div></legend>
+<table align="center" width="70%"> 
+  <tr>
+    <td><%= f.label :item_name %></td>
+    <td><%= f.text_field :item_name, :class=>"text_field" %></td>
+    <td><%= f.label :drug_type %></td>
+    <td><%= f.text_field :drug_type, :class=>"text_field" %></td>
+  </tr>
+  <tr>
+    
+    <td><%= f.label :quantity %></td>
+    <td><%= f.text_field :quantity, :class=>"text_field" %></td>
+    <td><%= f.label :free %></td>
+    <td><%= f.text_field :free, :class=>"text_field" %></td>
+  </tr>
+  <tr>
+    <td><%= f.label :packing %></td>
+    <td><%= f.text_field :packing, :class=>"text_field" %></td>
+    <td><%= f.label :batch_no %></td>
+    <td><%= f.text_field :batch_no, :class=>"text_field" %></td>
+   
+  </tr>
+  <tr>
+   <td><%= f.label :expiry_date %></td>
+    <td><%= f.text_field :expiry_date, :class=>"text_field" %></td>
+    <td><%= f.label :mrp %></td>
+    <td><%= f.text_field :mrp, :class=>"text_field" %></td>
+  </tr>
+  <tr>
+    <td><%= f.label :purchase_rate %></td>
+    <td><%= f.text_field :purchase_rate, :class=>"text_field" %></td>
+    <td><%= f.label :amount %></td>
+    <td><%= f.text_field :amount, :class=>"text_field" %></td>
+  </tr>
+  <tr>
+    <td><%= f.label :vat %></td>
+    <td><%= f.text_field :vat, :class=>"text_field" %></td>
+    <td><%= f.label :sale_rate %></td>
+    <td><%= f.text_field :sale_rate, :class=>"text_field" %></td>
+  </tr>
+ </table>
+ <table align="center">
+  <tr> 
+  <td><%= submit_tag "", :value => " Update ", :class => "submit_button" %></td>
+	
+  	
+  </tr>	
+</table>
+</fieldset>
+</div>
+<% end %>
+
+	

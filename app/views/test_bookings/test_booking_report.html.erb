@@ -1,0 +1,95 @@
+<script type="text/javascript"> 
+		
+	function testbooking_search()
+	{   
+		
+		var from_date=document.getElementById('from_date_').value
+		var to_date=document.getElementById('to_date_').value
+		
+		var age=document.getElementById('age').value
+		var patient=document.getElementById('patient').value
+		var org_code=document.getElementById('org_codeall').value
+		var reffered_by=document.getElementById('reffered_by').value
+		var patient_type=document.getElementById('patient_type').value
+		
+		req = new Ajax.Request('/test_bookings/test_booking_report_def/1', {
+				method: 'get',
+				parameters: { from_date:from_date, to_date :to_date, age:age,patient_type:patient_type, patient:patient, org_code:org_code,reffered_by:reffered_by },
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			});
+		function processReqChange(req) 
+		{
+			if(req.responseText=="No Records")
+				document.getElementById("table").value=req.responseText
+			else
+				document.getElementById("table").innerHTML=req.responseText
+		}
+	}
+	function clear_function()
+	{
+		document.getElementById('org_codeall').value=""
+		document.getElementById('from_date_').value=""
+		document.getElementById('to_date_').value=""
+		document.getElementById('age').value=""
+		document.getElementById('patient').value=""		
+		document.getElementById('reffered_by').value=""		
+	}
+ </script> 
+
+<body style="margin:0px;" onload="testbooking_search()">
+
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">&nbsp;&nbsp;Report >>&nbsp;&nbsp;&nbsp;Laboratory Reports >>&nbsp;&nbsp;&nbsp;<a HREF='/test_bookings/test_booking_report/1' class="nav" style="text-decoration:none;">Test Booking Report</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<div id="form_data">
+<font size="3" face="Calibri">
+<%= form_tag ({:controller => "test_bookings", :action => "generate_reports"}, {:method => "post"}) %>
+<% @date=format_date(:sort, Date.today ) %>
+<% @prev_date=format_date(:sort, Date.today-7 ) %>
+<fieldset>
+<legend><div class="font"><b>Search</b></div></legend>
+<table width="100%"  align="center">
+<tr>
+	<td><label for="item_name">Type</label></td>
+	<td><%= select('revenue','type',[['IP'],['OP'],['OSP']],{:prompt => 'All'},{:id=>"patient_type"}) %></td>
+	<td><label for="item_name">From Date</label></td>
+	<td><%= text_field('from_date', '',:size => 20, :value => @prev_date) %><a href="javascript:void(0)" onClick="setYears(2000, 2050);showCalender(this,'from_date_');" >
+		<img src="/images/cal.gif" ></a></td>
+    	<td><label for="item_name">To Date</label></td>
+	<td><%= text_field('to_date', '',:size => 20, :value=>@date) %><a href="javascript:void(0)" onClick="setYears(2000, 2050);showCalender(this,'to_date_');" >
+		<img src="/images/cal.gif" ></a></td>
+
+	<td>Patient Name</td>
+	<td><%= text_field_tag:patient ,"", :id=>"patient" %></td>
+</tr>
+<tr>
+	
+
+	<%= hidden_field_tag:mr_no ,"", :id=>"mr_no" %>
+	<%= hidden_field_tag:age ,"", :id=>"age" %>
+
+	<td>Reffered By</td>
+	<td><%= select:reffered ,"r", TestBooking.find(:all, :select=> "DISTINCT refferal_doctor").collect{|p| [p.refferal_doctor]},{:prompt => true},{:id=>"reffered_by"}  %></td>
+	
+	<td><%= hidden_field_tag :org_code1,"",:value=>"#{@org_code}", :id => "org_codeall" %></td>
+
+	<td colspan="2"><%= link_to "Search","javascript:testbooking_search()",:class=>"submit_button" %></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<%= link_to "&nbsp;&nbsp;Clear&nbsp;&nbsp;", "javascript: clear_function()",:class=>"submit_button" %></td>
+</tr>	
+</table>
+</fieldset>
+
+<div class="font">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Results :</b>
+</div>
+
+<div id="table" align ="center">
+</div>
+ <%= form_tag %>
+</body>

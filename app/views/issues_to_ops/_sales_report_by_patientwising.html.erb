@@ -1,0 +1,51 @@
+<% @i=0 %>
+<table width="80%" class="sofT">
+  <tr class="info">
+			<th>S.No</th>
+			<th>Bill Date</th>
+			<th>Bill No</th>
+			<th>MR No</th> 
+			<th>Admn.No</th> 
+			<th>Patient Name</th>
+			<th>Drug Type</th>
+			<th>Item Name</th>
+			<th>Quantity</th> 
+			<th>Rate</th> 
+			<th>Total</th> 
+			
+	</tr>
+
+	<% @total=0 %>
+	<% @issue.each do |issues|%>
+		<% reg=Registration.find_by_mr_no_and_org_code(issues.mr_no,issues.org_code) %>
+		<%  issues_op=IssueOpChild.find_by_issues_to_op_id(issues.id)
+			drug_type=Itemmaster.find_by_item_name_and_org_code(issues_op.item_name,issues.org_code)
+			@total=@total+issues_op.total.to_f
+		%>
+			
+		<% if((@i % 2)==0) 
+				id="datacellone"
+			else
+				id="datacelltwo"
+		end %>
+		<tr class='<%= id %>'>
+			<td><%= @i=@i+1 %></td>
+			<td><%=h issues.issue_date %></td>
+			<td><%=h issues.receipt_no %></td>
+			<td><%=h issues.mr_no %></td>
+			<td><%=h issues.admn_no %></td>
+			<td><%= reg.first_name %></td>
+			<td><%= issues_op.item_name %></td>
+			<td><%= drug_type.drug_type %></td>
+			<td><%= issues_op.issue_qty %></td>
+			<td><%=  issues_op.sale_rate %></td>
+			<td><%=  issues_op.total %></td>
+		</tr>  
+	<% end %>
+</table>
+<table align="center">
+	<tr>
+		<td>Total Amount</td>
+		<td><%= @total %></td>
+	</tr>
+</table>

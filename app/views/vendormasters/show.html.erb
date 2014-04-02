@@ -1,0 +1,64 @@
+<script type="text/javascript"> 
+	function print_page()
+	{
+		document.getElementById('print').style.display='none'
+		document.getElementById('back').style.display='none'
+		window.print();
+		return false;
+	}
+</script>
+
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div  width="100%">
+ <table align="center" width="70%" border="0" cellspacing="2" cellpadding="4">
+		<tr>
+			<td class="button" colspan="9"><center><b>Details of Agency</b></center></td> 
+			
+		</tr> 
+  <tr>
+		<td class='<%= id %>'><b>Agency Code</b></td>
+		<td class='<%= id1 %>'><%=h @vendormaster.vendor_code %></td> 
+		<td class='<%= id %>'><b>Agency Name</b></td>
+		<td class='<%= id1 %>'> <%=h @vendormaster.vendor_name %></td>  
+		<td class='<%= id %>'><b>Agency Tin No</b></td>
+		<td class='<%= id1 %>'> <%=h @vendormaster.vendor_tin_no %></td>
+		<td class='<%= id %>'><b>Vat No</b></td>
+		<td class='<%= id1%>'> <%=h @vendormaster.vat_no %></td>
+ </tr>
+<tr>
+		<td class='<%= id %>'><b>List Of Items Supplied</b></td>
+		<td class='<%= id1 %>'> <%=h @vendormaster.list_of_items_supplied %></td>  
+		<td class='<%= id %>'><b>Address1</b></td>
+		<td class='<%= id1 %>'> <%=h @vendormaster.address1 %></td>
+		<td class='<%= id %>'><b>Address2</b></td>
+		<td class='<%= id1 %>'> <%=h @vendormaster.address2 %></td>
+		<td class='<%= id %>'><b>City</b></td>
+		<td class='<%= id1 %>'> <%=h @vendormaster.city %></td>
+</tr>
+<tr>		
+		<td class='<%= id %>'><b>State</b></td>
+		<td class='<%= id1 %>'> <%=h @vendormaster.state %></td>
+		
+		<td class='<%= id %>'><b>Country</b></td>
+		<td class='<%= id1 %>'> <%=h @vendormaster.country %></td>
+		
+		
+		<td class='<%= id %>'><b>Contact Person</b></td>
+		<td class='<%= id1 %>'> <%=h @vendormaster.contact_person %></td>
+		<td class='<%= id %>'><b>Agency Email</b></td>
+		<td class='<%= id1 %>'> <%=h @vendormaster.vendor_emailid %></td>
+</tr>
+<tr>
+		<td class='<%= id %>'><b>Contact No</b></td>
+		<td class='<%= id1 %>'> <%=h @vendormaster.contact_num %></td>
+		<td class='<%= id %>'><b>Status</b></td>
+		<td class='<%= id1 %>'> <%=h @vendormaster.status %></td> 
+		<td class='<%= id %>'><b>Note</b></td>
+		<td class='<%= id1 %>'> <%=h @vendormaster.note %></td>
+  </tr>
+</table>
+ 
+ </div>
+<br/><center>
+<%= link_to image_tag("buttons/back.png", :class => "info", :border =>"0"), vendormasters_path(:user_id =>@user_id) %>

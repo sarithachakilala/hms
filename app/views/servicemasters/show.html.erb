@@ -1,0 +1,45 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Service Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/servicemasters?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Service Masters</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div  width="100%">
+ <table align="center" width="70%" border="0" cellspacing="2" cellpadding="4">
+	 <tr>
+			<td class="button" colspan="18"><center><b> Service Master Details</b></center></td> 
+			
+		</tr>
+<tr>
+  <td class='<%= id %>'><b>Org code</b></td> 
+  <td class='<%= id %>'>:</td> 
+  <td class='<%= id1 %>'><%=h @servicemaster.org_code %></td> 	 
+
+  <td class='<%= id %>'><b>Org location</b></td> 
+  <td class='<%= id %>'>:
+  <td class='<%= id1 %>'><%=h @servicemaster.org_location %></td> 
+
+  <td class='<%= id %>'><b>Service group Name</b></td>
+	<td class='<%= id %>'>: </td>
+  <td class='<%= id1 %>'><%=h @servicemaster.service_group_code %></td> 
+  
+  <td class='<%= id %>'><b>Service name</b></td>
+  <td class='<%= id %>'>: </td>
+  <td class='<%= id1 %>'><%=h @servicemaster.service_name %></td> 
+
+    <td class='<%= id %>'><b>Service code</b></td>
+	<td class='<%= id %>'>: </td>
+  <td class='<%= id1 %>'><%=h @servicemaster.service_code %></td> 
+</tr>
+</table>
+ </div>
+<br/>
+<table align ="center">
+  <tr>
+  	<td valign="middle"><%= link_to "back",  servicemasters_path, :class=>"new1" %></td>
+  </tr>
+</table>

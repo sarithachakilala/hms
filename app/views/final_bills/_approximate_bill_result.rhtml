@@ -1,0 +1,221 @@
+<% @date=format_date(:sort, Date.today ) %>
+<table border="1" cellspacing="0" align="center" width="70%">
+  <tr  bgcolor =" #378bf8" style="color:white"> 
+  
+	<td colspan="7" align="center"><b>Admission</b></td>
+  </tr>
+  <tr style="background: url(/images/tabbed.png) repeat-x top left;text-align:center;"> 
+   <th style="color:black;">Admn Date</th>
+    <th style="color:black;">Tran.Date</th>
+    <th style="color:black;">Ward</th>
+    <th style="color:black;">Room</th>
+    <th style="color:black;">Bed</th>
+    <th style="color:black;">No Of days</th>
+    <th style="color:black;">Amount</th>
+  </tr>
+  <% if @ward_changes[0] %>
+	<% @at=0 %>
+	<% @amt=0 %>
+	<% @j=0 %> 
+	<% @cash=0 %>
+	<% @amount_tot=0 %>
+	<% @ward_changes.each do |ward_changes| %>
+	<% @j=@j+1 %>
+	<tr>
+		<td><%=h ward_changes.admn_date %></td>
+		<td><%=h @date=ward_changes.trans_date %></td>
+		<td><%=h ward_changes.from_ward %></td>
+		<td><%=h ward_changes.from_room %></td>
+		<td><%=h ward_changes.from_bed %></td>
+		<% @date=ward_changes.trans_date
+				@today=ward_changes.admn_date
+				@days=(@date.to_date-@today.to_date).to_i %>
+		<td><%=h @days %></td>
+		<% @amt=@cash=ward_changes.amount-@amount_tot %>
+		<td align="right"><%=h @cash %></td>
+		<% @amount_tot=ward_changes.amount %>
+		<% @at=@at+@amt %>
+    </tr>
+	<% if @j==@ward_changes.length %>
+		<tr>
+			<td><%=h ward_changes.trans_date %></td>
+			<td><%=h Date.today %></td>
+			<td><%=h ward_changes.to_ward %></td>
+			<td><%=h ward_changes.room %></td>
+			<td><%=h ward_changes.bed %></td>
+			<%  @date=ward_changes.trans_date
+				@today=Date.today
+				@days=(@today-@date.to_date).to_i
+				@amount=@days*ward_changes.charge_per_day.to_i %>
+			<td><%=h @days %></td>
+			<td align="right"><%=h @amt=@amount %></td>
+			<% @at=@at+@amt %>
+		</tr>
+	<% end %>
+	<% end %>
+  <% else %>
+  <tr>
+    <td><%=h @admission.admn_date %></td>
+    <td><%=h @date %></td>
+    <td><%=h @admission.ward %></td>
+    <td><%=h @admission.room %></td>
+    <td><%=h @admission.bed %></td>
+	<%  @ward=WardMaster.find_by_name(@admission.ward)
+		@date=@admission.admn_date
+		@today=Date.today
+		@days=(@today-@date.to_date).to_i+1
+		@amount=@days*@ward.cost.to_i %>
+	<td><%=h @days %></td>
+	<td  align="right"><%=h @at=@amount %></td>
+  </tr>
+  <% end %>
+  <tr>
+	<td colspan="6" align="right">Total</td>
+	<td align="right"><%= @at %></td>
+  </tr>
+</table>
+<br />
+<% @i=0 %>
+<table border="1" cellspacing="0" align="center" width="70%">
+  <tr bgcolor =" #378bf8" style="color:white">
+	<td colspan="7" align="center"><b>Lab Charges</b></td>
+  </tr>
+ <tr style="background: url(/images/tabbed.png) repeat-x top left;text-align:center;"> 
+    <th style="color:black;">S.No</th>
+    <th style="color:black;">Service name</th>
+    <th style="color:black;">Fee</th>
+    
+  </tr>
+<% @at=0 %>
+<% @amt=0 %>
+<% if @investigation[0] %>
+<% for investigation in @investigation %>
+<% for ip_service in investigation.test_booking_child %>
+  <tr>
+    <td><%=h @i=@i+1 %></td>
+    <td><%=h ip_service.test_name %></td>
+    <td align="right"><%=h ip_service.amount %></td>
+	<% @at=ip_service.amount.to_f+@at %>
+  </tr>
+<% end %>
+<% end %>
+<% end %>
+	<tr>
+		<td colspan="2" align="right">Total</td>
+		<td align="right"><%= @at %></td>
+	</tr>
+</table>
+<br/>
+<% @i=0 %>
+<table border="1" cellspacing="0" align="center" width="70%">
+  <tr bgcolor =" #378bf8" style="color:white">
+	<td colspan="7" align="center"><b>Doctor Visits</b></td>
+  </tr>
+ <tr style="background: url(/images/tabbed.png) repeat-x top left;text-align:center;"> 
+     <th style="color:black;">S.No</th>
+    <th style="color:black;">Doctor name</th>
+	   <th style="color:black;">Employee Id</th>
+	<th style="color:black;">Department</th>
+    <th style="color:black;">Date & Time Of Visit</th>
+
+    <th style="color:black;">Charge</th>
+  </tr>
+<% @at=0 %>
+<% @amt=0 %>
+<% if(@consultation_visit_entries) %>
+<% @consultation_visit_entries1.each do |consultation_visit_entries2| %>
+
+  <tr>
+    <td><%=h @i=@i+1 %></td>
+<% cons_id=consultation_visit_entries2.cons_name.split("-") %>
+    <td><%=h cons_id[0] %></td>
+	 <td><%=h cons_id[1] %></td>
+    <td><%=h consultation_visit_entries2.department %></td>
+    <td><%=h consultation_visit_entries2.date_and_time  %></td>
+   
+    <td align="right"><%=h @amt=consultation_visit_entries2.charge.to_f %></td>
+	<% @at=@amt+@at %>
+  </tr>
+<% end %>
+<% end %>
+	<tr>
+		<td colspan="5" align="right">Total</td>
+		<td align="right"><%= @at %></td>
+	</tr>
+</table>
+
+<br/>
+
+
+<br/>
+<% @i=0 %>
+<table border="1" cellspacing="0" align="center" width="70%">
+<tr bgcolor =" #378bf8" style="color:white">
+	<td colspan="5" align="center"><b>Nurse Charge</b></td>
+  </tr>
+  <tr style="background: url(/images/tabbed.png) repeat-x top left;text-align:center;"> 
+   <th style="color:black;">S.No</th>
+    <th style="color:black;">Admn.No</th>
+    <th style="color:black;">MR No</th>
+    <th style="color:black;">Charge</th>
+  </tr>
+<% @at1=0 %>
+<% @amt1=0 %>
+  <tr>
+    <td><%=h @i=@i+1 %></td>
+    <td><%=h @admission.admn_no %></td>
+    <td><%=h @admission.mr_no %></td>
+    <td align="right"> <%= @nurse_charge %></td>
+  </tr>
+ <tr>
+		<td colspan="3" align="right">Total</td>
+		<td align="right"><%= @nurse_charge %></td>
+	</tr>
+</table>
+
+<br/>
+<% @i=0 %>
+<table border="1" cellspacing="0" align="center" width="70%">
+<tr bgcolor =" #378bf8" style="color:white">
+	<td colspan="5" align="center"><b>Pharmacy Charges</b></td>
+  </tr>
+ <tr style="background: url(/images/tabbed.png) repeat-x top left;text-align:center;"> 
+   <th style="color:black;">S.No</th>
+    <th style="color:black;">Admn.No</th>
+    <th style="color:black;">Dept Name</th>
+    <th style="color:black;">Charge</th>
+  </tr>
+<% @at2=0 %>
+<% @amt2=0 %>
+<% if(@issues_to_ip[0]) %>
+<% @issues_to_ip.each do |issues_to_ip| %>
+<% @dept=Admission.find_by_admn_no(issues_to_ip.admn_no) %>
+  <tr>
+    <td><%=h @i=@i+1 %></td>
+    <td><%=h issues_to_ip.admn_no %></td>
+   <td><%=h @dept.department %></td>
+    <td align="right"> <%= @amt2=issues_to_ip.total_amount.to_f %></td>
+	<% @at2=@amt2+@at2 %>
+  </tr>
+
+<% end %>
+	<tr>
+		<td colspan="3" align="right">Total</td>
+		<td align="right"><%= @at2 %></td>
+	</tr>
+<% end %>
+</table>
+
+
+
+<br/>
+<table  cellspacing="0" cellpadding="4" align="center" width="70%">
+<tr>
+     <td>Gross</td>
+	 <td><%= text_field_tag 'gross',number_with_precision(@total_amount, :precision => 2) , :size => "20", :readonly =>true%></td>
+     <td>Advance</td>
+     <td><%= text_field_tag 'query',number_with_precision(@advance, :precision => 2), :readonly =>true %></td>
+     <td>Due</td>
+     <td><%= text_field_tag 'due', number_with_precision(@due, :precision => 2) ,:size => "20", :readonly =>true  %></td>
+	 </tr>
+</table>

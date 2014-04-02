@@ -1,0 +1,92 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">IP Patients >>&nbsp;&nbsp;&nbsp;<a HREF='/pakage_transfers' class="nav" style="text-decoration:none;">Package Transfer</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/><br/>
+<center><h3><font color="#015a84">Package Transfer Records</font></h3>
+<%= link_to 'New', new_pakage_transfer_path, :class=>"new1" %>
+</center>
+<div align="center" width="100%">
+<table class="tablesorter" border="0" cellpadding="0" cellspacing="1" >
+<tbody>
+	<tr>
+	<td width="12%">&nbsp;</td>
+					<%= javascript_include_tag:defaults %>
+	<td width="15%"><input type="text" style="width:100%" id="today_date" placeholder="Search Today Date"></td>
+					<%= observe_field 'today_date', :frequency => 0.01,
+					:update => :name,
+					:url => {:action => :observe_field_ex },
+					:with => "'&today_date=' + escape($('today_date').value)+'&admn_no=' + escape($('admn_no').value)+ '&mr_no=' + escape($('mr_no').value)+ '&e_cat=' + escape($('e_cat').value)+ '&trans_cat=' + escape($('trans_cat').value)" %>
+	<td width="15%"><input type="text" style="width:100%" id="admn_no" onKeyUp = "search_function(id,event)" placeholder="Search admn_no"></td>
+					<%= observe_field 'admn_no', :frequency => 0.01,
+					:update => :name,
+					:url => {:action => :observe_field_ex },
+					:with => "'&today_date=' + escape($('today_date').value)+'&admn_no=' + escape($('admn_no').value)+ '&mr_no=' + escape($('mr_no').value)+ '&e_cat=' + escape($('e_cat').value)+ '&trans_cat=' + escape($('trans_cat').value)" %>
+	<td width="15%"><input type="text" style="width:100%" id="mr_no" onKeyUp = "search_function(id,event)" placeholder="Search MR NO"></td>
+					<%= observe_field 'mr_no', :frequency => 0.01,
+					:update => :name,
+					:url => {:action => :observe_field_ex },
+					:with => "'&today_date=' + escape($('today_date').value)+'&admn_no=' + escape($('admn_no').value)+ '&mr_no=' + escape($('mr_no').value)+ '&e_cat=' + escape($('e_cat').value)+ '&trans_cat=' + escape($('trans_cat').value)" %>
+	
+	<td width="15%"><input type="text" style="width:100%" id="e_cat" onKeyUp = "search_function(id,event)" placeholder="Search Exst.Category"></td>
+					<%= observe_field 'e_cat', :frequency => 0.01,
+					:update => :name,
+					:url => {:action => :observe_field_ex },
+					:with => "'&today_date=' + escape($('today_date').value)+'&admn_no=' + escape($('admn_no').value)+ '&mr_no=' + escape($('mr_no').value)+ '&e_cat=' + escape($('e_cat').value)+ '&trans_cat=' + escape($('trans_cat').value)" %>
+	<td width="15%"><input type="text" style="width:100%" id="trans_cat" onKeyUp = "search_function(id,event)" placeholder="Search Trns.Category"></td>
+					<%= observe_field 'trans_cat', :frequency => 0.01,
+					:update => :name,
+					:url => {:action => :observe_field_ex },
+					:with => "'&today_date=' + escape($('today_date').value)+'&admn_no=' + escape($('admn_no').value)+ '&mr_no=' + escape($('mr_no').value)+ '&e_cat=' + escape($('e_cat').value)+ '&trans_cat=' + escape($('trans_cat').value)" %>
+	
+	<td colspan="3" align="center" valign="top">
+		<%= link_to 'Clear','', :class=>"new1" %>
+	</td>
+  </tr>
+ </tbody>
+</table>
+</div>
+<div id="name" align="center" width="100%">
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+  <tr>
+    <th>S.No</th>    
+    <th>Date</th>
+    <th>Time</th>
+    <th>Admn.No</th>
+    <th>MR No</th>
+    <th>Exst.Category</th>
+    <th>Trns.Category</th>
+    <th  align="center">Permissions</th>
+  </tr>
+</thead>
+<tbody>
+<% @i=0 %>
+<% @pakage_transfer.each do |pakage_transfer| %>
+<% if((@i % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+		 end %>
+  <tr class='<%= id %>' style="height:30px">
+	<td><%= @i+=1 %></td>
+    <td><%=h pakage_transfer.today_date %></td>
+    <td><%=h pakage_transfer.present_time %></td>
+    <td><%=h pakage_transfer.admn_no %></td>
+    <td><%=h pakage_transfer.mr_no %></td>
+    <td><%=h pakage_transfer.e_cat %></td>
+    <td><%=h pakage_transfer.trans_cat %></td>
+ 
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Edit&nbsp;&nbsp;&nbsp;', edit_pakage_transfer_path(pakage_transfer), :class=>"submit_button" %></td>   
+	
+<% end %>
+</tbody>
+</table>
+<br />
+</div>
+</div>
+<p align="right"><div align="right" class="pagination"><%= will_paginate @pakage_transfer,  :style => "font: bold 15px Arial red;" %></p>
+

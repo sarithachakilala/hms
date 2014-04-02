@@ -1,0 +1,46 @@
+<div align="center" width="100%">
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+<tr>
+		<TH rowspan="2">S.No</TH> 
+		<TH rowspan="2">Org.Code</TH> 
+    	<TH rowspan="2">Category</TH>
+    	<TH rowspan="2">Sub category</TH>
+		<% if(@package_master_majestics[0]) %>
+			<TH colspan="<%= @package_master_majestics[0].package_master_majestic_children.length %>">Package Charge based on ward</TH>
+		<% end %>
+		<th rowspan="2" colspan="3">Permissions</th>
+	</tr>
+	<tr class="info">
+		<% if(@package_master_majestics[0]) %>
+			<% for package_child in @package_master_majestics[0].package_master_majestic_children %>
+				<th><%= package_child.ward_name %></th>
+			<% end %>
+		<% end %>
+  	</tr>
+</thead>
+<tbody>
+<% @i=0 %>
+<% @package_master_majestics.each do |package_master_majestic| %>
+<% if((@i%2)==0) 
+		id="datacelltwo"
+	else
+		id="datacellone"
+	end %>
+  <tr class='<%= id %>'>
+    <td><%= @i+=1 %></td>
+    <td><%=h package_master_majestic.org_code %></td>
+    <td><%=h package_master_majestic.category %></td>
+    <td><%=h package_master_majestic.sub_category %></td>
+    <% for package_child in package_master_majestic.package_master_majestic_children %>
+	<td><%= package_child.charge %></td>
+    <% end %>
+	<td align="center" class="submit_button"><%= link_to 'show', package_master_majestic %></td>
+	<td align="center"  class="submit_button"><%= link_to 'edit', edit_package_master_majestic_path(package_master_majestic) %></td>   
+	<td align="center"  class="submit_button"><%= link_to 'delete', package_master_majestic, :confirm => 'Are you sure?', :method => :delete %></td>
+    
+  </tr>
+<% end %>
+</tbody>
+</table>
+</div>

@@ -1,0 +1,379 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Pharmacy >>&nbsp;&nbsp;&nbsp;<a HREF='/goodsrecieptnotemasters' class="nav" style="text-decoration:none;">Goods Reciepts</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<div id="form_data">
+<%= stylesheet_link_tag 'jquery-ui' %>
+<%= javascript_include_tag 'jquery.min.js' %>
+<%= javascript_include_tag 'jquery-ui.min.js' %>  
+  
+  <script>
+  $(document).ready(function() {
+    $("input#itmem_name").autocomplete({
+    source: [
+			<% for item_masters in @item_masters %>
+				'<%= item_masters.product_name %>',
+			<% end %>
+			]
+	});
+  });
+  </script>
+  <script language="javascript" type="text/javascript">
+	function stopRKey(evt) {
+		
+		var evt  = (evt) ? evt : ((event) ? event : null);
+		var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+		if ((evt.keyCode == 13) && (node.type=="text")) { return false; }
+	}
+	document.onkeypress = stopRKey;
+</script>
+
+<script type="text/javascript">
+function getdlno(id)
+{
+	var agency=document.getElementById(id).value
+	
+		if(agency!="" && agency)
+			{
+				req = new Ajax.Request('/goodsrecieptnotemasters/ajax/1', 
+					{
+						method: 'get',
+						parameters: { agency: agency },
+						onComplete: function(transport){
+							processReqChange(transport);
+							}
+					}); // end ajax req
+			}
+			else
+			{
+				alert("Please Select Agency Name")
+				
+					document.getElementById(id).style.background='white'
+					document.getElementById(id).readOnly=false
+					document.getElementById(id).value=""
+				
+			}
+}
+
+</script>
+<script type="text/javascript">
+function medicine_search_ind(id,event)
+	{
+		if(event.keyCode!=13)
+			return false;
+		query2=document.getElementById(id).value
+			if(query2!="" && query2)
+			{
+				selectedid=id
+				ajax1()
+			}
+			document.getElementById(id).value=""
+	}
+	function ajax1()
+	{
+	req = new Ajax.Request('/goodsrecieptnotemasters/ajax1/1', 
+			{
+				method: 'get',
+				parameters: { query2: query2},
+				onComplete: function(transport){
+					processReqChange(transport);
+					}
+			}); // end ajax req
+	function processReqChange(req) 
+		{
+			// request is complete
+			
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				var temp_medicine = new Array
+				temp_medicine=results.split("<code>");
+						var store=new Array();
+						var add_amount_fields="total_amount,net_invoice_amount";
+						store[0]=temp_medicine[0]
+						store[1]=temp_medicine[1]
+						store[4]=temp_medicine[2]
+						store[9]=temp_medicine[3]
+						
+						add_row('r',12,'displayTable',store,add_amount_fields,9)
+					}
+		}
+	}
+
+	function cal_total(id,id_value)
+	{
+		if(document.getElementById(id).value!="" && document.getElementById(id).value)
+		{
+		var pur_rate=parseFloat(document.getElementById(id).value)
+		var quantity=parseInt(document.getElementById("r"+id_value+"c4").value)
+		if(document.getElementById("r"+id_value+"c4").value!="" && document.getElementById("r"+id_value+"c4").value && document.getElementById("r"+id_value+"c11").value!="" && document.getElementById("r"+id_value+"c11").value)
+				document.getElementById("r"+id_value+"c10").value=(pur_rate*quantity).toFixed(2);
+			else
+			{
+				alert("please enter quantity");
+				document.getElementById("r"+id_value+"c4").focus();
+			}
+			select_amount(id_value)
+		}
+	
+	}
+	function cal_discount()
+	{
+		var table = document.getElementById("displayTable");
+		var j=0;
+		for(i=0;i<table.rows.length;i++)
+		{
+			if(document.getElementById("r"+(i)+"c1").value!="" && document.getElementById("r"+(i)+"c1").value)
+			{
+				j=i+1;
+			}
+			else
+				break;
+		}
+		select_amount(j);
+	}
+</script>
+<script type="text/javascript">
+  
+function select_amount(s_no1)
+{
+
+	var amount=0
+	var discount=0
+	var mrp_rate=0
+	var vat_per=0	
+	document.getElementById("fourt_value").value=0
+	document.getElementById("fourt_vat").value=0
+	document.getElementById("total_vat").value=0
+	document.getElementById("five_value").value=0
+	document.getElementById("five_vat").value=0	
+	document.getElementById("zero_pre").value=0
+	for(i=0;i<=parseInt(s_no1);i++)
+	{
+		if(parseFloat(document.getElementById("r"+i+"c11").value)==5)
+		{
+			document.getElementById("five_value").value=(parseFloat(document.getElementById("five_value").value)+(parseFloat(document.getElementById("r"+i+"c10").value))).toFixed(2);
+			if(document.getElementById("five_discount_per").value!="")
+			{	
+				document.getElementById("after_five_dic").value=(parseFloat(document.getElementById("five_value").value)-parseFloat(document.getElementById("five_discount_per").value)).toFixed(2);
+				document.getElementById("five_vat").value=(parseFloat(document.getElementById("after_five_dic").value)*parseFloat(5/100)).toFixed(2);
+				document.getElementById("total_vat").value=(parseFloat(document.getElementById("five_vat").value)+parseFloat(document.getElementById("fourt_vat").value)).toFixed(2);
+			}	
+		}			
+		else if(parseFloat(document.getElementById("r"+i+"c11").value)==14.5)
+		{
+			document.getElementById("fourt_value").value=(parseFloat(document.getElementById("fourt_value").value)+(parseFloat(document.getElementById("r"+i+"c10").value))).toFixed(2);
+			if(document.getElementById("fourt_dic_per").value!="")
+			{	
+				document.getElementById("after_fourt_dic").value=(parseFloat(document.getElementById("fourt_value").value)-parseFloat(document.getElementById("fourt_dic_per").value)).toFixed(2);
+				document.getElementById("fourt_vat").value=(parseFloat(document.getElementById("after_fourt_dic").value)*parseFloat(14.5/100)).toFixed(2);
+				document.getElementById("total_vat").value=(parseFloat(document.getElementById("five_vat").value)+parseFloat(document.getElementById("fourt_vat").value)).toFixed(2);
+			}	
+		}
+		else if(parseFloat(document.getElementById("r"+i+"c11").value)==0)
+		{
+			document.getElementById("zero_pre").value=(parseFloat(document.getElementById("zero_pre").value)+(parseFloat(document.getElementById("r"+i+"c10").value))).toFixed(2);
+			if(document.getElementById("zero_pre_dic").value!="")
+			{	
+				document.getElementById("after_zero_dic").value=(parseFloat(document.getElementById("zero_pre").value)-parseFloat(document.getElementById("zero_pre_dic").value)).toFixed(2);
+			}	
+		}		
+	}
+	document.getElementById("sub_total").value=(parseFloat(document.getElementById("after_fourt_dic").value)+parseFloat(document.getElementById("after_five_dic").value)+parseFloat(document.getElementById("after_zero_dic").value)).toFixed(2);
+	document.getElementById("net_invoice_amount").value=(parseFloat(document.getElementById("sub_total").value)+parseFloat(document.getElementById("total_vat").value)).toFixed(2);
+	document.getElementById("total_amount").value=(parseFloat(document.getElementById("sub_total").value)+parseFloat(document.getElementById("total_vat").value)).toFixed(2);
+}
+	function change_date_format(id)
+	{
+		if(document.getElementById(id).value!="" && document.getElementById(id).value)
+		{
+			var date_temp=document.getElementById(id).value.split("/");
+			if(date_temp[1].length==2)
+				var year=2000+parseInt(date_temp[1])
+			else
+				var year=date_temp[1]
+			document.getElementById(id+"c12").value=year+"-"+date_temp[0]+"-01";
+		}
+	}	
+
+</script>
+
+
+<% form_for(@goodsrecieptnotemaster) do |f| %>
+<%= f.error_messages %>
+<%= hidden_field :user_id, :value => @person.id %>
+<% @date=format_date(:sort, Date.today ) %>
+<div align="center">
+	<fieldset><legend><div class="font"><b>Goods Receipt Details</b></div></legend>
+	<table   width="100%" >
+	<tr>	
+		<%= f.hidden_field :org_code, :value => @org_code, :size => 20, :id => "org_code", :readonly => true %>
+		<%= f.hidden_field :org_location, :value => @org_location, :size => 20, :id => "org_location", :readonly => true %>
+	<!--	<td>PO.No<sup>*</sup></td>
+        <td><%= f.select :po_number,Purchaseordermaster.find(:all, :conditions => "status ='in-order' and org_code='#{@org_code}' " ).collect {|p| [ p.po_number]}, {:prompt => true},{:id => "po_number",:onchange => "ajaxSearch(id)"} %></td>
+        <td>PO.Date</td>
+        <td><%= f.text_field :po_date, :id => "po_date", :size =>"20",:readOnly => true %></td>
+    -->    <td>Agency Name</td>
+        <td><%= f.select :agency_name, AgencyMaster.find(:all).collect{|p| [p.agency_name]},{:prompt =>true},{:id =>"agency_name", :onChange => "getdlno(id)" } %></td>
+		<td>Agency DL No</td>
+        <td><%= f.text_field :agency_dl_no, :id => "agency_dl_no", :size =>20,:readOnly => true %></td>
+		<td>Agency TIN No</td>
+        <td><%= f.text_field :agency_tin_no, :id => "agency_tin_no", :size =>20,:readOnly => true %></td>
+    </tr>
+    <tr>
+		<td>Invoice No<sup>*</sup></td>
+        <td><%= f.text_field :invoice_number,:size =>"20" %></td>
+        <td>Invoice Dt<sup>*</sup></td>
+     	<td><%= f.text_field :invoice_date, :size => "15", :id => "dob" %>
+			<a href="javascript:void(0)" onClick="setYears(2000, 2050);showCalender(this,'dob'); "  >
+			<img src="/images/cal.gif" ></a></td>
+	    <%= f.hidden_field :status, :value=>"Received" %>
+</table>
+<table> 
+         <tr>            
+	 <td>Product Name</td>
+             <td><%= f.text_field :item_name, :id => "itmem_name", :onKeyUp => "medicine_search_ind(id,event)", :style=>"width:850px;" %> </td>
+		</tr>
+	</table>
+	</fieldset>
+
+	</tr>
+	</table>
+	
+	  	
+<table width="100%">
+  <tr>
+	<td colspan="13">
+	<div id="info">
+    <table class="tableone">
+   <caption style="background: url(/images/vertical1_04.jpg) repeat-x top left;text-align:center;" ><font color="#F0FFFF" face="Cambria" ><b>Prescribed Medicines</b></font></caption>
+     <thead>
+         <tr>
+			<th width="50px" style="color:black;">S.No</th>
+			<th width="125px" style="color:black;">Product Name</th>
+		    <th width="100px" style="color:black;">Drug Type</th>
+			<th width="100px" style="color:black;">Qty</th>
+			
+			<th width="100px" style="color:black;">Free</th>
+			<th width="100px" style="color:black;">Packing</th>
+			<th width="100px" style="color:black;">Batch No</th>
+			<th width="100px" style="color:black;">Exp.Dt</th>
+			<th width="100px" style="color:black;">MRP</th>
+			<th width="100px" style="color:black;">Pur.Rate</th>
+			<th width="100px" style="color:black;">Amt</th>
+			<th width="100px" style="color:black;">Vat(%)</th>
+			<th width="48px" style="color:black;">Del</th>
+		</tr>
+    </thead>
+     <tbody>
+		<tr><td colspan="13">
+			<div class="innerb">
+			<table class="tabletwo" id="displayTable">
+			<% i=0 %>
+			<% f.fields_for :store_child do |a| %>
+				<% if (i%2==0) %>
+					<tr>
+				<% else%>
+					<tr class="dk">
+				<% end %>	
+
+					<td width="50px"><%= text_field_tag('s_no','', :style=>"width:100%", :id => "r#{i}c1", :class => "nbb") %></td> 
+					<td width="125px"><%= a.text_field :item_name, :style=>"width:100%", :id => "r#{i}c2", :class => "nbb",:readOnly => true %></td> 
+					<td width="100px"><%= a.text_field :drug_type, :style=>"width:100%", :id => "r#{i}c3", :class => "nbb" %></td> 
+					<td width="100px"><%= a.text_field :requisation_qty, :style=>"width:100%", :id => "r#{i}c4", :class => "nbb" %></td> 
+					<td width="100px"><%= a.text_field :free, :style=>"width:100%", :id => "r#{i}c5", :class => "nbb" %></td> 
+					<td width="100px"><%= a.text_field :packing, :style=>"width:100%", :id => "r#{i}c6", :class => "nbb"%></td> 
+					<td width="100px"><%= a.text_field :batch_no, :style=>"width:100%", :id => "r#{i}c7", :class => "nbb" %></td> 
+					<td width="100px"><%= text_field_tag('expiry_date_test', '',:style=>"width:100%", :id => "r#{i}", :class => "nbb", :onFocusOut=>"change_date_format(id)", :placeholder => "mm/yyyy") %></td> 
+					<%= a.hidden_field :expiry_date, :style=>"width:100%", :id => "r#{i}c12", :class => "nbb"%>
+					<td width="100px"><%= a.text_field :mrp, :style=>"width:100%", :id => "r#{i}c8", :class => "nbb" %></td> 
+					<td width="100px"><%= a.text_field :purchase_rate, :style=>"width:100%", :id => "r#{i}c9", :class => "nbb", :onkeyup=>"cal_total(id,'#{i}')" %></td> 
+					<td width="100px"><%= a.text_field :amount, :style=>"width:100%", :id => "r#{i}c10", :class => "nbb",:readOnly => true %></td> 
+					<td width="100px"><%= a.text_field :vat, :style=>"width:100%", :id => "r#{i}c11", :class => "nbb",:readOnly => true %></td> 
+					<td width="40px" id="r<%= i %>c13"></td>			
+	</tr>
+				<% i+=1 %>
+				
+		
+				
+			<% end %>
+			</table>
+			</div>
+		</td>
+		</tr>
+	</tbody>
+     </table>
+   </div>
+	</td>
+  </tr>
+ </table>
+ 
+
+ 
+ </fieldset>
+
+	<table width="100%">
+	<tr>
+			 <td>0% Value </td> 
+             <td><%= f.text_field :zero_pre, :size =>"20", :value=>0, :id => "zero_pre", :readOnly => true %>
+             <td>Discount</td>
+             <td><%= f.text_field :zero_pre_dic,:size =>"20", :value=>0, :id => "zero_pre_dic", :onKeyUp => "cal_discount()" %>
+			 <td>After.Dis</td> 
+             <td><%= f.text_field :after_zero_dic, :size =>"20", :value=>0, :id => "after_zero_dic", :readOnly => true %>
+	</tr>
+	<tr>
+			 <td>5% Value </td> 
+             <td><%= f.text_field :five_value, :size =>"20", :value=>0, :id => "five_value", :readOnly => true %>
+             <td>Discount</td>
+             <td><%= f.text_field :five_discount_per,:size =>"20", :value=>0, :id => "five_discount_per", :onKeyUp => "cal_discount()" %>
+			 <td>After.Dis</td> 
+             <td><%= f.text_field :after_five_dic, :size =>"20", :value=>0, :id => "after_five_dic", :readOnly => true %>
+             <td>5% Vat</td>
+             <td><%= f.text_field :five_vat,:size =>"20", :value=>0, :id => "five_vat",  :readOnly => true %>
+	</tr>
+	<tr>
+			 <td>14.5% value</td>
+             <td><%= f.text_field :fourt_value,  :value=>0,:id => "fourt_value",:readOnly => true, :size =>"20" %></td>
+             <td>Discount</td>
+             <td><%= f.text_field :fourt_dic_per, :value=>0,:id =>"fourt_dic_per", :size =>"20", :onKeyUp => "cal_discount()" %></td>
+			 <td>After.Dis</td>
+             <td><%= f.text_field :after_fourt_dic,  :value=>0,:id => "after_fourt_dic",:readOnly => true, :size =>"20" %></td>
+             <td>14.5% Vat</td>
+             <td><%= f.text_field :fourt_vat, :value=>0,:id =>"fourt_vat", :readOnly => true, :size =>"20" %></td>
+	</tr>
+	<tr>
+			 <td>Total Vat Value</td>
+             <td><%= f.text_field :total_vat, :id =>"total_vat", :readOnly => true, :size =>"20", :value=>0 %></td>
+			 <td>Sub Total</td>
+             <td><%= f.text_field :sub_total, :value=>0,:id =>"sub_total", :readOnly => true, :size =>"20" %></td>
+       		 <td>Total Amount</td> 
+             <td><%= f.text_field :total_amount, :size =>"20", :value=>0, :id => "total_amount", :readOnly => true %>
+             <td>Net Amt</td>
+             <td><%= f.text_field :net_invoice_amount, :id => "net_invoice_amount", :size =>"20" %></td>
+	</tr>
+	<tr>
+			<td>Purchase Return No</td>
+			<td><%= f.select :pur_ret_no,PurchaseOrderReturn.find(:all, :conditions =>"org_code='#{@org_code}' " ).collect {|p| [ p.return_no]}, {:prompt => true},{:id => "return_no",:onchange => "ajaxSearch(id)"} %></td>
+             
+			<td>Return Amt</td>
+            <td><%= f.text_field :ret_amt, :id => "ret_amt", :size =>"20"%></td>
+			<td>Note Amount</td>
+            <td><%= f.text_field :note_amt, :id => "note_amt", :size =>"20", :onkeyup=>"ajaxSearch(id)"%></td>
+			<td>Goods Amt</td>
+            <td><%= f.text_field :goods_amt, :id => "goods_amt", :size =>"20"%></td>
+	</tr>
+</table>
+<table align="center">
+<tr>
+	<td><%= submit_tag "", :value => " Save ", :class => "submit_button", :onClick => "this.disabled=true;this.value='Process..';this.form.submit();" %></td>
+	<td><%= submit_tag "", :value => " Reset ", :type => "reset",  :class => "submit_button" %></td>
+	<td valign="middle"><%= link_to "back",  goodsrecieptnotemasters_path, :class=>"new1" %></td>
+</tr>
+</table>	
+
+<% end %>
+</div>

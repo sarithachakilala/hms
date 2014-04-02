@@ -1,0 +1,32 @@
+<h1>Listing store_test_result_children</h1>
+
+<table>
+  <tr>
+    <th>Store test result</th>
+    <th>Servce name</th>
+    <th>Test name</th>
+    <th>Rate</th>
+    <th>Lbound</th>
+    <th>Ubound</th>
+    <th>Units</th>
+  </tr>
+
+<% @store_test_result_children.each do |store_test_result_child| %>
+  <tr>
+    <td><%=h store_test_result_child.store_test_result_id %></td>
+    <td><%=h store_test_result_child.servce_name %></td>
+    <td><%=h store_test_result_child.test_name %></td>
+    <td><%=h store_test_result_child.rate %></td>
+    <td><%=h store_test_result_child.lbound %></td>
+    <td><%=h store_test_result_child.ubound %></td>
+    <td><%=h store_test_result_child.units %></td>
+    <td><%= link_to 'Show', store_test_result_child %></td>
+    <td><%= link_to 'Edit', edit_store_test_result_child_path(store_test_result_child) %></td>
+    <td><%= link_to 'Destroy', store_test_result_child, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New store_test_result_child', new_store_test_result_child_path %>

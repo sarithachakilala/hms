@@ -1,0 +1,51 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Pharmacy Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/itemmasters?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Item Masters</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<h3 align="center"><font color="#015a84"><%=h @itemmaster.product_name %> Record</font></h3>
+<div align="center">
+<table width="80%" " border="0">
+<tr>
+<td bgcolor=#c6dfff>Org.Code</td>
+<td bgcolor=#c6dfff>:</td>
+<td bgcolor="#d9e8f0"><%=h @itemmaster.org_code %></td>
+<td bgcolor=#c6dfff>Org.Location</td>
+<td bgcolor=#c6dfff>:</td>
+<td bgcolor="#d9e8f0"><%=h @itemmaster.org_location %></td>
+<td bgcolor=#c6dfff>Type</td>
+<td bgcolor=#c6dfff>:</td>
+<td bgcolor="#d9e8f0"><%=h @itemmaster.is_medical_item %></td>
+</tr>
+<tr>
+<td bgcolor=#c6dfff>Drug Type</td>
+<td bgcolor=#c6dfff>:</td>
+<td bgcolor="#d9e8f0"><%=h @itemmaster.drug_type %></td>
+<td bgcolor=#c6dfff>Product Name</td>
+<td bgcolor=#c6dfff>:</td>
+<td bgcolor="#d9e8f0"><%=h @itemmaster.product_name %></td>
+<td bgcolor=#c6dfff>Packing</td>
+<td bgcolor=#c6dfff>:</td>
+<td bgcolor="#d9e8f0"><%=h @itemmaster.packing %></td>
+</tr>
+<tr>
+<td bgcolor=#c6dfff>Number Of Units</td>
+<td bgcolor=#c6dfff>:</td>
+<td bgcolor="#d9e8f0"> <%=h @itemmaster.units%></td>
+<td bgcolor=#c6dfff>Manufacturer</td>
+<td bgcolor=#c6dfff>:</td>
+<td bgcolor="#d9e8f0"> <%=h @itemmaster.manufacturer%></td>
+<td bgcolor=#c6dfff>Drug Formula</td>
+<td bgcolor=#c6dfff>:</td>
+<td bgcolor="#d9e8f0"> <%=h @itemmaster.drug_formula%></td>
+<td bgcolor=#c6dfff>Vat</td>
+<td bgcolor=#c6dfff>:</td>
+<td bgcolor="#d9e8f0"> <%=h @itemmaster.vat%></td>
+</tr> 
+</table>
+</div><br/>
+<center>
+<td valign="middle"><%= link_to "back",  itemmasters_path, :class=>"new1" %></td> 

@@ -1,0 +1,34 @@
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+  <tr>
+     <th>S.No</th>     
+	<th>Issue No</th>
+	<th>Issue Dt</th>
+	<th>Total Amt</th>
+	<th>Paid Amt</th>
+	<th>Due Amt</th>
+	<th colspan=3>Permissions</th>
+  </tr>
+</thead>
+<tbody>
+<% @i=0 %>
+<% @issues_to_op.each do |issues_to_op| %>
+<% if((@i % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+  end %>
+	<tr class='<%= id %>'>
+		<td><%= @i+=1 %></td>
+    	<td><%=h issues_to_op.issue_no %></td>
+    	<td><%=h issues_to_op.issue_date %></td>
+		<td><%=h issues_to_op.due_amount %></td>
+		<td><%=h issues_to_op.paid_amt %></td>
+		<td><%=h issues_to_op.due %></td>
+	<td align="center" class="submit_button"><%= link_to 'show', issues_to_op %></td>
+	<td align="center"  class="submit_button"><%= link_to 'edit', edit_issues_to_op_path(issues_to_op) %></td>   
+    <td  align="center" class="submit_button"><%= link_to "Print", {:action => 'report', :id => issues_to_op.id, :format => "pdf"} %></td>
+ </tr>
+<% end %>
+</tbody>
+</table>

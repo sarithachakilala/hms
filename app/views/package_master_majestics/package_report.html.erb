@@ -1,0 +1,122 @@
+<script type="text/javascript"> 
+	
+	function details(id1)
+	{
+	window.open('/package_master_majestics/display_package/1?id1='+id1,'open_window','dependent, width=640, height=480, left=0, top=0');
+	}
+	
+	function package_search()
+	{   
+		
+		var from_date=document.getElementById('from_date_').value
+		var to_date=document.getElementById('to_date_').value
+		var org_code=document.getElementById('org_code1').value
+		var package=document.getElementById('package').value
+		var sub_package=document.getElementById('sub_package').value
+		var report_type="package_info"
+		if(!package)
+		{
+			alert("please select fields");
+			return false;
+			
+		}
+		req = new Ajax.Request('/package_master_majestics/find_report/1', {
+				method: 'get',
+				parameters: { from_date:from_date, to_date :to_date, org_code:org_code,package:package,sub_package:sub_package},
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			});
+		function processReqChange(req) 
+		{
+			if(req.responseText=="No Records")
+				document.getElementById("table").value=req.responseText
+			else
+				document.getElementById("table").innerHTML=req.responseText
+		}
+	}
+	function clear_function()
+	{
+		document.getElementById('org_code1').value=""
+		document.getElementById('from_date_').value=""
+		document.getElementById('to_date_').value=""
+		document.getElementById('package').value=""
+	}
+
+	function select_sub_package(id)
+	{
+		var org_code=document.getElementById('org_code1').value
+		var package=document.getElementById(id).value
+		
+		req = new Ajax.Request('/package_master_majestics/sub_package/1', {
+				method: 'get',
+				parameters: { org_code:org_code,package:package},
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			});
+		function processReqChange(req) 
+		{
+			var results=req.responseText
+			var temp=results.split("<division>");
+			document.getElementById('sub_package').length=0
+			var opt = document.createElement('option');
+			document.getElementById('sub_package').options.add(opt);
+			opt.text =""
+			for(var j=0;j<temp.length;j++)
+			{
+				var opt = document.createElement('option');
+				document.getElementById('sub_package').options.add(opt);
+				opt.text =temp[j]
+				opt.value=temp[j]
+			}
+
+		}
+
+	}
+ </script> 
+
+<body style="margin:0px;" onload="setMyDiv('/package_master_majestics/package_report/1','new','')">
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Report >>&nbsp;&nbsp;&nbsp;<a HREF='/package_master_majestics/package_report/1' class="nav" style="text-decoration:none;">Package Report</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<body onload="package_search()">
+<font size="3" face="Calibri">
+<%= form_tag ({:action =>  :export_to_csv}, {:method => "post"}) %>
+  <% @date=format_date(:sort, Date.today ) %>
+<fieldset>
+<legend><div class="font"><b>Search</b></div></legend>
+<table width="100%"  align="center">
+<tr>
+	<td>Org.Code</td>
+	<td><%= select:org_code1,"o",Person.find(:all, :select=>"DISTINCT org_code").collect {|p|[p.org_code]},{:prompt => 'All'},{:id => "org_code1"}  %></td>
+	<td><label for="item_name">From Date</label></td>
+	<td><%= text_field('from_date', '',:size => 20,:value=>"#{@date}") %><a href="javascript:void(0)" onClick="setYears(2000, 2050);showCalender(this,'from_date_');" >
+		<img src="/images/cal.gif" ></a></td>
+    	<td><label for="item_name">To Date</label></td>
+	<td><%= text_field('to_date', '',:size => 20,:value=>"#{@date}") %><a href="javascript:void(0)" onClick="setYears(2000, 2050);showCalender(this,'to_date_');" >
+		<img src="/images/cal.gif" ></a></td>
+	</tr>
+	<tr>
+	<td>Packages</td>
+	<td><%= select:package ,"", PackageMasterMajestic.find(:all, :conditions =>"org_code ='#{@org_code}'", :select => "DISTINCT category").collect{|p|[p.category]},{:prompt => true},{:id => "package", :onChange => "select_sub_package(id)"}  %></td>
+	<td>Sub Packages</td>
+	<td><%= select:sub_package ,"", '',{:prompt => true},{:id => "sub_package"} %></td>
+	 <td><a href="javascript:void(0);" class="new1" onClick ="package_search()">Search</a>
+	<a href="javascript:void(0);" class="new1" onClick ="clear_function()">Clear</a></td>
+</tr>	
+</table>
+</fieldset>
+<div class="font">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Results :</b>
+
+</div>
+<div id="table" align ="center">
+</div>
+ <center><%= submit_tag "", :value => " Save ", :class => "submit_button" %></center>
+ <%= form_tag %>
+</body>

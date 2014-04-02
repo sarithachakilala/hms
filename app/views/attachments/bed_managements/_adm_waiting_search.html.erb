@@ -1,0 +1,41 @@
+<div align="center" >
+<table width="60%">
+<% @i=0 %>
+<table width="100%" class="sofT">
+  <tr class="info">
+			<th>S.No</th>
+			<th>First Name</th> 
+			<th>Last Name</th>
+            <th>Ward</th> 
+			<th>Room</th>
+			<th>Floor</th>
+			<th>Bed</th>
+			<th>Status</th>
+			<th>Comments</th>
+			<th>Admit</th>
+	</tr>
+<%  @admission.each do |admission| %> 
+       <% if((admission.id % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+  end %>
+    <% registration=Registration.find_by_mr_no_and_org_code(admission.mr_no,$org_code) %>
+	<tr>
+	
+		<td class='<%= id %>'><%= @i=@i+1 %></td>
+		<td class='<%= id %>'><%=h registration.first_name %></td>
+		<td class='<%= id %>'><%=h registration.last_name %></td>
+		<td class='<%= id %>'><%=h admission.ward %></td>
+		<td class='<%= id %>'><%=h admission.room %></td>
+		<td class='<%= id %>'><%=h admission.floor %></td>
+		<td class='<%= id %>'><%=h admission.bed %></td>
+		<td class='<%= id %>'><%=h admission.admn_status %></td>
+		<td class='<%= id %>'><%=h admission.comments %></td>
+	    <td class='<%= id %>'><a href='javascript:void(0)' onclick="window.open('/admissions/new_admission/1?record_id=<%=admission.id %>&user_id=<%= @user_id %>&mr_no=<%= registration.mr_no %>&ward=<%= admission.ward %>&floor=<%= admission.floor %>&room=<%= admission.room%>&bed=<%= admission.bed%>','open_window','menubar, scroll=1,toolbar, location, width=1000, height=480, left=0, top=0')">
+		<%= image_tag("buttons/admit.png", :size => "54x21", :border =>"0") %></td>		
+		
+	</tr>
+
+<% end %>
+</table>

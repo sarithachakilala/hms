@@ -1,0 +1,98 @@
+<%= javascript_include_tag :defaults %>
+<script type="text/javascript">
+	function set_url()
+	{
+		
+		var from_date=document.getElementById('from_date').value
+		var to_date=document.getElementById('to_date').value
+		var org_code=document.getElementById('org_code_c').value
+		if(from_date=="" || to_date=="")		
+		{
+		alert("Please Select The Date Range")
+          return false		
+		}
+		req = new Ajax.Request('/test_bookings/test_cancels_report_form/1', 
+			{
+				method: 'get',
+				parameters: {from_date :from_date, to_date :to_date, org_code :org_code },
+				onComplete: function(transport){
+					processReqChange(transport);
+					}
+			}); // end ajax req
+		function processReqChange(req) 
+		{
+			if(req.responseText=="No Records")
+				document.getElementById("table").value=req.responseText
+			else
+				document.getElementById("table").innerHTML=req.responseText
+		}
+	}
+</script>
+<body style="margin:0px;" onload="set_url()">
+
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">&nbsp;&nbsp;Report >>&nbsp;&nbsp;&nbsp;Laboratory Reports >>&nbsp;&nbsp;&nbsp;<a HREF='/test_bookings/test_wise_report/1' class="nav" style="text-decoration:none;">Test Cancel Report</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<div id="form_data">
+<% @date=format_date(:sort, Date.today ) %>
+<% @prev_date=format_date(:sort, Date.today-7 ) %>
+<fieldset><legend>Search Tests</legend>
+	<table width="60%" align="center">
+		<tr>
+		    <td>Org.Code</td>
+			<td><%= select :org_code,"c", Person.find(:all, :select =>"DISTINCT org_code").collect{|p| [p.org_code]}, {:prompt =>'All'} %></td>
+			<td>Form Date</td>
+			<td><%= text_field_tag('from_date','',:size=>20, :value => @prev_date) %><a href="javascript:void(0)" onClick="setYears(2000, 2050);showCalender(this,'from_date');" >
+			<img src="/images/cal.gif" ></a></td>
+			<td>To Date</td>
+			<td><%= text_field_tag('to_date','',:size=>20, :value => @date) %><a href="javascript:void(0)" onClick="setYears(2000, 2050);showCalender(this,'to_date');" >
+			<img src="/images/cal.gif" ></a></td>
+			
+			<td><a href="javascript:void(0)" onclick="set_url()" class="submit_button">Search</a></td>
+		</tr>
+	</table>
+</fieldset>
+<div class="font" id="table">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Results :</b>
+</div>
+
+<table id="calenderTable">
+    <tbody id="calenderTableHead">
+        <tr>
+			<td colspan="4" align="center">
+	          <select onChange="showCalenderBody(createCalender(document.getElementById('selectYear').value,
+	           this.selectedIndex, false));" id="selectMonth">
+	              <option value="0">Jan</option>
+	              <option value="1">Feb</option>
+	              <option value="2">Mar</option>
+	              <option value="3">Apr</option>
+	              <option value="4">May</option>
+	              <option value="5">Jun</option>
+	              <option value="6">Jul</option>
+	              <option value="7">Aug</option>
+	              <option value="8">Sep</option>
+	              <option value="9">Oct</option>
+	              <option value="10">Nov</option>
+	              <option value="11">Dec</option>
+	          </select>
+            </td>
+            <td colspan="2" align="center">
+			    <select onChange="showCalenderBody(createCalender(this.value, 
+				document.getElementById('selectMonth').selectedIndex, false));" id="selectYear">
+				</select>
+			</td>
+            
+		</tr>
+	</tbody>
+	<tbody id="calenderTableDays">
+		<tr style="">
+			<td>Sun</td><td>Mon</td><td>Tue</td><td>Wed</td><td>Thu</td><td>Fri</td><td>Sat</td>
+		</tr>
+	</tbody>
+    <tbody id="calender"></tbody>
+</table>
+</body>

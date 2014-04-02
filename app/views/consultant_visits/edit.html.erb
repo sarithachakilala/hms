@@ -1,0 +1,107 @@
+
+<script type="text/javascript"> 
+
+	
+	function select_org_code(id)
+	{
+		var org_code=document.getElementById(id).value
+		if(org_code)
+		{
+			req = new Ajax.Request('/consultant_visits/select_org_code/1', {
+				method: 'get',
+				parameters: { org_code: org_code },
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			}); // end ajax req
+		}
+		else
+		{
+			alert("Please Select org_code")
+		}
+	}
+	
+	// start of change by sateesh 2011-12-26  
+	function consultant()
+	{	
+		var department=document.getElementById("dept").value
+		var date=document.getElementById("dov").value
+		var org_code=document.getElementById("org_code").value
+		var admn_no=document.getElementById("admn_no").value
+		if(admn_no=="" || department=="")
+		{
+			alert("Please select Admn.no and department");
+			return false;
+		}
+		window.open('/consultant_visits/appointment/1?dapartment='+department+'&org_code='+org_code+'&date='+date+'&admn_no='+admn_no,'open_window','dependent, width=900, height=600, left=0, top=0');
+	}
+	
+ function stopRKey(evt) {
+  var evt  = (evt) ? evt : ((event) ? event : null);
+  var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+	if ((evt.keyCode == 13) && (node.type=="text")) { return false; }
+ }
+ document.onkeypress = stopRKey;
+</script>
+<% form_for(@consultant_visit) do |f| %>
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">IP Patients >>&nbsp;&nbsp;&nbsp;<a HREF='/consultant_visits?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Consultant Visits</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<body>
+<div id="form_data">
+<fieldset>
+<legend><div class="font"><b>Consultant Visits</b></div></legend>
+<table width="100%" >
+<%= f.hidden_field :org_code, :value => @org_code, :class =>"text_field", :id => "org_code", :readonly => true %>
+<%= f.hidden_field :org_location, :value => @org_location, :class =>"text_field", :id => "org_location",  :readonly => true %>
+		<tr>
+			<td>Admn No</td>
+			<td><%= f.text_field :admn_no, :class =>"text_field", :id =>"admn_no", :readonly=>true %>	
+			<td>MR No </td>
+			<td><%= f.text_field :mr_no, :class =>"text_field", :id =>"rno", :readonly=>true %></td>
+			<td>Patient Name </td>
+			<td><%= f.text_field :patient_name, :class =>"text_field", :id =>"patient_name" %></td>
+		</tr>
+        <tr>
+			<td>Ward </td>
+			<td><%= text_field_tag :ward,"", :id =>"ward", :readonly=>true, :value=>@admission.ward %></td>	
+			<td>Room </td>
+			<td><%= text_field_tag :room,"", :id =>"room", :readonly=>true, :value=>@admission.room %></td>
+			<td>Bed</td>
+			<td><%= text_field_tag :bed,"", :id =>"bed", :readonly=>true, :value=>@admission.bed%></td>
+	 </tr>
+	 <tr>
+		<td>Floor</td>
+		<td><%= text_field_tag :floor,"", :id =>"floor", :readonly=>true,  :value=>@admission.floor %> </td>
+	    <td>Department</td>
+        <td><%= f.select :department, DepartmentMaster.find(:all).collect{|p| [p.	department]},{:prompt => true},{:id =>"dept"} %>
+	    </td><td colspan="3"><%= link_to image_tag ("book_app.png", :border=>0, :height => "37", :width => "220"),"javascript: consultant()"  %>
+	</tr>
+
+	<tr>
+		<td>consultant</td>
+        <td><%= f.text_field :consultant, :class =>"text_field", :id =>"consultant" %></td>
+	    <td>Date Of Visit</td> 
+        <td><%= f.text_field :date_of_visit, :class =>"text_field", :id =>"dov", :value =>@date %><a href="javascript:void(0)" onClick="setYears(2000, 2050);showCalender(this,'dov'); "  >
+        <img src="/images/cal.gif" onblur = "alert('hai')"></a></td>	
+	    <td>Time of Visit</td>
+        <td><%= f.text_field :time_of_visit, :class =>"text_field", :id => "appt_time" %></td>
+    </tr>
+	
+</table>
+</fieldset>
+<table align="center">
+<tr>
+	<td><%= submit_tag "", :value => " Update ", :class => "submit_button" %></td>
+	<td valign="middle"><%= link_to "Back",  consultant_visits_path, :class=>"new1" %></td>
+</tr>
+</table>
+</div>
+<% end %>
+</body>
+

@@ -1,0 +1,33 @@
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+	<tr>
+    <th>S.No</th>  
+	<th>Org code</th>
+    <th>Org location</th>
+	<th>Name</th>
+	<th>No.of Rooms</th>
+    <th>Room Charge</th>
+	<th colspan="3">Permissions</th>
+  </tr>
+</thead>
+<tbody>
+<% @i=0 %>
+<% @ward_masters.each do |ward_master| %>
+<% if((@i % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+  end %>
+<tr class='<%= id %>'>
+	<td><%= @i+=1 %></td>
+	<td><%=h ward_master.org_code %></td>
+    <td><%=h ward_master.org_location %></td>
+    <td><%=h ward_master.name %></td>
+    <td><%=h ward_master.no_of_rooms %></td>
+    <td><%=h ward_master.cost %></td>
+    <td class='abc' align="center"><%= link_to image_tag("buttons/display1.png", :class => "info", :border =>"0"), ward_master %></td>
+    <td class='abc'align="center"><%= link_to image_tag("buttons/modify.png", :class => "info", :border =>"0"), edit_ward_master_path(ward_master) %></td>
+	<td class='abc'align="center"><%= link_to image_tag("buttons/delete.png", :class => "info", :border =>"0"),ward_master, :confirm => 'Are you sure?', :method => :delete %>
+  </tr>
+<% end %>
+</table>

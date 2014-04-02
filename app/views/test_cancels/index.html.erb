@@ -1,0 +1,26 @@
+<h1>Listing test_cancels</h1>
+
+<table>
+  <tr>
+    <th>Lab</th>
+    <th>Department name</th>
+    <th>Service name</th>
+    <th>Reason</th>
+  </tr>
+
+<% @test_cancels.each do |test_cancel| %>
+  <tr>
+    <td><%=h test_cancel.lab_id %></td>
+    <td><%=h test_cancel.department_name %></td>
+    <td><%=h test_cancel.service_name %></td>
+    <td><%=h test_cancel.reason %></td>
+    <td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Show&nbsp;&nbsp;&nbsp;', test_cancel, :class=>"submit_button" %></td>
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Edit&nbsp;&nbsp;&nbsp;', edit_test_cancel_path(test_cancel), :class=>"submit_button" %></td>   
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Delete&nbsp;&nbsp;&nbsp;', test_cancel, :confirm => 'Are you sure?', :method => :delete, :class=>"submit_button" %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New test_cancel', new_test_cancel_path %>

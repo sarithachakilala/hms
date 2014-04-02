@@ -1,0 +1,128 @@
+<script type="text/javascript"> 
+	var date_value
+	var date_value1
+	var org_code
+	function searchConsultation_Number()
+	{
+		date_value=document.getElementById('appt_date1').value
+		date_value1=document.getElementById('appt_date2').value
+		ajax()
+	}	
+	function calling_goodsreceiptpage(store_id)
+	{
+	window.open('/store_children/show/1?id='+store_id+'&cond=display','open_window','menubar=0, toolbar=0, scrollbars=1location, width=640, height=480, left=0, top=0')
+	}
+	function ajax()
+	{
+	    org_code= document.getElementById('org_code_c').value
+		  req = new Ajax.Request('/goodsrecieptnotemasters/goodsrecieptnotemaster_reporting/1', {
+				method: 'get',
+				parameters: { org_code:org_code,date_value:date_value,date_value1:date_value1},
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			});
+		function processReqChange(req) 
+		{
+	
+			if(req.responseText=="No Records")
+				document.getElementById("table").value=req.responseText
+			else
+				document.getElementById("table").innerHTML=req.responseText
+		}
+	}
+	function clear_function()
+	{
+		document.getElementById('appt_date1').value=""
+		document.getElementById('appt_date2').value=""
+	}
+	
+</script> 
+<body style="margin:0px;" onload="/goodsrecieptnotemasters/goodsrecieptnotemaster_report/1">
+
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">&nbsp;&nbsp;Report >>&nbsp;&nbsp;&nbsp;Pharmacy Reports >>&nbsp;&nbsp;&nbsp;<a HREF='/test_bookings/test_wise_report/1' class="nav" style="text-decoration:none;">Expiry Product Reports</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<div id="form_data">
+<%= form_tag ({:controller => "goodsrecieptnotemasters", :action => "export_to_csv"}, {:method => "post"}) %>
+<fieldset>
+<legend><div class="font"><b>Expiry Medicine Information</b></div></legend>
+<% @date=Date.today("%Y-%m-%d") %>
+<table  width="100%">
+  <tr>
+	<td>Org.Code</td>
+	<td><%= select :"org","code",Person.find(:all, :select =>"DISTINCT org_code").collect{|p| [p.org_code]},{:prompt=>true},{:id=>"org_code_c"} %>
+	
+	<td><label for="item_name">From Date</label></td>
+	<td><input type=text id="appt_date1" name="appt_date1" value='<%= @date %>' >
+	<a href="javascript:void(0)" onClick="setYears(2000, 2050);showCalender(this,'appt_date1');" >
+    	<img src="/images/cal.gif" ></a></td>
+	
+	<td><label for="item_name">To Date</label></td>
+	<td><input type=text id="appt_date2" name="appt_date2"value='<%= @date %>' >
+	<a href="javascript:void(0)" onClick="setYears(2000, 2050);showCalender(this,'appt_date2');" >
+	<img src="/images/cal.gif" ></a></td>
+	
+	<td><a href='javascript:void(0)' onclick="searchConsultation_Number()" class="submit_button">Search</a>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= link_to "&nbsp;&nbsp;Clear&nbsp;&nbsp;", "javascript: clear_function()",:class=>"submit_button" %></td>
+</tr>
+	
+	</table>
+	</fieldset>
+
+<div id="table" align ="center">
+
+</div>
+	</div>
+
+ <center><%= image_submit_tag("buttons/save-as.png", :width => "54px", :height =>"21px", :border =>"0") %></center>
+ <%= form_tag %>
+ 
+<table id="calenderTable">
+        <tbody id="calenderTableHead">
+          <tr>
+            <td colspan="4" align="center">
+	          <select onChange="showCalenderBody(createCalender(document.getElementById('selectYear').value,
+	           this.selectedIndex, false));" id="selectMonth">
+	              <option value="0">Jan</option>
+	              <option value="1">Feb</option>
+	              <option value="2">Mar</option>
+	              <option value="3">Apr</option>
+	              <option value="4">May</option>
+	              <option value="5">Jun</option>
+	              <option value="6">Jul</option>
+	              <option value="7">Aug</option>
+	              <option value="8">Sep</option>
+	              <option value="9">Oct</option>
+	              <option value="10">Nov</option>
+	              <option value="11">Dec</option>
+	          </select>
+            </td>
+            <td colspan="2" align="center">
+			    <select onChange="showCalenderBody(createCalender(this.value, 
+				document.getElementById('selectMonth').selectedIndex, false));" id="selectYear">
+				</select>
+			</td>
+          
+		  </tr>
+       </tbody>
+       <tbody id="calenderTableDays">
+         <tr style="">
+           <td>Sun</td><td>Mon</td><td>Tue</td><td>Wed</td><td>Thu</td><td>Fri</td><td>Sat</td>
+         </tr>
+       </tbody>
+       <tbody id="calender"></tbody>
+    </table>
+</fieldset>
+</div>
+
+<center>
+	  <iframe src="" id="frame" width="100%" height="450px" align="center" style="border:none"/>
+</center>
+</body>
+

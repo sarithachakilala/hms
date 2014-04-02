@@ -1,0 +1,91 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Pharmacy >>&nbsp;&nbsp;&nbsp;<a HREF='/issues_to_ops/issues_to_op_reports/1?user_id=<%= @user_id %>' class="nav" style="text-decoration:none;">Sales</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<div id="form_data">
+
+<%= stylesheet_link_tag 'css' %>
+<%= stylesheet_link_tag 'calendar' %>
+<%= javascript_include_tag :defaults %>
+<%= javascript_include_tag 'calendar.js' %>
+
+<script type="text/javascript">
+
+	function date_range()
+	{
+		org_code = document.getElementById('org_code_c').value;
+		var date1=document.getElementById('date').value
+		var date2=document.getElementById('date1').value
+		var patient_type=document.getElementById('type').value
+		
+		if(date1=="" || date2=="")
+		{
+			alert("Plz Select Dates")
+			return false;
+		}
+		req = new Ajax.Request('/issues_to_ops/sales/1', {
+				method: 'get',
+				parameters: {  date1: date1, date2: date2, org_code:org_code, patient_type:patient_type },
+				onComplete: function(transport) {
+					processReqChange(transport);
+				}
+		});
+		function processReqChange(req) 
+		{
+			if(req.responseText=="No Records")
+			{
+				document.getElementById("table").style.color='red'
+				document.getElementById("table").innerHTML=req.responseText
+			}else
+				document.getElementById("table").innerHTML=req.responseText
+		}
+	}
+	function calling_goodsreceiptpage(no)
+	{
+		window.open('/issues_to_ops/show1/1?id1='+no+'&cond=display','open_window','menubar=0, toolbar=0, scrollbars=1location, width=640, height=480, left=0, top=0')
+	}
+
+	function clear_function()
+	{
+		document.getElementById('date').value=""
+		document.getElementById('date1').value=""
+	}
+</script>
+<body style="margin:0px;" onLoad="date_range()">
+<%= form_tag ({:controller => "issues_to_ops", :action => "generate_reports"}, {:method => "post"}) %>
+<fieldset>
+<legend>Search</legend>
+
+<div align="center" width="100%">
+<table align="center" width="60%">
+<% @date=format_date(:sort, Date.today ) %>
+<tr>
+
+	<td><label for="item_name">From Date</label></td>
+	<td><input type=text id="date" value=<%= @date %>><a href="javascript:void(0)" onClick="setYears(2000, 2050);showCalender(this,'date');" >
+      <img src="/images/cal.gif" ></a></td>
+	<td><label for="item_name">To Date</label></td>
+	<td><input type=text id="date1" value=<%= @date %>><a href="javascript:void(0)" onClick="setYears(2000, 2050);showCalender(this,'date1');" >
+      <img src="/images/cal.gif" ></a></td>
+	<td>Patient Type</td>
+	<td><%= select :"patient_type","",[['OP'],['IP'],['OSP']],{:prompt=>'All'}, {:id=>"type"} %></td>
+	<%= hidden_field_tag('org_code','',:id=>"org_code_c", :value =>@org_code) %>
+	<td class="button"><a href="javascript:void(0)" onclick = "date_range()" class="new1" %>Search</a></td>
+	
+</tr>
+</table>
+</div>
+</body>
+</fieldset>
+
+<div id="table" align="center">
+
+</div>
+<%= form_tag %>
+ 
+
+

@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<title>Medieaz-Cloud Hospital Management System</title>
+	<link rel="shortcut icon" href="images/Exleaz-E.png" type="image/png" size=32x52 />
+	<%= stylesheet_link_tag 'styles' %>
+	<%= stylesheet_link_tag 'domtab' %>
+	<%= javascript_include_tag :defaults %>
+	<%= stylesheet_link_tag 'ddsmoothmenu.css' %>
+	<%= javascript_include_tag 'ddsmoothmenu.js' %>
+	<%= javascript_include_tag 'jquery-1.7.1.min.js' %>
+	<script type="text/javascript">
+
+	ddsmoothmenu.init({
+		mainmenuid: "smoothmenu1", //menu DIV id
+		orientation: 'h', //Horizontal or vertical menu: Set to "h" or "v"
+		classname: 'ddsmoothmenu', //class added to menu's outer DIV
+		//customtheme: ["#1c5a80", "#18374a"],
+		contentsource: "markup" //"markup" or ["container_id", "path_to_menu_file"]
+	})
+
+	ddsmoothmenu.init({
+		mainmenuid: "smoothmenu2", //Menu DIV id
+		orientation: 'v', //Horizontal or vertical menu: Set to "h" or "v"
+		classname: 'ddsmoothmenu-v', //class added to menu's outer DIV
+		//customtheme: ["#804000", "#482400"],
+		contentsource: "markup" //"markup" or ["container_id", "path_to_menu_file"]
+	})
+</script>
+
+<script type = "text/javascript" >
+	function disableBackButton()
+	{
+		window.history.forward();
+	}
+	setTimeout("disableBackButton()", 0);
+</script>
+
+<style type="text/css">
+	a
+	{
+		color :white;
+		text-decoration:none;
+		
+	}
+	a:hover{
+		color:#bf0101;
+		text-decoration:none;
+		
+	}
+	a.nav
+	{
+		color :blue;
+	}
+</style>
+</head>
+<body style="overflow:hidden;">
+<%= yield %>
+</body>
+</html>

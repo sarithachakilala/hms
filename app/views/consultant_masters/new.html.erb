@@ -1,0 +1,210 @@
+<%= javascript_include_tag :defaults %> 
+<script type="application/javascript">
+function checked_value()
+	{
+	  
+		var selObj = document.getElementById('payment_type');
+		var payment_type= selObj.options[selObj.selectedIndex].value
+		if(payment_type == "Salary")
+		{
+		document.getElementById('sal').disabled=false
+		document.getElementById('salt').disabled=false
+		document.getElementById('per').disabled=true
+		
+	   }
+	else if(payment_type == "Percentage")
+	{
+		document.getElementById('sal').disabled=true
+		document.getElementById('salt').disabled=true
+		document.getElementById('per').disabled=false
+	}
+	else if(payment_type == "Both")
+	{
+		document.getElementById('sal').disabled=false
+		document.getElementById('salt').disabled=false
+		document.getElementById('per').disabled=false
+	}
+	
+	}
+	function check(id)
+	{
+	  	var selObj = document.getElementById(id);
+		var charge= selObj.options[selObj.selectedIndex].value
+	
+		if(charge == "OP")
+		{
+		document.getElementById('scharge').disabled=false
+		document.getElementById('tab').style.display='none'
+		document.getElementById('ctype').disabled=true
+		document.getElementById('ndcharge').disabled=false
+		document.getElementById('echarge').disabled=false
+		
+	   }
+	else if(charge == "IP")
+	{  
+		document.getElementById('scharge').disabled=true
+		document.getElementById('ndcharge').disabled=true
+		document.getElementById('echarge').disabled=true
+		document.getElementById('tab').style.display='block'
+		document.getElementById('ctype').disabled=true
+	}
+	else if(charge == "Both")
+	{
+		
+		document.getElementById('tab').style.display='none'
+		document.getElementById('ctype').disabled=false
+		
+	}
+		else if(charge=="Both Flat")
+	{
+	document.getElementById('scharge').disabled=false
+	document.getElementById('ndcharge').disabled=false
+	document.getElementById('echarge').disabled=false
+	document.getElementById('tab').style.display='none'
+	}
+	else if(charge=="Both Variable")
+	{
+	document.getElementById('scharge').disabled=false
+	document.getElementById('ndcharge').disabled=false
+	document.getElementById('echarge').disabled=false
+	document.getElementById('tab').style.display='block'
+	}
+
+ }
+	var fields=new Array("name","designation","phno")
+	function select_empid(id)
+	{
+	var selObj = document.getElementById(id);
+	consultant = selObj.options[selObj.selectedIndex].value
+	selected_type=id
+	ajax_code()
+	}
+	
+	function ajax_code()
+	{
+		req = new Ajax.Request('/consultant_masters/ajax_function/1', 
+			{
+				method: 'get',
+				parameters: {consultant: consultant,  selected_type:selected_type },
+				onComplete: function(transport){
+					processReqChange(transport);
+					}
+			}); // end ajax req
+		function processReqChange(req) 
+		{
+			// request is complete
+			
+			if (req.readyState == 4) 
+			{
+				var results = req.responseText;
+				if(selected_type=="emp_id")
+				{
+					var temp=new Array
+					temp=results.split("<division>")
+					for(i=0;i<fields.length;i++)
+					{
+					document.getElementById(fields[i]).value=temp[i]
+					document.getElementById(fields[i]).style.background='#FEF5CA'
+					document.getElementById(fields[i]).readOnly=true
+					}
+					
+				}
+			}
+		}
+	}
+</script>
+<% form_for(@consultant_master) do |f| %>
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Doctor Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/consultant_masters?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Consultant Masters</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+
+<div id="form_data">
+	<table width="100%">
+	  <tr><td colspan="8"><fieldset><legend><div class="font"><b>Consultant Masters</b></div></legend>
+		<table width="100%">
+				
+  <tr>
+    <td>Org.code</td>
+    <td><%= f.text_field :org_code, :class =>"text_field", :id => "org_code", :value =>@org_code, :readonly =>true %></td>
+    <td>Org.location</td>
+    <td><%= f.text_field :org_location, :class =>"text_field", :id => "org_location", :value =>@org_location, :readonly =>true %></td>
+    <td>Consultant Type<sup>*</sup></td>
+	<td><%= f.select :consultant_type,[['Internal'],['External'],['Visiting']],{:prompt => true} %></td>
+  </tr>
+  <tr>
+    <td>Consultant Id<sup>*</sup> </td>
+	<td><%= f.select :consultant_id, EmployeeMaster.find(:all, :conditions =>"category='Consultant'").collect{|p| [p.empid]},{:prompt =>true},{:id =>"emp_id", :onchange => "select_empid(id)" } %></td>
+	<td>Cosultant Name</td>
+	<td><input type="text" id="name" class="text_field"  disabled ="true" ></td>
+	<td>Designation</td>
+	<td><input type="text" id="designation" class="text_field" disabled ="true"></td>
+ </tr>
+ <tr>
+	<td>Ph.No</td>
+	<td><input type="text" id="phno" class="text_field" disabled ="true"></td>
+    <td>Payment Type</td>
+    <td><%= f.select :payment_type,[['Salary'],['Percentage'],['Both']],{:prompt => true},{:id =>"payment_type" , :onchange=> "checked_value()"} %></td>
+    <td><%= f.label :Salary %></td>
+    <td><%= f.text_field :salary , :id =>"sal", :disabled => true, :class =>"text_field" %></td>
+  </tr>
+   
+  <tr>
+    <td>Salary Type</td>
+	<td><%= f.select :salary_type,[['Monthly'],['Yearly'],['Daily']],{:prompt => true},{:id =>"salt", :disabled =>true}%></td>
+    <td><%= f.label :Percentage %></td>
+	<td><%= f.text_field :percentage, :id =>"per" , :disabled => true, :class =>"text_field", :placeholder =>"On Single Payment", :pattern =>'[0-9]+' %></td>
+    <td>Consulting Room</td>
+   <td> <%= f.text_field :consulting_room, :class =>"text_field", :pattern =>'[0-9]+' %></td>
+  </tr>
+  <tr>
+    <td>Extension No</td>
+    <td><%= f.text_field :extension_no, :class =>"text_field", :pattern =>'[0-9]+' %></td>
+    <td>Charge Type</td>
+	<td><%= f.select :charge_type,[['OP'],['IP'],['Both']],{:prompt  => true, :required =>true},{:id =>"type1" , :onchange=> "check(id)"} %> </td>
+    <td>Charge</td>
+	<td><%= f.select :charge,[['Both Flat'],['Both Variable']],{:prompt  => true},{:id =>"ctype" , :disabled =>"true", :onchange=> "check(id)"}   %> </td>
+  </tr>
+  <tr>
+    <td>General Charge</td>
+	<td><%= f.text_field :general_charge, :id =>"scharge", :disabled =>"true", :class =>"text_field", :pattern=>"^[1-9]{1}[0-9]*" %> </td>
+   <td>Night Duty Charge</td>
+	<td><%= f.text_field :night_duty_charge, :id =>"ndcharge", :disabled =>"true", :class =>"text_field", :pattern=>"^[1-9]{1}[0-9]*" %> </td>
+    <td>Emergency Charge</td>
+	<td><%= f.text_field :emergency_charge, :id =>"echarge", :disabled =>"true", :class =>"text_field", :pattern=>"^[1-9]{1}[0-9]*" %> </td>
+ </tr>
+	</table>
+	<div id="tab" style="display :none;">
+	<table border="1" cellspacing="0" align="center">
+	<tr>
+		<th bgcolor="#149bbb">Ward</th>
+		<th bgcolor="#149bbb">General Cost</th>
+		<th bgcolor="#0b92b0">Night Duty Cost</th>
+		<th bgcolor="#0b92b0">Emergency Cost</th>
+	</tr>
+	<tr></tr>
+	<% f.fields_for :ward_cost do |w| %>
+	<tr><td><%=w.text_field :ward, :class =>"text_field", :style=>"border:0; background-color :#ecf3f7;"%></td>
+	<td><%=w.text_field :gcost, :class =>"text_field", :style=>"border:0;" %></td>
+	<td><%=w.text_field :night_duty_cost, :class =>"text_field", :style=>"border:0;"%></td>
+	<td><%=w.text_field :emergency_cost, :class =>"text_field", :style=>"border:0;" %></td>
+	</tr>
+	<% end %>
+	</table>
+	</fieldset>
+	</div>
+	<div  width="100%">
+<table align="center">
+  <td><%= submit_tag "", :value => " Save ", :class => "submit_button" %></td>
+<td ><%= submit_tag "", :value => " Reset ", :class => "submit_button" %></td>
+	<td valign="middle"><%= link_to "Back",  consultant_masters_path, :class=>"new1" %></td>
+ </table>
+</div> 
+<% end %>
+
+
+<%# link_to 'Back', consultant_masters_path %>

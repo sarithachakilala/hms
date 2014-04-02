@@ -1,0 +1,230 @@
+<script type="text/javascript"> 
+function printing()
+{
+var word1=toWords(<%= @total_amount.to_i %>)
+document.getElementById('total_amount').innerHTML=word1+"Only"
+
+var word2=toWords(<%= @due.to_i %>)
+document.getElementById('due').innerHTML=word2+"Only"
+
+var word3=toWords(<%= h @advance %>)
+document.getElementById('advance').innerHTML=word3+"Only"
+
+var word4=toWords(<%= h @final_bill.paid_amount.to_i %>)
+document.getElementById('paid_amount').innerHTML=word4+"Only"
+
+window.print();
+}
+</script>
+<br/>
+<body onload="printing()">
+<table border="1" cellspacing="0" align="center" width="70%">
+  <tr bgcolor =" #378bf8" style="color:white">
+	<td colspan="7" align="center"><b>Admission</b></td>
+  </tr>
+  <tr bgcolor="#378bf8">
+    <th>Admn Date</th>
+    <th>Tran.Date</th>
+    <th>Ward</th>
+    <th>Room</th>
+    <th>Bed</th>
+    <th>No Of days</th>
+    <th>Amount</th>
+  </tr>
+  <% if @ward_changes[0] %>
+	<% @at=0 %>
+	<% @amt=0 %>
+	<% @j=0 %> 
+	<% @cash=0 %>
+	<% @amount_tot=0 %>
+	<% @ward_changes.each do |ward_changes| %>
+	<% @j=@j+1 %>
+	<tr>
+		<td><%=h ward_changes.admn_date %></td>
+		<td><%=h @date=ward_changes.trans_date %></td>
+		<td><%=h ward_changes.from_ward %></td>
+		<td><%=h ward_changes.from_room %></td>
+		<td><%=h ward_changes.from_bed %></td>
+		<% @date=ward_changes.trans_date
+				@today=ward_changes.admn_date
+				@days=(@date.to_date-@today.to_date).to_i %>
+		<td><%=h @days %></td>
+		<% @amt=@cash=ward_changes.amount-@amount_tot %>
+		<td><%=h @cash %></td>
+		<% @amount_tot=ward_changes.amount %>
+		<% @at=@at+@amt %>
+    </tr>
+	<% if @j==@ward_changes.length %>
+		<tr>
+			<td><%=h ward_changes.trans_date %></td>
+			<td><%=h Date.today %></td>
+			<td><%=h ward_changes.to_ward %></td>
+			<td><%=h ward_changes.room %></td>
+			<td><%=h ward_changes.bed %></td>
+			<%  @date=ward_changes.trans_date
+				@today=Date.today
+				@days=(@today-@date.to_date).to_i
+				@amount=@days*ward_changes.charge_per_day.to_i %>
+			<td><%=h @days %></td>
+			<td><%=h @amt=@amount %></td>
+			<% @at=@at+@amt %>
+		</tr>
+	<% end %>
+	<% end %>
+  <% else %>
+  <tr>
+    <td><%=h @admission.admn_date%></td>
+    <td><%=h @date %></td>
+    <td><%=h @admission.ward %></td>
+    <td><%=h @admission.room %></td>
+    <td><%=h @admission.bed %></td>
+	<%  @ward=WardMaster.find_by_name(@admission.ward)
+		@date=@admission.admn_date
+		@today=Date.today
+		@days=(@today-@date.to_date).to_i
+		@amount=@days*@ward.cost.to_i %>
+	<td><%=h @days %></td>
+	<td><%=h @at=@amount %></td>
+  </tr>
+  <% end %>
+  <tr>
+	<td colspan="6" align="right">Total</td>
+	<td><%= @at %></td>
+  </tr>
+</table>
+<br />
+<% @i=0 %>
+<table border="1" cellspacing="0" align="center" width="70%">
+  <tr bgcolor =" #378bf8" style="color:white">
+	<td colspan="7" align="center"><b>Services</b></td>
+  </tr>
+  <tr bgcolor="#378bf8">
+    <th>Sno</th>
+    <th>Service name</th>
+    <th>Service code</th>
+    <th>Fee</th>
+    
+  </tr>
+<% @at=0 %>
+<% @amt=0 %>
+<% if @investigation[0] %>
+<% for investigation in @investigation %>
+<% for ip_service in investigation.investigation_child_tables %>
+  <tr>
+    <td><%=h @i=@i+1 %></td>
+    <td><%=h ip_service.service_name %></td>
+    <td><%=h ip_service.service_code %></td>
+    <td><%=h ip_service.amount %></td>
+  </tr>
+<% end %>
+<% @at=investigation.paid_amount.to_f+@at %>
+<% end %>
+<% end %>
+	<tr>
+		<td colspan="3" align="right">Total</td>
+		<td><%= @at %></td>
+	</tr>
+</table>
+<br/>
+<% @i=0 %>
+<table border="1" cellspacing="0" align="center" width="70%">
+  <tr bgcolor =" #378bf8" style="color:white">
+	<td colspan="7" align="center"><b>Doctor Visits</b></td>
+  </tr>
+  <tr bgcolor="#378bf8">
+    <th>Sno</th>
+    <th>Doctor name</th>
+	<th>Department</th>
+    <th>Date Of Visit</th>
+    <th>Time Of Visit</th>
+    <th>Charge</th>
+  </tr>
+<% @at=0 %>
+<% @amt=0 %>
+<% @consultation_visit_entries.each do |consultation_visit_entries| %>
+  <tr>
+    <td><%=h @i=@i+1 %></td>
+    <td><%=h consultation_visit_entries.consultant %></td>
+    <td><%=h consultation_visit_entries.department %></td>
+    <td><%=h consultation_visit_entries.date_of_visit  %></td>
+    <td>
+		<% time=consultation_visit_entries.time_of_visit %>
+		<%= time.strftime("%H:%M:%S") %>
+	</td>
+    <td><%=h @amt=consultation_visit_entries.charge%></td>
+	<% @at=@amt+@at %>
+  </tr>
+<% end %>
+	<tr>
+		<td colspan="5" align="right">Total</td>
+		<td><%= @at %></td>
+	</tr>
+</table>
+<br/>
+<% @i=0 %>
+<table border="1" cellspacing="0" align="center" width="70%">
+<tr bgcolor =" #378bf8" style="color:white">
+	<td colspan="5" align="center"><b>Oeperation Details</b></td>
+  </tr>
+  <tr bgcolor="#378bf8">
+    <th>Sno</th>
+    <th>Surgery Name</th>
+    <th>Date</th>
+    <th>Time</th>
+    <th>Charge</th>
+  </tr>
+<% @at=0 %>
+<% @amt=0 %>
+<% if(@operation_details[0]) %>
+<% @operation_details.each do |operation_details| %>
+  <tr>
+    <td><%=h @i=@i+1 %></td>
+    <td><%=h operation_details.surgery_name %></td>
+    <td><%=h operation_details.surgery_date %></td>
+    <td>
+		<% time=operation_details.surgery_time %>
+		<%= time.strftime("%H:%M:%S") %>
+	</td>
+    <td><%=h @amt=operation_details.charge.to_f %></td>
+	<% @at=@amt+@at %>
+  </tr>
+<% end %>
+	<tr>
+		<td colspan="3" align="right">Total</td>
+		<td><%= @at %></td>
+	</tr>
+<% end %>
+</table>
+<br/>
+<table  cellspacing="0" cellpadding="4" align="center" width="70%">
+<tr>
+     <td>Gross</td>
+	 
+	 <td>:<%= @total_amount %></td>
+	<td>In Words:
+				<%= image_tag("buttons/rupee.png", :size=>"20x18") %>
+				<span id="total_amount"></span></td>
+ </tr>
+<tr>
+		<td>Advance</td>
+     <td>:<%= @advance %></td>
+		<td>In Words:
+				<%= image_tag("buttons/rupee.png", :size=>"20x18") %>
+				<span id="advance"></span></td>
+	</tr>
+<tr>
+  <td>Due</td>
+     <td>:<%= @due  %></td>
+		<td>In Words:
+				<%= image_tag("buttons/rupee.png", :size=>"20x18") %>
+				<span id="due"></span></td>
+	</tr>
+	
+	<tr>
+  <td>Paid Amount</td>
+     <td>:<%= @final_bill.paid_amount  %></td>
+		<td>In Words:
+				<%= image_tag("buttons/rupee.png", :size=>"20x18") %>
+				<span id="paid_amount"></span></td>
+	</tr>
+</table>

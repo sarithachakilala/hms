@@ -1,0 +1,80 @@
+<h1>New store_child</h1>
+
+<% form_for(@store_child) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :goodsrecieptnotemaster_id %><br />
+    <%= f.text_field :goodsrecieptnotemaster_id %>
+  </p>
+    <p>
+    <%= f.label :purchase_order_return_id %><br />
+    <%= f.text_field :purchase_order_return_id %>
+  </p>
+  
+    <p>
+    <%= f.label :mr_no %><br />
+    <%= f.text_field :mr_no %>
+  </p>
+    <p>
+    <%= f.label :admn_no %><br />
+    <%= f.text_field :admn_no %>
+  </p>
+  <p>
+    <%= f.label :item_name %><br />
+    <%= f.text_field :item_name %>
+  </p>
+  <p>
+    <%= f.label :item_code %><br />
+    <%= f.text_field :item_code %>
+  </p>
+  <p>
+    <%= f.label :batch_no %><br />
+    <%= f.text_field :batch_no %>
+  </p>
+  <p>
+    <%= f.label :expiry_date %><br />
+    <%= f.text_field :expiry_date %>
+  </p>
+  <p>
+    <%= f.label :quantity %><br />
+    <%= f.text_field :quantity %>
+  </p>
+  <p>
+    <%= f.label :issue_qty %><br />
+    <%= f.text_field :issue_qty %>
+  </p>
+  <p>
+    <%= f.label :purchase_rate %><br />
+    <%= f.text_field :purchase_rate %>
+  </p>
+  <p>
+    <%= f.label :purchase_amt %><br />
+    <%= f.text_field :purchase_amt %>
+  </p>
+  <p>
+    <%= f.label :sale_rate %><br />
+    <%= f.text_field :sale_rate %>
+  </p>
+  <p>
+    <%= f.label :sale_amt %><br />
+    <%= f.text_field :sale_amt %>
+  </p>
+  <p>
+    <%= f.label :discount %><br />
+    <%= f.text_field :discount %>
+  </p>
+  <p>
+    <%= f.label :total_amt %><br />
+    <%= f.text_field :total_amt %>
+  </p>
+    <p>
+    <%= f.label :grandtot %><br />
+    <%= f.text_field :grandtot %>
+  </p>
+  <p>
+    <%= f.submit 'Create' %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', store_children_path %>

@@ -1,0 +1,25 @@
+<h1>Listing complaints</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Pdate</th>
+    <th>Ptime</th>
+    <th>About</th>
+  </tr>
+<% @complaints.each do |complaint| %>
+  <tr>
+    <td><%=h complaint.name %></td>
+    <td><%=h complaint.pdate %></td>
+    <td><%=h complaint.ptime %></td>
+    <td><%=h complaint.about %></td>
+    <td><%= link_to 'Show', complaint %></td>
+    <td><%= link_to 'Edit', edit_complaint_path(complaint) %></td>
+    <td><%= link_to 'Destroy', complaint, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New complaint', new_complaint_path %>

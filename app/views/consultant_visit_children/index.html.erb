@@ -1,0 +1,28 @@
+<h1>Listing consultant_visit_children</h1>
+
+<table>
+  <tr>
+    <th>Department</th>
+    <th>Cons name</th>
+    <th>Date and time</th>
+    <th>Cons type</th>
+    <th>Charge</th>
+  </tr>
+
+<% @consultant_visit_children.each do |consultant_visit_child| %>
+  <tr>
+    <td><%=h consultant_visit_child.department %></td>
+    <td><%=h consultant_visit_child.cons_name %></td>
+    <td><%=h consultant_visit_child.date_and_time %></td>
+    <td><%=h consultant_visit_child.cons_type %></td>
+    <td><%=h consultant_visit_child.charge %></td>
+    <td><%= link_to 'Show', consultant_visit_child %></td>
+    <td><%= link_to 'Edit', edit_consultant_visit_child_path(consultant_visit_child) %></td>
+    <td><%= link_to 'Destroy', consultant_visit_child, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New consultant_visit_child', new_consultant_visit_child_path %>

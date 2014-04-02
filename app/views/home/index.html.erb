@@ -1,0 +1,162 @@
+<%= javascript_include_tag 'popup/jquery-1.3.2.js' %>
+<%= stylesheet_link_tag 'popup/style' %>
+<%=javascript_include_tag 'jquery-1.7.1.min' %>	
+<%=javascript_include_tag 'jquery.reveal' %>
+<%= stylesheet_link_tag 'styles_dialog' %>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		if('<%= notice %>'!="")
+		{
+		   	$('#modal').reveal({ // The item which will be opened with reveal
+			  	animation: 'fade',                   // fade, fadeAndPop, none
+				animationspeed: 600,                       // how fast animtions are
+				closeonbackgroundclick: true,              // if you click background will modal close?
+				dismissmodalclass: 'close'    // the class of a button or element that will close an open modal
+			});
+		}
+	});
+</script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".panel").toggle("fast");
+	$(this).toggleClass("active");
+	$(".trigger").click(function(){
+		$(".panel").toggle("fast");
+		$(this).toggleClass("active");
+		return false;
+	});
+});
+</script>
+
+<script type="text/javascript">
+	
+	function ajaxSearch(id,source,hyper_link,name) 
+	{
+		document.getElementById("module_link").src=id;
+	}	
+	function dispaly_data(id)
+	{
+		document.getElementById("module_link").src=id;
+	}	
+	
+	function mrfun(id)
+	{
+		query=find_mr_no(id,new Array());
+		document.getElementById("module_link").src="/doctor_workbench/patient_info/1?mr="+query+"&org_code="+org_code;
+	}
+	function clear_file(id)
+	{
+		document.getElementById(id).value=""
+		document.getElementById(id).style.color="black"
+	}
+	function record_display(id,event)
+	{
+		if(event.keyCode!=13)
+			return false;
+		query=find_mr_no(id,new Array());
+		var org_code=""
+		document.getElementById("module_link").src="/doctor_workbench/patient_info/1?mr="+query+"&org_code="+org_code;
+	}
+</script>
+ <div id="modal">
+	<div id="heading1">
+		MediEaz-Cloud Hospital Management System
+	</div>
+	<div id="content">
+		<p><font style="color:red;font-weight:bold;size=20px;"><%= notice %></font></p>
+	</div>
+</div>
+<table width="100%" height="600" border="0" style="margin:opx;padding:0px;" cellpadding="0" cellspacing="0">
+  <tr height="50">
+    <td>
+    	<table width="100%" border="1" style="margin:opx;">
+  			<tr>
+    			<% if(@home) %>
+				<td width="18%" align="left"><a HREF='javascript:void(0);' id="/home/home/1" onclick="ajaxSearch(id,'',id,'   Home')"><%= image_tag(@home.image_path, :size => "173x64") %></a></td>
+			<% else %>
+				<td width="18%" align="left"><a HREF='javascript:void(0);' id="/home/home/1" onclick="ajaxSearch(id,'',id,'   Home')"><%= image_tag("hs-gol.png", :size => "173x64") %></a></td>
+
+			<% end %>
+
+    			<td width="50%">
+                		<table width="100%" border="1" class="border1">
+  					<tr>
+    						<td align="center" class="td_style">Welcome</td><td></td><td width="25"></td>
+<td><%= image_tag("user.png", :size=>"27x30") %></td>
+
+
+                        			<td  class="td_style"><%= @person.display_name %></td>
+                        			
+    					<td></td><td></td><td></td><td></td>
+                        			<td class="td_style"><a href="javascript:void(0)" id="/people/<%= @person.id %>/edit" onclick="ajaxSearch(id,'',id,'Change password')">Change password</a></td>
+    						<td class="td_style"><a href="/sessions/destroy/<%= @session_id %>">Logout</a></td>
+  					</tr>
+  					<tr>
+    					<td colspan="13" align="center" class="td_style"><%= @person.client_name.upcase %></td>
+  					</tr>
+				</table>
+				</td>
+				<td style = "font-size:14px; color :#ffce00; face:Calibri;"><b> Call For Support: 040-40203231<br/>E-mail Us: support@exleaz.com</b></td>
+    			<td width="15%" align="right"><a HREF='javascript:void(0);' id="/home/medieaz_info" onclick="ajaxSearch(id,'',id,'   Home')"><%= image_tag("medieaznew-1.png", :size => "179x50") %></a></td>
+  			</tr>
+		</table>
+	</td>
+   </tr>
+   <tr height="10">
+  	<td><div id="smoothmenu1" class="ddsmoothmenu">
+	<ul>
+		<% for modules_lists in @modules_lists %>
+			<% childmaster=Childmaster.find_by_profilemaster_id_and_forms_and_new(@profile.id,modules_lists.module_name,'1') %>
+			<% if(childmaster) %>
+				<li><a HREF='javascript:void(0);' id='<%= modules_lists.path %>' onclick="ajaxSearch(id,'',id,'Reception Management')"><%= modules_lists.module_name %></a>
+					<ul><% prev_id= 0 %>
+						<% 	for modules_lists_child in modules_lists.module_list_children %> 
+							<% if(modules_lists_child.id>prev_id ) %>
+							<% prev_id= modules_lists_child.id %>
+							<% childmaster=Childmaster.find_by_profilemaster_id_and_forms_and_new(@profile.id,modules_lists_child.form_name,'1') %>
+							<% if(childmaster) %>
+								<li><a HREF='javascript:void(0);' id='<%= modules_lists_child.path %>' onclick="ajaxSearch(id,'Rec.Mgmt >> Patient Enquiries',id,'IP Details')"><%= modules_lists_child.form_name %></a>
+									<% if(modules_lists_child.field_type=="Sub-Heading") %>
+										<% modules_lists_child_sub=ModuleListChild.find(:all,:conditions => "id > '#{prev_id}' and modules_list_id='#{modules_lists_child.modules_list_id}'") %>
+										<% if(modules_lists_child_sub[0]) %>
+											<ul>
+												<% for modules_lists_child1 in modules_lists_child_sub %>
+													<% prev_id= modules_lists_child1.id %>
+													<% childmaster=Childmaster.find_by_profilemaster_id_and_forms_and_new(@profile.id,modules_lists_child1.form_name,1) %>
+													<% if(childmaster) %>
+														<% if(modules_lists_child1.field_type=="Content") %>
+															<li><a HREF='javascript:void(0);' id='<%= modules_lists_child1.path %>' onclick="ajaxSearch(id,'Rec.Mgmt >> Patient Enquiries',id,'IP Details')"><%= modules_lists_child1.form_name %></a>
+														<% else %>
+															<% prev_id= prev_id-1 %>
+															<% break %>
+														<% end %>
+													<% end %>
+												<% end %>
+											</ul>
+										<% end %>
+									<% end %>
+								</li>		
+							<% end %>
+						<% end %>
+						<% end %>
+					</ul>
+				</li>
+			<% end %>
+		<% end %>
+	</ul>
+	<br style="clear: left" />
+	</div></td>
+  </tr>
+  <tr height="530">
+    <td height="100%"><div id="module_link_div" style="width:100%;height:525px;">
+    	<iframe src="/home/home" width="100%" height="525px" id="module_link" style="background-color:#ecf3f7;" border="1" ALLOWTRANSPARENCY="true"></iframe>
+    </div></td>
+  </tr>
+  <tr height="20" style="background-color:#ecf3f7;">
+	<td align="center" style="color:blue;font-size:14px;"><a href="javascript:void(0)" style="background-color:#444444;" onClick="window.open('/events','open_window','dependent, width=950, height=560, left=0, top=0');">&nbsp;&nbsp;&nbsp;Calendar&nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" style="background-color:#444444;" onClick="window.open('/notice_boards/new','open_window','dependent, width=900, height=480, left=0, top=0');">&nbsp;&nbsp;&nbsp;Notice Board&nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" style="background-color:#444444;" onClick="window.open('/complaints/new','open_window','dependent, width=950, height=560, left=0, top=0');">&nbsp;&nbsp;&nbsp;Complaints&nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" style="background-color:#444444;" onClick="window.open('/calculate','open_window','dependent, width=300, height=300, toolbar=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no,top=200,left=500');">&nbsp;&nbsp;&nbsp;Calculator&nbsp;&nbsp;&nbsp;</a></td>
+  </tr>
+  <tr height="5" >
+  	<td class="bgbody" align="center"><p style="font-face:calibri;color:white;font-size:13px;"><b>All Copyrights&copy; Reserved to Exleaz Solutions Limited</b> </p></td>
+  </tr>
+</table>

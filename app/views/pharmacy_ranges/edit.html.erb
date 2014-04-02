@@ -1,0 +1,36 @@
+
+<% form_for(@pharmacy_range) do |f| %>
+  <%= f.error_messages %>
+ <div  width="100%">
+<fieldset>
+<legend><div class="font"><b>Ediitng Pharmacy Range</b></div></legend>
+
+<table align="center"  width="100%">
+ <tr>
+    <td><%= f.label :item_type %></td>
+  
+	<td><%= f.select :item_type,Itemmaster.find(:all,:select => "DISTINCT drug_type").collect{ |p| [p.drug_type]},{:prompt=>true} %></td>
+	
+	
+  <td>  <%= f.label :range %></td>
+	<td><%= f.text_field :range, :id=>"range", :size=>"20" %></td>
+ </tr>
+ 
+</table>
+
+
+</table>
+  </fieldset>
+  <table align ="center">
+  <tr>
+
+<td><%= submit_tag "", :value => " Update ", :class => "submit_button", :onClick => "this.disabled=true;this.value='Process..';this.form.submit();" %></td>
+	
+	<td valign="middle"><%= link_to "Back",  pharmacy_ranges_path , :class=>"new1" %></td>
+  	
+  	
+
+  </tr>
+</table>
+<% end %>
+</div>

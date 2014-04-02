@@ -1,0 +1,23 @@
+<p>
+  <b>Form name:</b>
+  <%=h @module_list_child.form_name %>
+</p>
+
+<p>
+  <b>Field type:</b>
+  <%=h @module_list_child.field_type %>
+</p>
+
+<p>
+  <b>Path:</b>
+  <%=h @module_list_child.path %>
+</p>
+
+<p>
+  <b>Module list:</b>
+  <%=h @module_list_child.module_list_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_module_list_child_path(@module_list_child) %> |
+<%= link_to 'Back', module_list_children_path %>

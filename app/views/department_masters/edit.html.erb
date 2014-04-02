@@ -1,0 +1,42 @@
+
+<% form_for(@department_master) do |f| %>
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Doctor Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/department_masters?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Depatrment Masters</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<fieldset>
+<legend><b>Department Masters</b></legend>
+<table width=100%>
+ <tr>
+    <td>OrgCode</td>
+    <td><%= f.text_field :org_code, :class => "text_field" %></td>
+   <td> Org.Location</td>
+    <td><%= f.text_field :org_location, :class => "text_field" %></td>
+    <td><%= f.label :category %><sup>*</sup></td>
+    <td><%= f.text_field :category %></td>
+  </tr>
+  <tr>
+    <td><%= f.label :department %><sup>*</sup></td>
+    <td><%= f.text_field :department %></td>
+    <td><%= f.label :status  %></td>
+    <td><%= f.text_field :status %></td>
+    <td><%= f.label :hod %></td>
+    <td><%= f.text_field :hod %></td>
+  </tr>
+  <tr>
+    <td>Ph.No.Hod</td>
+	<td> <%= f.text_field :ph_no_hod ,:class =>"text_field" %></td>
+  </tr>
+   </table>
+ </fieldset>
+	<table align="center">
+		<tr>
+			<td><%= submit_tag "", :value => " Update ", :class => "submit_button" %></td>
+				<td valign="middle"><%= link_to "Back",  department_masters_path, :class=>"new1" %></td>
+
+		</tr></table>
+<% end %>

@@ -1,0 +1,112 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">Pharmacy >>&nbsp;&nbsp;&nbsp;<a HREF='/issues_to_ops?user_id=<%= @user_id %>' class="nav" style="text-decoration:none;">Sales</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div>
+<div id="form_data">
+<br/>
+<center>
+<%= link_to 'New',new_issues_to_op_path, :class=>"new1" %>
+</center>
+<script type="application/javascript">
+var type
+	function clear_file()
+	{
+		document.getElementById("issue_no").value=""
+		document.getElementById("issue_date").value=""
+		document.getElementById("due_amount").value=""
+		document.getElementById("paid_amt").value=""
+		document.getElementById("due").value=""
+	}
+ </script>
+<div align="center" width="100%">
+<table class="tablesorter" border="0" cellpadding="0" cellspacing="1" >
+<tbody>
+	<tr>
+	<td width="12%">&nbsp;</td>
+
+	
+	<td width="15%"><input type="text" style="width:100%" id="issue_no" onKeyUp = "search_function(id,event)" placeholder="Search Issue No"></td>
+					<%= javascript_include_tag:defaults %>
+					<%= observe_field 'issue_no', :frequency => 0.01,
+					:update => :name,
+					:url => {:action => :observe_field_ex },
+					:with => "'issue_no='+escape($('issue_no').value)+ '&issue_date=' + escape($('issue_date').value)+ '&due_amount=' + escape($('due_amount').value)+ '&paid_amt=' + escape($('paid_amt').value)+ '&due_amount=' + escape($('due_amount').value)+ '&due=' + escape($('due').value) " %>
+					  
+	<td width="15%"><input type="text" style="width:100%" id="issue_date" onKeyUp = "search_function(id,event)" placeholder="Search Issue date"></td>
+					<%= observe_field 'issue_date', :frequency => 0.01,
+					:update => :name,
+					:url => {:action => :observe_field_ex },
+					:with => "'issue_no='+escape($('issue_no').value)+ '&issue_date=' + escape($('issue_date').value)+ '&due_amount=' + escape($('due_amount').value)+ '&paid_amt=' + escape($('paid_amt').value)+ '&due_amount=' + escape($('due_amount').value)+ '&due=' + escape($('due').value) " %>
+	<td width="15%"><input type="text" style="width:100%" id="due_amount" onKeyUp = "search_function(id,event)" placeholder="Search Total Amount"></td>
+					<%= observe_field 'due_amount', :frequency => 0.01,
+					:update => :name,
+					:url => {:action => :observe_field_ex },
+					:with => "'issue_no='+escape($('issue_no').value)+ '&issue_date=' + escape($('issue_date').value)+ '&due_amount=' + escape($('due_amount').value)+ '&paid_amt=' + escape($('paid_amt').value)+ '&due_amount=' + escape($('due_amount').value)+ '&due=' + escape($('due').value) " %>
+	<td width="15%"><input type="text" style="width:100%" id="paid_amt" onKeyUp = "search_function(id,event)" placeholder="Search Paid Amount"></td>
+					<%= observe_field 'paid_amt', :frequency => 0.01,
+					:update => :name,
+					:url => {:action => :observe_field_ex },
+					:with => "'issue_no='+escape($('issue_no').value)+ '&issue_date=' + escape($('issue_date').value)+ '&due_amount=' + escape($('due_amount').value)+ '&paid_amt=' + escape($('paid_amt').value)+ '&due_amount=' + escape($('due_amount').value)+ '&due=' + escape($('due').value) " %>
+	<td width="15%"><input type="text" style="width:100%" id="due" onKeyUp = "search_function(id,event)" placeholder="Due Amount"></td>
+					<%= observe_field 'due', :frequency => 0.01,
+					:update => :name,
+					:url => {:action => :observe_field_ex },
+					:with => "'issue_no='+escape($('issue_no').value)+ '&issue_date=' + escape($('issue_date').value)+ '&due_amount=' + escape($('due_amount').value)+ '&paid_amt=' + escape($('paid_amt').value)+ '&due_amount=' + escape($('due_amount').value)+ '&due=' + escape($('due').value) " %>
+	
+	<td colspan="3" align="center" valign="top">
+		<%= link_to 'Clear','', :class=>"new1",:onClick => "clear_file()"  %>
+	</td>
+  </tr>
+ </tbody>
+</table>
+</div>
+
+ 
+ <!-- End of the Code for field search	 -->
+ 
+<div id="name" align="center" width="100%">
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+  <tr>
+     <th>S.No</th>     
+	<th>Issue No</th>
+	<th>Issue Dt</th>
+	<th>Total Amt</th>
+	<th>Paid Amt</th>
+	<th>Due Amt</th>
+	<th colspan=2 align="center">Permissions</th>
+  </tr>
+</thead>
+<tbody>
+<% @i=0 %>
+<% @issues_to_op.each do |issues_to_op| %>
+<% if((@i % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+  end %>
+	<tr class='<%= id %>' style="height:30px">
+		<td><%= @i+=1 %></td>
+    	<td><%=h issues_to_op.receipt_no %></td>
+    	<td><%=h issues_to_op.issue_date %></td>
+		<td><%=h issues_to_op.due_amount %></td>
+		<td><%=h issues_to_op.paid_amt %></td>
+		<td><%=h issues_to_op.due %></td>
+	
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Edit&nbsp;&nbsp;&nbsp;', edit_issues_to_op_path(issues_to_op), :class=>"submit_button" %></td>
+	
+	<td  align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Print&nbsp;&nbsp;&nbsp;', {:action => 'report1', :id =>  issues_to_op.id, :format => "pdf", :print_type=>"duplicate"}, :class=>"submit_button" %></td>
+	
+    
+ </tr>
+<% end %>
+</tbody>
+</table>
+<br />
+</div>
+
+<p align="right"><div align="right" class="pagination"><%= will_paginate @issues_to_op,  :style => "font: bold 15px Arial red;" %></p>

@@ -1,0 +1,27 @@
+
+<% id="datacellone" %>
+<% id1="datacelltwo" %>
+<div  width="100%">
+ <table align="center" width="70%" border="0" cellspacing="2" cellpadding="4">
+	<tr>
+		<td class="button" colspan="9"><center><b>Details of Manufacturer</b></center></td> 
+	</tr>
+	<tr>
+		<td class='<%= id %>'><b>Org code</b></td> 
+		<td class='<%= id %>'>:</td> 
+		<td class='<%= id1 %>'><%=h @manufacturer.org_code %></td>
+		<td class='<%= id %>'><b>Org location</b></td> 
+		<td class='<%= id %>'>:</td> 
+		<td class='<%= id1 %>'><%=h @manufacturer.org_location %></td>
+		<td class='<%= id %>'><b>Manufacturer Name</b></td> 
+		<td class='<%= id %>'>:</td> 
+		<td class='<%= id1 %>'><%=h @manufacturer.manufacturer_name %></td>
+		<td class='<%= id %>'><b> Manufacturer Code</b></td> 
+		<td class='<%= id %>'>:</td> 
+		<td class='<%= id1 %>'><%=h @manufacturer.manufacturer_code %></td>
+	</tr>
+ </table>
+</div>
+<br/>
+<center>
+<%= link_to image_tag("buttons/back.png", :class => "info", :border =>"0"), manufacturers_path %>

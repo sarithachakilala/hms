@@ -1,0 +1,31 @@
+<h1>New consultant_visit_child</h1>
+
+<% form_for(@consultant_visit_child) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :department %><br />
+    <%= f.text_field :department %>
+  </p>
+  <p>
+    <%= f.label :cons_name %><br />
+    <%= f.text_field :cons_name %>
+  </p>
+  <p>
+    <%= f.label :date_and_time %><br />
+    <%= f.text_field :date_and_time %>
+  </p>
+  <p>
+    <%= f.label :cons_type %><br />
+    <%= f.text_field :cons_type %>
+  </p>
+  <p>
+    <%= f.label :charge %><br />
+    <%= f.text_field :charge %>
+  </p>
+  <p>
+    <%= f.submit 'Create' %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', consultant_visit_children_path %>

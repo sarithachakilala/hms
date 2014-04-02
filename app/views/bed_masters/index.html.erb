@@ -1,0 +1,102 @@
+<div id="form_name_display">
+	<table width="100%" border=0" cellspacing="0" cellpadding="0">
+  	<tr>
+    		<td width="50%">General Masters >>&nbsp;&nbsp;&nbsp;<a HREF='/bed_masters?user_id=<%= @person.id %>' class="nav" style="text-decoration:none;">Bed Masters</a></td>
+    		<td align="right" width="50%"><%= format_date(:short, Date.today ) %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  	</tr>
+	</table>
+</div><br/>
+<center><h3><font color="#015a84">Bed Master Records</font></h3>
+<%= link_to 'New', new_bed_master_path, :class=>"new1" %>
+</center>
+<script type="application/javascript">
+	var bed_name
+  	function date_range(event)
+	{
+		if(event.keyCode==13)
+		{
+		bed_name=document.getElementById('search_field').value
+			req = new Ajax.Request('/bed_masters/search/1', {
+				method: 'get',
+				parameters: {bed_name: bed_name },
+				onComplete: function(transport) {
+				processReqChange(transport);
+				}
+			});
+			function processReqChange(req) 
+			{
+				document.getElementById("tablesorter-demo").innerHTML=req.responseText
+			}
+		}
+	}
+
+	function click_search()
+	{
+		
+		bed_name=document.getElementById('search_field').value
+		req = new Ajax.Request('/bed_masters/search/1', {
+			method: 'get',
+			parameters: {bed_name: bed_name},
+			onComplete: function(transport) {
+			processReqChange(transport);
+			}
+		});
+		function processReqChange(req) 
+		{
+			document.getElementById("tablesorter-demo").innerHTML=req.responseText
+		}
+	}
+
+ </script>
+<table align ="right">
+  <tr>
+	<td><%= text_field_tag :search, params[:search], :id => 'search_field', :Placeholder => "Enter Name", :onKeyUp =>"date_range(event)" %></td>
+    <td><a href='javascript:void(0)'  onclick = "click_search()" ><img src="/images/buttons/search.png" class="info"/> </a></td>
+    </td>
+  </tr>
+</table>
+<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead>
+	<tr>
+	<th>S.No</th> 
+	<th>Org Code</th>
+    <th>Org Location</th>
+    <th>Name</th>
+    <th>Code</th>
+    <th>Room</th>
+    <th>Ward</th>
+    <th>Floor</th>
+    <th>Status</th>
+    <th colspan="2" align="center">Permissions</th>
+   </tr>
+</thead>
+<tbody>
+<% @i=0 %>
+<% @bed_masters.each do |bed_master| %>
+<% if((@i % 2)==0) 
+		id="datacellone"
+	else
+		id="datacelltwo"
+  end %>
+  <tr class='<%= id %>' style="height:30px">
+	<td><%= @i+=1 %></td>
+	<% room=RoomMaster.find_by_id(bed_master.room_master_id) 
+     	ward=WardMaster.find_by_id(bed_master.ward_master_id)
+    %>
+	<td><%=h bed_master.org_code %></td>
+    <td><%=h bed_master.org_location %></td>
+    <td><%=h bed_master.name %></td>
+    <td><%=h bed_master.code %></td>
+	<td><%=h room.name %></td>
+    <td><%=h ward.name %></td>
+    <td><%=h room.floor %></td> 
+    <td><%=h bed_master.status %></td>
+
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Edit&nbsp;&nbsp;&nbsp;', edit_bed_master_path(bed_master), :class=>"submit_button" %></td>   
+	<td align="center"><%= link_to '&nbsp;&nbsp;&nbsp;Delete&nbsp;&nbsp;&nbsp;', bed_master, :confirm => 'Are you sure?', :method => :delete, :class=>"submit_button" %></td>
+  
+  </tr>
+<% end %>
+</table>
+<br />
+<p align="right"><div align="right" class="pagination"><%= will_paginate @bed_masters,  :style => "font: bold 15px Arial red;" %></p>

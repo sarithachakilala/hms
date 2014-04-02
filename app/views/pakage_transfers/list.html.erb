@@ -1,0 +1,46 @@
+<h1>Listing pakage_transfers</h1>
+
+<table>
+  <tr>
+    <th>Org code</th>
+    <th>Org location</th>
+    <th>Today date</th>
+    <th>Present time</th>
+    <th>Admn no</th>
+    <th>Mr no</th>
+    <th>E cat</th>
+    <th>E subcat</th>
+    <th>Days</th>
+    <th>Amount</th>
+    <th>Trans cat</th>
+    <th>Trans subcat</th>
+    <th>T days</th>
+    <th>T amount</th>
+  </tr>
+
+<% @pakage_transfers.each do |pakage_transfer| %>
+  <tr>
+    <td><%=h pakage_transfer.org_code %></td>
+    <td><%=h pakage_transfer.org_location %></td>
+    <td><%=h pakage_transfer.today_date %></td>
+    <td><%=h pakage_transfer.present_time %></td>
+    <td><%=h pakage_transfer.admn_no %></td>
+    <td><%=h pakage_transfer.mr_no %></td>
+    <td><%=h pakage_transfer.e_cat %></td>
+    <td><%=h pakage_transfer.e_subcat %></td>
+    <td><%=h pakage_transfer.days %></td>
+    <td><%=h pakage_transfer.amount %></td>
+    <td><%=h pakage_transfer.trans_cat %></td>
+    <td><%=h pakage_transfer.trans_subcat %></td>
+    <td><%=h pakage_transfer.t_days %></td>
+    <td><%=h pakage_transfer.t_amount %></td>
+    <td><%= link_to 'Show', pakage_transfer %></td>
+    <td><%= link_to 'Edit', edit_pakage_transfer_path(pakage_transfer) %></td>
+    <td><%= link_to 'Destroy', pakage_transfer, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New pakage_transfer', new_pakage_transfer_path( :user_id=> @user_id) %>
